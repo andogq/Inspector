@@ -1,1 +1,5 @@
-{}
+{
+  "projects": {
+    "default": "inspector-d21b9"
+  }
+}
