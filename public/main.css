@@ -1,11 +1,26 @@
+:root {
+    --unit: 5vmin;
+    --transition: 250ms ease-out;
+    --green: #16a085;
+    --red: #e74c3c;
+    --lightblue: #3498db;
+    --white: #ecf0f1;
+}
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    transition: var(--transition);
 }
 
 html, body {
     height: 100%;
     width: 100%;
+    background: var(--white);
+}
+
+.material-icons {
+    font-size: calc(var(--unit) * 1.5);
 }
 
 #map {
@@ -15,13 +30,63 @@ html, body {
 
 #centerPoint {
     position: fixed;
-    top: calc(50% - 5vmin);
-    left: calc(50% - 5vmin);
-    height: 5vmin;
-    width: 5vmin;
+    top: calc(50% - (var(--unit) * 0.75));
+    left: calc(50% - (var(--unit) * 0.75));
+    height: calc(var(--unit) * 1.5);
+    width: calc(var(--unit) * 1.5);
 
     border-radius: 100%;
-    border: 1vmin solid white;
+    border: calc(var(--unit) / 10) solid white;
 
-    background: #3399CC;
+    background: var(--green);
+}
+
+#pointMenu {
+    position: fixed;
+    top: calc(50% + var(--unit));
+    left: 50%;
+    width: fit-content;
+    transform: translate(-50%, 0);
+    text-align: center;
+}
+
+#pointMenu > * {
+    margin: calc(var(--unit) / 2);
+    font-size: calc(var(--unit) * 2);
+}
+
+#pullUpMenu {
+    position: fixed;
+    top: 100%;
+    bottom: 0;
+    width: 100%;
+    padding: var(--unit) 0;
+
+    box-shadow: 0 0 var(--unit);
+    border-radius: var(--unit) var(--unit) 0 0;
+    background: var(--white);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+#pullUpMenu.peek {
+    top: calc(100% - (var(--unit) * 3));
+}
+
+#report {
+    color: var(--red);
+}
+
+#recenter {
+    color: var(--green);
+}
+
+.faded {
+    opacity: 0.2;
+}
+
+.hidden {
+    pointer-events: none;
+    opacity: 0;
 }

@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
     <title>Inspector</title>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css">
     <link rel="stylesheet" href="main.css"/>
 </head>
@@ -12,11 +13,25 @@
     <div id="map"></div>
     <div id="centerPoint"></div>
     
+    <div id="pointMenu">
+        <span class="material-icons" id="report">report</span>
+        <span class="material-icons" id="recenter">gps_fixed</span>
+    </div>
+
+    <div id="pullUpMenu">
+        <span class="material-icons" id="account">person</span>
+        <span class="material-icons" id="data">bar_chart</span>
+        <span class="material-icons" id="history">history</span>
+        <span class="material-icons" id="help">help</span>
+
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js"></script>
     <script src="js/coord.js"></script>
     <script src="js/map.js"></script>
     <script src="js/heatmap.js"></script>
     <script src="js/network.js"></script>
+    <script src="js/ui.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

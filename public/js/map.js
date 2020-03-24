@@ -14,7 +14,8 @@ class Map {
             ],
             view: this.view,
             controls: ol.control.defaults({
-                zoom: showZoom == undefined ? true : showZoom
+                zoom: showZoom == undefined ? true : showZoom,
+                rotate: false
             })
         });
     }
