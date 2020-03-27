@@ -17,13 +17,18 @@ class UI {
     }
 
     addListener({el, event, callback, once}) {
+        function cb(e) {
+            e.preventDefault();
+            callback(e);
+        }
+        
         if (Array.isArray(event)) event.forEach((e) => {
-            this.addListener({el, event: e, callback, once});
+            this.addListener({el, event: e, cb, once});
         });
         else if (Array.isArray(el)) el.forEach((e) => {
-            this.addListener({el: e, event, callback, once});
+            this.addListener({el: e, event, cb, once});
         });
-        else this.el[el].addEventListener(event, callback, once == undefined ? false : once);
+        else this.el[el].addEventListener(event, cb, once == undefined ? false : once);
     }
 
     /*

@@ -10,6 +10,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
     transition: var(--transition);
 }
 
@@ -62,7 +63,6 @@ html, body {
     width: 100%;
     padding: var(--unit) 0;
 
-    box-shadow: 0 0 var(--unit);
     border-radius: var(--unit) var(--unit) 0 0;
     background: var(--white);
 
@@ -70,8 +70,17 @@ html, body {
     flex-direction: row;
     justify-content: space-evenly;
 }
+#pullUpMenu.peek, #pullUpMenu.drag, #pullUpMenu.pop {
+    box-shadow: 0 0 var(--unit);
+}
 #pullUpMenu.peek {
     top: calc(100% - (var(--unit) * 3));
+}
+#pullUpMenu.drag {
+    transition: none;
+}
+#pullUpMenu.pop {
+    top: 30%;
 }
 
 #report {

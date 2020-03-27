@@ -52,18 +52,28 @@ let ui = new UI({
 
 ui.addListener({
     el: "centerPoint",
-    event: "click",
+    event: "touchstart",
     callback: () => {
         ui.state = ui.states.pointMenu;
     }
 });
 ui.addListener({
     el: "map",
-    event: ["click", "touchstart"],
+    event: "touchstart",
     callback: () => {
         ui.state = ui.states.map;
     }
 });
+
+let menu = new Draggable({
+    el: ui.el.pullUpMenu,
+    classes: {
+        collapsed: "peek",
+        moving: "drag",
+        extended: "pop"
+    }
+});
+
 ui.state = 1;
 
 // let data;
