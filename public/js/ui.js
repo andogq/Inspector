@@ -23,10 +23,10 @@ class UI {
         }
         
         if (Array.isArray(event)) event.forEach((e) => {
-            this.addListener({el, event: e, cb, once});
+            this.addListener({el, event: e, callback: cb, once});
         });
         else if (Array.isArray(el)) el.forEach((e) => {
-            this.addListener({el: e, event, cb, once});
+            this.addListener({el: e, event, callback: cb, once});
         });
         else this.el[el].addEventListener(event, cb, once == undefined ? false : once);
     }

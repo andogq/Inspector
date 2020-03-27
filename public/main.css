@@ -12,6 +12,8 @@
     box-sizing: border-box;
 
     transition: var(--transition);
+
+    overscroll-behavior: none;
 }
 
 html, body {

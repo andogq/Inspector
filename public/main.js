@@ -31,7 +31,9 @@ geo.on("change", () => {
 
 let states = {
     map: 0,
-    pointMenu: 1
+    pointMenu: 1,
+    pullUpMenuDrag: 2,
+    pullUpMenuExtended: 3
 }
 let stateClasses = [
     { // Map
@@ -40,6 +42,14 @@ let stateClasses = [
     { // Point menu
         map: "faded",
         pullUpMenu: "peek"
+    },
+    { // Pull up menu drag
+        map: "faded",
+        pullUpMenu: "drag"
+    },
+    { // Pull up menu extended
+        map: "faded",
+        pullUpMenu: "pop"
     }
 ];
 
@@ -65,16 +75,42 @@ ui.addListener({
     }
 });
 
-let menu = new Draggable({
-    el: ui.el.pullUpMenu,
-    classes: {
-        collapsed: "peek",
-        moving: "drag",
-        extended: "pop"
+// Set things up for the draggable menu
+let y0;
+let threshold = 0.2;
+ui.addListener({
+    el: "pullUpMenu",
+    event: "touchstart",
+    callback: (e) => {
+        y0 = e.changedTouches[0].clientY;
     }
 });
+ui.addListener({
+    el: "pullUpMenu",
+    event: "touchmove",
+    callback: (e) => {
+        let y = e.changedTouches[0].clientY;
 
-ui.state = 1;
+        if (ui.state != ui.states.pullUpMenuDrag) {
+            let dy = Math.abs(y0 - y);
+
+            if (dy > 10) ui.state = ui.states.pullUpMenuDrag;
+        }
+        // Recheck because it may change
+        if (ui.state == ui.states.pullUpMenuDrag) ui.el.pullUpMenu.style.top = y + "px";
+    }
+});
+ui.addListener({
+    el: "pullUpMenu",
+    event: ["touchend", "touchcancel"],
+    callback: (e) => {
+        if (e.changedTouches[0].clientY < ((1 - threshold) * document.body.clientHeight)) ui.state = ui.states.pullUpMenuExtended;
+        else ui.state = ui.states.pointMenu;
+
+        // Remove any styling put in by the class
+        ui.el.pullUpMenu.style.top = ""
+    }
+});
 
 // let data;
 // let xhr = new XMLHttpRequest();
