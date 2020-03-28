@@ -1,12 +1,4 @@
 /*
- * Import Fonts
- */
-@font-face {
-    font-family: "Open Sans";
-    src: url("/openSans.ttf");
-}
-
-/*
  * Variables
  */
 :root {
