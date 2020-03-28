@@ -57,7 +57,8 @@ let ui = new UI({
     map: document.getElementById("map"),
     centerPoint: document.getElementById("centerPoint"),
     pointMenu: document.getElementById("pointMenu"),
-    pullUpMenu: document.getElementById("pullUpMenu")
+    pullUpMenu: document.getElementById("pullUpMenu"),
+    buttonTab: document.getElementById("buttonTab")
 }, states, stateClasses);
 
 ui.addListener({
@@ -77,16 +78,16 @@ ui.addListener({
 
 // Set things up for the draggable menu
 let y0;
-let threshold = 0.2;
+let threshold = 0.3;
 ui.addListener({
-    el: "pullUpMenu",
+    el: "buttonTab",
     event: "touchstart",
     callback: (e) => {
         y0 = e.changedTouches[0].clientY;
     }
 });
 ui.addListener({
-    el: "pullUpMenu",
+    el: "buttonTab",
     event: "touchmove",
     callback: (e) => {
         let y = e.changedTouches[0].clientY;
@@ -101,7 +102,7 @@ ui.addListener({
     }
 });
 ui.addListener({
-    el: "pullUpMenu",
+    el: "buttonTab",
     event: ["touchend", "touchcancel"],
     callback: (e) => {
         if (e.changedTouches[0].clientY < ((1 - threshold) * document.body.clientHeight)) ui.state = ui.states.pullUpMenuExtended;
@@ -111,6 +112,8 @@ ui.addListener({
         ui.el.pullUpMenu.style.top = ""
     }
 });
+
+ui.state = 3;
 
 // let data;
 // let xhr = new XMLHttpRequest();

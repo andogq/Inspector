@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Open Sans";
+    src: url("/openSans.ttf");
+}
+
 :root {
     --unit: 5vmin;
     --transition: 250ms ease-out;
@@ -10,6 +15,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    font-family: "Open Sans";
 
     transition: var(--transition);
 
@@ -63,14 +70,11 @@ html, body {
     top: 100%;
     bottom: 0;
     width: 100%;
-    padding: var(--unit) 0;
+
+    overflow-y: hidden;
 
     border-radius: var(--unit) var(--unit) 0 0;
     background: var(--white);
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
 }
 #pullUpMenu.peek, #pullUpMenu.drag, #pullUpMenu.pop {
     box-shadow: 0 0 var(--unit);
@@ -83,6 +87,15 @@ html, body {
 }
 #pullUpMenu.pop {
     top: 30%;
+}
+
+#buttonTab {
+    height: calc(var(--unit) * 3);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 #report {
