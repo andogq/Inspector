@@ -1,0 +1,50 @@
+/*
+ * Import Fonts
+ */
+@font-face {
+    font-family: "Open Sans";
+    src: url("/openSans.ttf");
+}
+
+/*
+ * Variables
+ */
+:root {
+    --unit: 5vmin;
+    --transition: 250ms ease-out;
+    --green: #16a085;
+    --red: #e74c3c;
+    --lightblue: #3498db;
+    --white: #ecf0f1;
+}
+
+/*
+ * Default styling for elements
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: "Open Sans";
+
+    transition: var(--transition);
+
+    overscroll-behavior: none;
+}
+
+/*
+ * Styling for root of the document
+ */
+html, body {
+    height: 100%;
+    width: 100%;
+    background: var(--white);
+}
+
+/*
+ * Slight adjustment for icons
+ */
+.material-icons {
+    font-size: calc(var(--unit) * 1.5);
+}

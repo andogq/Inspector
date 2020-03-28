@@ -1,0 +1,14 @@
+/*
+ * Fades out the item
+ */
+.faded {
+    opacity: 0.2;
+}
+
+/*
+ * Completely hides an item
+ */
+.hidden {
+    pointer-events: none;
+    opacity: 0;
+}
