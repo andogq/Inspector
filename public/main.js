@@ -96,34 +96,37 @@ ui.addListener({
 
 // Set things up for the draggable menu
 let y0;
+let menuStart;
 let threshold = 0.3;
 ui.addListener({
-    el: "buttonTab",
+    el: "pullUpMenu",
     event: "touchstart",
     callback: (e) => {
         y0 = e.changedTouches[0].clientY;
+        menuStart = Number(window.getComputedStyle(ui.el.pullUpMenu).top.replace("px", ""));
     }
 });
 ui.addListener({
-    el: "buttonTab",
+    el: "pullUpMenu",
     event: "touchmove",
     callback: (e) => {
         let y = e.changedTouches[0].clientY;
+        let dy = y - y0;
 
-        if (ui.state != ui.states.pullUpMenuDrag) {
-            let dy = Math.abs(y0 - y);
+        if (ui.state != ui.states.pullUpMenuDrag && Math.abs(dy) > 10) ui.state = ui.states.pullUpMenuDrag;
 
-            if (dy > 10) ui.state = ui.states.pullUpMenuDrag;
-        }
         // Recheck because it may change
-        if (ui.state == ui.states.pullUpMenuDrag) ui.el.pullUpMenu.style.top = y + "px";
+        if (ui.state == ui.states.pullUpMenuDrag) {
+            ui.el.pullUpMenu.style.top = (menuStart + dy) + "px";
+        }
     }
 });
 ui.addListener({
-    el: "buttonTab",
+    el: "pullUpMenu",
     event: ["touchend", "touchcancel"],
     callback: (e) => {
-        if (e.changedTouches[0].clientY < ((1 - threshold) * document.body.clientHeight)) ui.state = ui.states.pullUpMenuExtended;
+        let menuTop = Number(window.getComputedStyle(ui.el.pullUpMenu).top.replace("px", ""));
+        if (menuTop < ((1 - threshold) * document.body.clientHeight)) ui.state = ui.states.pullUpMenuExtended;
         else ui.state = ui.states.pointMenu;
 
         // Remove any styling put in by the class

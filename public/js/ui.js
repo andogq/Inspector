@@ -18,7 +18,9 @@ class UI {
 
     addListener({el, event, callback, once}) {
         function cb(e) {
-            e.preventDefault();
+            // Deactivate the active element to hide the keyboard
+            document.activeElement.blur();
+            // Run the user supplied callback
             callback(e);
         }
         
@@ -35,6 +37,7 @@ class UI {
      * Manages the state changes
      */
     set state(newState) {
+        // if (newState == 1) debugger;
         if (typeof(newState) != "number" || newState >= Object.keys(this.states).length) return;
 
         let oldState = this._state;
