@@ -34,7 +34,8 @@ let ui = new UI({
         map: 0,
         pointMenu: 1,
         pullUpMenuDrag: 2,
-        pullUpMenuExtended: 3
+        pullUpMenuPopped: 3,
+        pullUpMenuExtended: 4
     },
     stateClasses: [
         { // Map
@@ -48,9 +49,13 @@ let ui = new UI({
             map: "faded",
             pullUpMenu: "drag"
         },
-        { // Pull up menu extended
+        { // Pull up menu popped
             map: "faded",
             pullUpMenu: "pop"
+        },
+        { // Pull up menu extended
+            map: "faded",
+            pullUpMenu: "extended"
         }
     ]
 });
@@ -64,7 +69,7 @@ ui.addListener({el: "map", event: "touchstart", callback: () => {
 }});
 
 ui.addListener({el: "report", event: "touchstart", callback: () => {
-    ui.state = ui.states.pullUpMenuExtended;
+    ui.state = ui.states.pullUpMenuPopped;
 }});
 
 ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
@@ -75,8 +80,10 @@ ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
 
 // Holds all the functions and variables for the menu
 let menu = {
-    minTop: 0.3, // Also defined in pullUpMenu.css
-    threshold: 0.65,
+    popped: 0.3, // Also defined in pullUpMenu.css
+    padding: 0.1,
+
+    moving: false,
 
     init: function() {
         ui.addListener({el: "pullUpMenu", event: "touchstart", callback: this.touchStart.bind(this)});
@@ -92,31 +99,44 @@ let menu = {
         let y = e.changedTouches[0].clientY;
         let dy = y - this.y0;
 
-        if (ui.state != ui.states.pullUpMenuDrag && Math.abs(dy) > 10) ui.state = ui.states.pullUpMenuDrag;
+        let container = ui.el("pullUpMenuContainer");
+        let scrollTop = container.scrollTop <= 0;
+        let scrollBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
+        let onButtonTab = e.path[0] == ui.el("buttonTab") || e.path[1] == ui.el("buttonTab");
 
-        // Recheck because it may change
-        if (ui.state == ui.states.pullUpMenuDrag) {
-            ui.el("pullUpMenu").style.top = (this.menuStart + dy) + "px";
+        if (!this.moving && Math.abs(dy) > 10) this.moving = true;
+
+        if (this.moving && (onButtonTab || scrollTop || scrollBottom)) {
+            let newTop = this.menuStart + dy;
+
+            if (newTop < this.padding * document.body.clientHeight) {
+                ui.state = ui.states.pullUpMenuExtended;
+                newTop = "";
+            } else if (newTop > (this.popped - this.padding) * document.body.clientHeight && newTop < (this.popped + this.padding) * document.body.clientHeight) {
+                ui.state = ui.states.pullUpMenuPopped;
+                newTop = "";
+            } else if (newTop > (1 - (this.padding * 2)) * document.body.clientHeight) {
+                ui.state = ui.states.pointMenu;
+                newTop = "";
+            } else {
+                ui.state = ui.states.pullUpMenuDrag;
+                newTop += "px";
+            }
+            
+            ui.el("pullUpMenu").style.top = newTop;
         }
     },
     touchEnd: function(e) {
-        // Current top of the menu
-        let menuTop = this.getMenuTop();
+        this.moving = false;
 
-        // If the top of the menu is above the threshold
-        if (menuTop < this.threshold * document.body.clientHeight) {
-            // Spring open
-            ui.state = ui.states.pullUpMenuExtended;
+        let top = Number(ui.el("pullUpMenu").style.top.replace("px", ""));
 
-            //* Set a custom top on the element if the user has dragged it up
-            // Minimum for menuTop
-            let minTopPx = this.minTop * document.body.clientHeight;
-            // Set to the smallest (closest to the top)
-            ui.el("pullUpMenu").style.top = menuTop > minTopPx ? "" : menuTop + "px";
-        } else {
-            // Snap shut, remove any styling put in by the class
-            ui.el("pullUpMenu").style.top = ""
+        if (top < (1 - (this.padding * 2)) * document.body.clientHeight && top > (this.popped + this.padding) * document.body.clientHeight) {
+            ui.el("pullUpMenu").style.top = "";
             ui.state = ui.states.pointMenu;
+        } else if (top < (this.popped - this.padding) * document.body.clientHeight && top > this.padding * document.body.clientHeight) {
+            ui.el("pullUpMenu").style.top = "";
+            ui.state = ui.states.pullUpMenuExtended;
         }
     },
 
@@ -126,7 +146,7 @@ let menu = {
 }
 menu.init();
 
-// ui.state = 3;
+ui.state = 3;
 
 // let data;
 // let xhr = new XMLHttpRequest();
