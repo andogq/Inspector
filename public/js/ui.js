@@ -1,5 +1,5 @@
 class UI {
-    constructor(elements, states, stateClasses) {
+    constructor(states, stateClasses) {
         /*
          * Constants
          */
@@ -8,9 +8,6 @@ class UI {
 
         // Classes to be added to each element for each state
         this.stateClasses = stateClasses;
-
-        // Save the elements
-        this.el = elements;
 
         // Set the initial state
         this.state = this.states.map;
@@ -30,8 +27,15 @@ class UI {
         else if (Array.isArray(el)) el.forEach((e) => {
             this.addListener({el: e, event, callback: cb, once});
         });
-        else this.el[el].addEventListener(event, cb, once == undefined ? false : once);
+        else this.el(el).addEventListener(event, cb, once == undefined ? false : once);
     }
+
+    /*
+     * Retreieves elements
+     */
+    el(id) {
+        return document.getElementById(id);
+    } 
 
     /*
      * Manages the state changes
@@ -47,7 +51,7 @@ class UI {
             let oldClasses = this.stateClasses[oldState];
             Object.keys(oldClasses).forEach((el) => {
                 let c = typeof(oldClasses[el]) == "string" ? [oldClasses[el]] : oldClasses[el];
-                this.el[el].classList.remove(c);
+                this.el(el).classList.remove(c);
             });
         }
 
@@ -55,7 +59,7 @@ class UI {
         let newClasses = this.stateClasses[newState];
         Object.keys(newClasses).forEach((el) => {
             let c = typeof(newClasses[el]) == "string" ? [newClasses[el]] : newClasses[el];
-            this.el[el].classList.add(...c);
+            this.el(el).classList.add(...c);
         });
         
         this._state = newState;

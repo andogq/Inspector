@@ -53,15 +53,7 @@ let stateClasses = [
     }
 ];
 
-let ui = new UI({
-    map: document.getElementById("map"),
-    centerPoint: document.getElementById("centerPoint"),
-    pointMenu: document.getElementById("pointMenu"),
-    pullUpMenu: document.getElementById("pullUpMenu"),
-    buttonTab: document.getElementById("buttonTab"),
-    report: document.getElementById("report"),
-    amount: document.getElementById("amount")
-}, states, stateClasses);
+let ui = new UI(states, stateClasses);
 
 ui.addListener({
     el: "centerPoint",
@@ -88,9 +80,9 @@ ui.addListener({
     el: "amount",
     event: "touchstart",
     callback: (e) => {
-        let selected = ui.el.amount.getElementsByClassName("selected");
+        let selected = ui.el("amount").getElementsByClassName("selected");
         if (selected.length > 0) selected[0].classList.remove("selected");
-        if (e.path[0] != ui.el.amount) e.path[0].classList.add("selected");
+        if (e.path[0] != ui.el("amount")) e.path[0].classList.add("selected");
     }
 });
 
@@ -104,7 +96,7 @@ ui.addListener({
     event: "touchstart",
     callback: (e) => {
         y0 = e.changedTouches[0].clientY;
-        menuStart = Number(window.getComputedStyle(ui.el.pullUpMenu).top.replace("px", ""));
+        menuStart = Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
     }
 });
 ui.addListener({
@@ -118,7 +110,7 @@ ui.addListener({
 
         // Recheck because it may change
         if (ui.state == ui.states.pullUpMenuDrag) {
-            ui.el.pullUpMenu.style.top = (menuStart + dy) + "px";
+            ui.el("pullUpMenu").style.top = (menuStart + dy) + "px";
         }
     }
 });
@@ -127,7 +119,7 @@ ui.addListener({
     event: ["touchend", "touchcancel"],
     callback: (e) => {
         // Current top of the menu
-        let menuTop = Number(window.getComputedStyle(ui.el.pullUpMenu).top.replace("px", ""));
+        let menuTop = Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
 
         // If the top of the menu is above the threshold
         if (menuTop < threshold * document.body.clientHeight) {
@@ -138,10 +130,10 @@ ui.addListener({
             // Minimum for menuTop
             let minTopPx = minTop * document.body.clientHeight;
             // Set to the smallest (closest to the top)
-            ui.el.pullUpMenu.style.top = (menuTop > minTopPx ? minTopPx : menuTop) + "px";
+            ui.el("pullUpMenu").style.top = (menuTop > minTopPx ? minTopPx : menuTop) + "px";
         } else {
             // Snap shut, remove any styling put in by the class
-            ui.el.pullUpMenu.style.top = ""
+            ui.el("pullUpMenu").style.top = ""
             ui.state = ui.states.pointMenu;
         }
     }
