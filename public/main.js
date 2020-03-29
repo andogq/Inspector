@@ -97,7 +97,8 @@ ui.addListener({
 // Set things up for the draggable menu
 let y0;
 let menuStart;
-let threshold = 0.3;
+let threshold = 0.65;
+let minTop = 0.3;
 ui.addListener({
     el: "pullUpMenu",
     event: "touchstart",
@@ -125,12 +126,24 @@ ui.addListener({
     el: "pullUpMenu",
     event: ["touchend", "touchcancel"],
     callback: (e) => {
+        // Current top of the menu
         let menuTop = Number(window.getComputedStyle(ui.el.pullUpMenu).top.replace("px", ""));
-        if (menuTop < ((1 - threshold) * document.body.clientHeight)) ui.state = ui.states.pullUpMenuExtended;
-        else ui.state = ui.states.pointMenu;
 
-        // Remove any styling put in by the class
-        ui.el.pullUpMenu.style.top = ""
+        // If the top of the menu is above the threshold
+        if (menuTop < threshold * document.body.clientHeight) {
+            // Spring open
+            ui.state = ui.states.pullUpMenuExtended;
+
+            //* Set a custom top on the element if the user has dragged it up
+            // Minimum for menuTop
+            let minTopPx = minTop * document.body.clientHeight;
+            // Set to the smallest (closest to the top)
+            ui.el.pullUpMenu.style.top = (menuTop > minTopPx ? minTopPx : menuTop) + "px";
+        } else {
+            // Snap shut, remove any styling put in by the class
+            ui.el.pullUpMenu.style.top = ""
+            ui.state = ui.states.pointMenu;
+        }
     }
 });
 

@@ -38,6 +38,7 @@
  * When the menu is fully out
  */
 #pullUpMenu.pop {
+    /* Will be overwritten when the user drags the menu */
     top: 30%;
 }
 
