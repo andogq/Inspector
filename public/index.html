@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="css/classes.css"/>
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="css/map.css"/>
+    <link rel="stylesheet" href="css/page.css"/>
     <link rel="stylesheet" href="css/pullUpMenu.css"/>
+    <link rel="stylesheet" href="css/report.css"/>
 </head>
 <body>
     <div id="map"></div>
@@ -32,7 +34,31 @@
         </div>
         
         <div id="pullUpMenuContainer">
-            <h1>Report</h1>
+            <div id="reportPage" class="page">
+                <h1>Report Inspectors</h1>
+                <div class="row">
+                    <h2 class="text">Amount:</h2>
+                    <div id="amount" class="selection">
+                        <div>1</div>
+                        <div>2</div>
+                        <div>3</div>
+                        <div>4+</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h2 class="text">Location:</h2>
+                    <input type="text" id="location" placeholder="Location">
+                </div>
+                <div class="row">
+                    <h2 class="text">Direction:</h2>
+                    <input type="text" id="direction" placeholder="Direction">
+                </div>
+                <div class="row">
+                    <h2 class="text">Time:</h2>
+                    <input type="time" id="time" value="02:03"/>
+                </div>
+                <div id="submit">Report</div>
+            </div>
         </div>
     </div>
     

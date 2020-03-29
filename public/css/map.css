@@ -19,7 +19,7 @@
     border-radius: 100%;
     border: calc(var(--unit) / 10) solid white;
 
-    background: var(--green);
+    background: var(--mediumblue);
 }
 
 /*
@@ -47,5 +47,5 @@
 }
 
 #recenter {
-    color: var(--green);
+    color: var(--grey);
 }

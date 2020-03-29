@@ -58,7 +58,9 @@ let ui = new UI({
     centerPoint: document.getElementById("centerPoint"),
     pointMenu: document.getElementById("pointMenu"),
     pullUpMenu: document.getElementById("pullUpMenu"),
-    buttonTab: document.getElementById("buttonTab")
+    buttonTab: document.getElementById("buttonTab"),
+    report: document.getElementById("report"),
+    amount: document.getElementById("amount")
 }, states, stateClasses);
 
 ui.addListener({
@@ -73,6 +75,22 @@ ui.addListener({
     event: "touchstart",
     callback: () => {
         ui.state = ui.states.map;
+    }
+});
+ui.addListener({
+    el: "report",
+    event: "touchstart",
+    callback: () => {
+        ui.state = ui.states.pullUpMenuExtended;
+    }
+});
+ui.addListener({
+    el: "amount",
+    event: "touchstart",
+    callback: (e) => {
+        let selected = ui.el.amount.getElementsByClassName("selected");
+        if (selected.length > 0) selected[0].classList.remove("selected");
+        if (e.path[0] != ui.el.amount) e.path[0].classList.add("selected");
     }
 });
 

@@ -4,9 +4,11 @@
 :root {
     --unit: 5vmin;
     --transition: 250ms ease-out;
-    --green: #16a085;
-    --red: #e74c3c;
-    --lightblue: #3498db;
+    --red: #eb4d4b;
+    --lightblue: #7ed6df;
+    --mediumblue: #22a6b3;
+    --darkblue: #30336b;
+    --grey: #535c68;
     --white: #ecf0f1;
 }
 
@@ -17,6 +19,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    user-select: none;
 
     font-family: "Open Sans";
 
