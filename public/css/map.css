@@ -17,9 +17,9 @@
     width: calc(var(--unit) * 1.5);
 
     border-radius: 100%;
-    border: calc(var(--unit) / 10) solid white;
+    border: calc(var(--unit) / 10) solid var(--white);
 
-    background: var(--mediumblue);
+    background: var(--main);
 }
 
 /*
@@ -43,9 +43,9 @@
 }
 
 #report {
-    color: var(--red);
+    color: var(--accent);
 }
 
 #recenter {
-    color: var(--grey);
+    color: var(--main);
 }

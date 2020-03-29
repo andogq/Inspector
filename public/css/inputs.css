@@ -1,0 +1,69 @@
+/*
+ * Things common amoung all inputs
+ */
+input, .input {
+    width: 100%;
+    height: calc(var(--unit) * 2.5);   
+
+    background: var(--white);
+    font-size: calc(var(--unit) * 0.75);
+    --border: 2px solid var(--darker);
+}
+
+/*
+ * Selection elements
+ */
+.selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    border-bottom: var(--border);
+    border-left: var(--border);
+}
+
+.selection > * {
+    /* Ensure all items are the same width */
+    flex-grow: 1;
+    flex-basis: 0;
+
+
+    /* Center text in the cell */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-top: var(--border);
+    border-right: var(--border);
+}
+
+.selection > .selected {
+    background: var(--accent);
+    color: white;
+}
+
+/*
+ * Input elements
+ */
+input {
+    border: var(--border);
+    padding: calc(var(--unit) / 2);
+}
+input:focus {
+    outline: none;
+    border: 2px solid var(--accent);
+}
+
+/*
+ * Input button elements
+ */
+input[type="button"] {
+    margin-top: var(--unit);
+}
+input[type="button"]:focus {
+    border: var(--border);
+}
+input[type="button"]:active {
+    background: var(--accent);
+    color: white;
+}

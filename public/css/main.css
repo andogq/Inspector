@@ -4,11 +4,19 @@
 :root {
     --unit: 5vmin;
     --transition: 250ms ease-out;
-    --red: #eb4d4b;
-    --lightblue: #7ed6df;
-    --mediumblue: #22a6b3;
-    --darkblue: #30336b;
-    --grey: #535c68;
+    /* --red: #eb4d4b;
+    --orange: #fa983a;
+    --lightblue: #38ada9;
+    --mediumblue: #4a69bd;
+    --darkblue: #0a3d62;
+    --grey: #95afc0;
+    --white: #ecf0f1; */
+
+    --main: #4E8098;
+    --dark: #04395E;
+    --darker: #031D44;
+    --accent: #D66540;
+    --accentLight: #DAB785;
     --white: #ecf0f1;
 }
 

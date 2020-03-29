@@ -1,0 +1,17 @@
+.page > h1 {
+    font-size: calc(var(--unit) * 1.75);
+    color: var(--accent);
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.row > .text {
+    color: var(--dark);
+    font-size: calc(var(--unit) * 0.75);
+    font-weight: normal;
+}

@@ -7,6 +7,8 @@
     bottom: 0;
     width: 100%;
 
+    overflow: hidden;
+
     border-radius: var(--unit) var(--unit) 0 0;
     background: var(--white);
 }
@@ -50,13 +52,13 @@
     justify-content: space-evenly;
     align-items: center;
 
-    color: var(--grey);
+    background: var(--white);
+    color: var(--darker);
 }
 
 /*
  * The container containing everything in the menu
  */
 #pullUpMenuContainer {
-    border-top: 1px solid var(--grey);
     margin: 0 var(--unit);
 }
