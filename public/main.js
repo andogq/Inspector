@@ -33,9 +33,7 @@ let ui = new UI({
     states: {
         map: 0,
         pointMenu: 1,
-        pullUpMenuDrag: 2,
-        pullUpMenuPopped: 3,
-        pullUpMenuExtended: 4
+        reportPage: 2
     },
     stateClasses: [
         { // Map
@@ -45,17 +43,9 @@ let ui = new UI({
             map: "faded",
             pullUpMenu: "peek"
         },
-        { // Pull up menu drag
-            map: "faded",
-            pullUpMenu: "drag"
-        },
-        { // Pull up menu popped
+        { // Report page
             map: "faded",
             pullUpMenu: "pop"
-        },
-        { // Pull up menu extended
-            map: "faded",
-            pullUpMenu: "extended"
         }
     ]
 });
@@ -69,7 +59,7 @@ ui.addListener({el: "map", event: "touchstart", callback: () => {
 }});
 
 ui.addListener({el: "report", event: "touchstart", callback: () => {
-    ui.state = ui.states.pullUpMenuPopped;
+    ui.state = ui.states.reportPage;
 }});
 
 ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
@@ -84,6 +74,7 @@ let menu = {
     padding: 0.1,
 
     moving: false,
+    state: "peek",
 
     init: function() {
         ui.addListener({el: "pullUpMenu", event: "touchstart", callback: this.touchStart.bind(this)});
@@ -110,16 +101,16 @@ let menu = {
             let newTop = this.menuStart + dy;
 
             if (newTop < this.padding * document.body.clientHeight) {
-                ui.state = ui.states.pullUpMenuExtended;
+                this.setState("extended");
                 newTop = "";
             } else if (newTop > (this.popped - this.padding) * document.body.clientHeight && newTop < (this.popped + this.padding) * document.body.clientHeight) {
-                ui.state = ui.states.pullUpMenuPopped;
+                this.setState("pop");
                 newTop = "";
             } else if (newTop > (1 - (this.padding * 2)) * document.body.clientHeight) {
-                ui.state = ui.states.pointMenu;
+                this.setState("peek");
                 newTop = "";
             } else {
-                ui.state = ui.states.pullUpMenuDrag;
+                this.setState("drag");
                 newTop += "px";
             }
             
@@ -132,21 +123,32 @@ let menu = {
         let top = Number(ui.el("pullUpMenu").style.top.replace("px", ""));
 
         if (top < (1 - (this.padding * 2)) * document.body.clientHeight && top > (this.popped + this.padding) * document.body.clientHeight) {
+            this.setState("peek");
             ui.el("pullUpMenu").style.top = "";
-            ui.state = ui.states.pointMenu;
         } else if (top < (this.popped - this.padding) * document.body.clientHeight && top > this.padding * document.body.clientHeight) {
+            this.setState("extended");
             ui.el("pullUpMenu").style.top = "";
-            ui.state = ui.states.pullUpMenuExtended;
         }
     },
 
-    getMenuTop() {
+    getMenuTop: function() {
         return Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
+    },
+
+    setState: function(newState) {
+        // Change the state of the UI if needed
+        if (newState == "peek" && ui.state != ui.states.pointMenu) ui.state = ui.states.pointMenu;
+        else if (newState != "peek" && ui.state != ui.states.reportPage) ui.state = ui.states.reportPage;
+
+        let el = ui.el("pullUpMenu");
+        el.classList.remove(this.state);
+        el.classList.add(newState);
+        this.state = newState;
     }
 }
 menu.init();
 
-ui.state = 3;
+// ui.state = 3;
 
 // let data;
 // let xhr = new XMLHttpRequest();
