@@ -79,3 +79,12 @@
 #pullUpMenu.extended > #pullUpMenuContainer {
     overflow-y: scroll;
 }
+
+/*
+ * The line between the buttons and the page
+ */
+#pullUpMenu > hr {
+    /* width: 90%; */
+    margin: 1% 0;
+    border: 2px solid var(--accentLight);
+}
