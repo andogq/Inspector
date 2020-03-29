@@ -1,5 +1,5 @@
 class UI {
-    constructor(states, stateClasses) {
+    constructor({states, stateClasses}) {
         /*
          * Constants
          */
