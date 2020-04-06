@@ -51,7 +51,7 @@ class UI {
             let oldClasses = this.stateClasses[oldState];
             Object.keys(oldClasses).forEach((el) => {
                 let c = typeof(oldClasses[el]) == "string" ? [oldClasses[el]] : oldClasses[el];
-                this.el(el).classList.remove(c);
+                this.el(el).classList.remove(...c);
             });
         }
 

@@ -33,8 +33,9 @@ let ui = new UI({
     states: {
         map: 0,
         pointMenu: 1,
-        reportPage: 2,
-        accountPage: 3
+        menuOpen: 2,
+        menuDrag: 3,
+        menuExtended: 4
     },
     stateClasses: [
         { // Map
@@ -42,16 +43,33 @@ let ui = new UI({
         },
         { // Point menu
             map: "faded",
-            pullUpMenu: "peek"
+            pullUpMenu: "active"
         },
-        { // Report page
+        { // Menu open
             map: "faded",
-            pullUpMenu: "pop",
+            pullUpMenu: ["active", "open"]
+        },
+        { // Menu drag
+            map: "faded",
+            pullUpMenu: ["active", "drag"]
+        },
+        { // Menu extended
+            map: "faded",
+            pullUpMenu: ["active", "extended"]
+        }
+    ]
+});
+
+let menu = new UI({
+    states: {
+        report: 0,
+        account: 1
+    },
+    stateClasses: [
+        { // Report
             reportPage: "show"
         },
-        { // Account page
-            map: "faded",
-            pullUpMenu: "pop",
+        { // Account
             accountPage: "show"
         }
     ]
@@ -66,13 +84,13 @@ ui.addListener({el: "map", event: "touchstart", callback: () => {
 }});
 
 ui.addListener({el: "report", event: "touchstart", callback: () => {
-    ui.state = ui.states.reportPage;
-    menu.state = "pop"
+    menu.state = menu.states.report;
+    ui.state = ui.states.menuOpen;
 }});
 
 ui.addListener({el: "account", event: "touchstart", callback: () => {
-    ui.state = ui.states.accountPage;
-    menu.state = "pop"
+    menu.state = menu.states.account;
+    ui.state = ui.states.menuOpen;
 }});
 
 ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
@@ -82,84 +100,83 @@ ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
 }});
 
 // Holds all the functions and variables for the menu
-let menu = {
-    popped: 0.3, // Also defined in pullUpMenu.css
-    padding: 0.1,
+// let menu = {
+//     openOffset: 0.3, // Also defined in pullUpMenu.css
+//     padding: 0.1,
 
-    moving: false,
-    state: "peek",
+//     moving: false,
+//     state: "peek",
 
-    init: function() {
-        ui.addListener({el: "pullUpMenu", event: "touchstart", callback: this.touchStart.bind(this)});
-        ui.addListener({el: "pullUpMenu", event: "touchmove", callback: this.touchMove.bind(this)});
-        ui.addListener({el: "pullUpMenu", event: ["touchend", "touchcancel"], callback: this.touchEnd.bind(this)});
-    },
+//     init: function() {
+//         ui.addListener({el: "pullUpMenu", event: "touchstart", callback: this.touchStart.bind(this)});
+//         ui.addListener({el: "pullUpMenu", event: "touchmove", callback: this.touchMove.bind(this)});
+//         ui.addListener({el: "pullUpMenu", event: ["touchend", "touchcancel"], callback: this.touchEnd.bind(this)});
+//     },
 
-    touchStart: function(e) {
-        this.y0 = e.changedTouches[0].clientY;
-        this.menuStart = this.getMenuTop();
-    },
-    touchMove: function(e) {
-        let y = e.changedTouches[0].clientY;
-        let dy = y - this.y0;
+//     touchStart: function(e) {
+//         this.y0 = e.changedTouches[0].clientY;
+//         this.menuStart = this.getMenuTop();
+//     },
+//     touchMove: function(e) {
+//         let y = e.changedTouches[0].clientY;
+//         let dy = y - this.y0;
 
-        let container = ui.el("pullUpMenuContainer");
-        let scrollTop = container.scrollTop <= 0;
-        let scrollBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
-        let onButtonTab = e.path[0] == ui.el("buttonTab") || e.path[1] == ui.el("buttonTab");
+//         let container = ui.el("pullUpMenuContainer");
+//         let scrollTop = container.scrollTop <= 0;
+//         let scrollBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
+//         let onButtonTab = e.path[0] == ui.el("buttonTab") || e.path[1] == ui.el("buttonTab");
 
-        if (!this.moving && this.state != "peek" && Math.abs(dy) > 10) this.moving = true;
+//         if (!this.moving && this.state != "peek" && Math.abs(dy) > 10) this.moving = true;
 
-        if (this.moving && (onButtonTab || scrollTop || scrollBottom)) {
-            let newTop = this.menuStart + dy;
+//         if (this.moving && (onButtonTab || scrollTop || scrollBottom)) {
+//             let newTop = this.menuStart + dy;
 
-            if (newTop < this.padding * document.body.clientHeight) {
-                this.setState("extended");
-                newTop = "";
-            } else if (newTop > (this.popped - this.padding) * document.body.clientHeight && newTop < (this.popped + this.padding) * document.body.clientHeight) {
-                this.setState("pop");
-                newTop = "";
-            } else if (newTop > (1 - (this.padding * 2)) * document.body.clientHeight) {
-                this.setState("peek");
-                newTop = "";
-            } else {
-                this.setState("drag");
-                newTop += "px";
-            }
+//             if (newTop < this.padding * document.body.clientHeight) {
+//                 this.setState("extended");
+//                 newTop = "";
+//             } else if (newTop > (this.openOffset - this.padding) * document.body.clientHeight && newTop < (this.openOffset + this.padding) * document.body.clientHeight) {
+//                 this.setState("open");
+//                 newTop = "";
+//             } else if (newTop > (1 - (this.padding * 2)) * document.body.clientHeight) {
+//                 this.setState("peek");
+//                 newTop = "";
+//             } else {
+//                 this.setState("drag");
+//                 newTop += "px";
+//             }
             
-            ui.el("pullUpMenu").style.top = newTop;
-        }
-    },
-    touchEnd: function(e) {
-        this.moving = false;
+//             ui.el("pullUpMenu").style.top = newTop;
+//         }
+//     },
+//     touchEnd: function(e) {
+//         this.moving = false;
 
-        let top = Number(ui.el("pullUpMenu").style.top.replace("px", ""));
+//         let top = Number(ui.el("pullUpMenu").style.top.replace("px", ""));
 
-        if (top < (1 - (this.padding * 2)) * document.body.clientHeight && top > (this.popped + this.padding) * document.body.clientHeight) {
-            this.setState("peek");
-            ui.el("pullUpMenu").style.top = "";
-        } else if (top < (this.popped - this.padding) * document.body.clientHeight && top > this.padding * document.body.clientHeight) {
-            this.setState("extended");
-            ui.el("pullUpMenu").style.top = "";
-        }
-    },
+//         if (top < (1 - (this.padding * 2)) * document.body.clientHeight && top > (this.openOffset + this.padding) * document.body.clientHeight) {
+//             this.setState("peek");
+//             ui.el("pullUpMenu").style.top = "";
+//         } else if (top < (this.openOffset - this.padding) * document.body.clientHeight && top > this.padding * document.body.clientHeight) {
+//             this.setState("extended");
+//             ui.el("pullUpMenu").style.top = "";
+//         }
+//     },
 
-    getMenuTop: function() {
-        return Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
-    },
+//     getMenuTop: function() {
+//         return Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
+//     },
 
-    setState: function(newState) {
-        // Change the state of the UI if needed
-        if (newState == "peek" && ui.state != ui.states.pointMenu) ui.state = ui.states.pointMenu;
-        // else if (newState != "peek" && ui.state != ui.states.reportPage) ui.state = ui.states.reportPage;
+//     setState: function(newState) {
+//         // Change the state of the UI if needed
+//         if (newState == "peek" && ui.state != ui.states.pointMenu) ui.state = ui.states.pointMenu;
 
-        let el = ui.el("pullUpMenu");
-        el.classList.remove(this.state);
-        el.classList.add(newState);
-        this.state = newState;
-    }
-}
-menu.init();
+//         let el = ui.el("pullUpMenu");
+//         el.classList.remove(this.state);
+//         el.classList.add(newState);
+//         this.state = newState;
+//     }
+// }
+// menu.init();
 
 // ui.state = 3;
 

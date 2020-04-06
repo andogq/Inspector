@@ -13,31 +13,28 @@
     background: var(--white);
 }
 
-/*
- * Box shadow for when the menu isn't hidden
- */
-#pullUpMenu.peek, #pullUpMenu.drag, #pullUpMenu.pop {
-    box-shadow: 0 0 var(--unit);
+#pullUpMenu.active {
+    top: calc(100% - (var(--unit) * 3));
 }
 
 /*
- * When only the menu icons are showing
+ * Box shadow for when the menu isn't hidden
  */
-#pullUpMenu.peek {
-    top: calc(100% - (var(--unit) * 3));
+#pullUpMenu.active, #pullUpMenu.active.drag, #pullUpMenu.active.open {
+    box-shadow: 0 0 var(--unit);
 }
 
 /*
  * When the menu is being dragged
  */
-#pullUpMenu.drag {
+#pullUpMenu.active.drag {
     transition: none;
 }
 
 /*
  * When the menu is part out
  */
-#pullUpMenu.pop {
+#pullUpMenu.active.open {
     /* Will be overwritten when the user drags the menu */
     top: 30%;
 }
@@ -45,7 +42,7 @@
 /*
  * When the menu is fully out
  */
-#pullUpMenu.extended {
+#pullUpMenu.active.extended {
     /* Will be overwritten when the user drags the menu */
     top: 0;
 }
