@@ -33,7 +33,8 @@ let ui = new UI({
     states: {
         map: 0,
         pointMenu: 1,
-        reportPage: 2
+        reportPage: 2,
+        accountPage: 3
     },
     stateClasses: [
         { // Map
@@ -45,7 +46,13 @@ let ui = new UI({
         },
         { // Report page
             map: "faded",
-            pullUpMenu: "pop"
+            pullUpMenu: "pop",
+            reportPage: "show"
+        },
+        { // Account page
+            map: "faded",
+            pullUpMenu: "pop",
+            accountPage: "show"
         }
     ]
 });
@@ -60,6 +67,12 @@ ui.addListener({el: "map", event: "touchstart", callback: () => {
 
 ui.addListener({el: "report", event: "touchstart", callback: () => {
     ui.state = ui.states.reportPage;
+    menu.state = "pop"
+}});
+
+ui.addListener({el: "account", event: "touchstart", callback: () => {
+    ui.state = ui.states.accountPage;
+    menu.state = "pop"
 }});
 
 ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
@@ -95,7 +108,7 @@ let menu = {
         let scrollBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
         let onButtonTab = e.path[0] == ui.el("buttonTab") || e.path[1] == ui.el("buttonTab");
 
-        if (!this.moving && Math.abs(dy) > 10) this.moving = true;
+        if (!this.moving && this.state != "peek" && Math.abs(dy) > 10) this.moving = true;
 
         if (this.moving && (onButtonTab || scrollTop || scrollBottom)) {
             let newTop = this.menuStart + dy;
@@ -138,7 +151,7 @@ let menu = {
     setState: function(newState) {
         // Change the state of the UI if needed
         if (newState == "peek" && ui.state != ui.states.pointMenu) ui.state = ui.states.pointMenu;
-        else if (newState != "peek" && ui.state != ui.states.reportPage) ui.state = ui.states.reportPage;
+        // else if (newState != "peek" && ui.state != ui.states.reportPage) ui.state = ui.states.reportPage;
 
         let el = ui.el("pullUpMenu");
         el.classList.remove(this.state);
