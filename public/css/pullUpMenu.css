@@ -3,48 +3,15 @@
  */
 #pullUpMenu {
     position: fixed;
-    top: 100%;
+    top: calc(100% - (var(--unit) * 3));
     bottom: 0;
     width: 100%;
-
+    
     overflow: hidden;
-
+    
     border-radius: var(--unit) var(--unit) 0 0;
-    background: var(--white);
-}
-
-#pullUpMenu.active {
-    top: calc(100% - (var(--unit) * 3));
-}
-
-/*
- * Box shadow for when the menu isn't hidden
- */
-#pullUpMenu.active, #pullUpMenu.active.drag, #pullUpMenu.active.open {
     box-shadow: 0 0 var(--unit);
-}
-
-/*
- * When the menu is being dragged
- */
-#pullUpMenu.active.drag {
-    transition: none;
-}
-
-/*
- * When the menu is part out
- */
-#pullUpMenu.active.open {
-    /* Will be overwritten when the user drags the menu */
-    top: 30%;
-}
-
-/*
- * When the menu is fully out
- */
-#pullUpMenu.active.extended {
-    /* Will be overwritten when the user drags the menu */
-    top: 0;
+    background: var(--white);
 }
 
 /*
@@ -70,10 +37,6 @@
     overflow-y: hidden;
 
     padding: 0 var(--unit) var(--unit);
-}
-
-#pullUpMenu.extended > #pullUpMenuContainer {
-    overflow-y: scroll;
 }
 
 /*

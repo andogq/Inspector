@@ -32,6 +32,9 @@
     width: fit-content;
     transform: translate(-50%, 0);
     text-align: center;
+
+    pointer-events: none;
+    opacity: 0;
 }
 
 /*

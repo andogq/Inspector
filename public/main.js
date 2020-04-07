@@ -29,151 +29,114 @@ geo.on("change", () => {
     }, 1);
 });
 
-let ui = new UI({
-    states: {
-        map: 0,
-        pointMenu: 1,
-        menuOpen: 2,
-        menuDrag: 3,
-        menuExtended: 4
-    },
-    stateClasses: [
-        { // Map
-            pointMenu: "hidden"
-        },
-        { // Point menu
-            map: "faded",
-            pullUpMenu: "active"
-        },
-        { // Menu open
-            map: "faded",
-            pullUpMenu: ["active", "open"]
-        },
-        { // Menu drag
-            map: "faded",
-            pullUpMenu: ["active", "drag"]
-        },
-        { // Menu extended
-            map: "faded",
-            pullUpMenu: ["active", "extended"]
-        }
-    ]
-});
 
-let menu = new UI({
-    states: {
-        report: 0,
-        account: 1
-    },
-    stateClasses: [
-        { // Report
-            reportPage: "show"
-        },
-        { // Account
-            accountPage: "show"
-        }
-    ]
-});
 
-ui.addListener({el: "centerPoint", event: "touchstart", callback: () => {
-    ui.state = ui.states.pointMenu;
-}});
-
-ui.addListener({el: "map", event: "touchstart", callback: () => {
-    ui.state = ui.states.map;
-}});
-
-ui.addListener({el: "report", event: "touchstart", callback: () => {
-    menu.state = menu.states.report;
-    ui.state = ui.states.menuOpen;
-}});
-
-ui.addListener({el: "account", event: "touchstart", callback: () => {
-    menu.state = menu.states.account;
-    ui.state = ui.states.menuOpen;
-}});
-
-ui.addListener({el: "amount", event: "touchstart", callback: (e) => {
-    let selected = ui.el("amount").getElementsByClassName("selected");
-    if (selected.length > 0) selected[0].classList.remove("selected");
-    if (e.path[0] != ui.el("amount")) e.path[0].classList.add("selected");
-}});
-
-// Holds all the functions and variables for the menu
-let menuDrag = {
-    openOffset: 0.3, // Also defined in pullUpMenu.css
-    padding: 0.1,
-
-    moving: false,
-
+let menu = {
     init: function() {
-        ui.addListener({el: "pullUpMenu", event: "touchstart", callback: this.touchStart.bind(this)});
-        ui.addListener({el: "pullUpMenu", event: "touchmove", callback: this.touchMove.bind(this)});
-        ui.addListener({el: "pullUpMenu", event: ["touchend", "touchcancel"], callback: this.touchEnd.bind(this)});
+        // Elements used in the menu
+        this.menu = document.getElementById("pullUpMenu");
+        this.container = document.getElementById("pullUpMenuContainer");
+        
+        // Start touch position of the input
+        this.startY = 0;
+        // The top offset of the menu element when it's minimised
+        this.maxY = this.getTop();
+        // Offset between finger and top of menu
+        this.offset = 0;
+        // Distance that must be travelled before the menu starts to move
+        this.threshold = 10;
+        // Keeps track of if the menu is being dragged, to keep things smooth
+        this.moving = false;
+
+        // Positions for the menu to snap to as it's dragged
+        this.snap = [0, 0.3 * document.body.clientHeight, this.maxY];
+
+        // Add event listeners for the different touch events
+        this.menu.addEventListener("touchstart", this.touchStart.bind(this));
+        this.menu.addEventListener("touchmove", this.touchMove.bind(this));
+        this.menu.addEventListener("touchend", this.touchEnd.bind(this));
+        this.menu.addEventListener("touchcancel", this.touchEnd.bind(this));
     },
 
     touchStart: function(e) {
-        this.y0 = e.changedTouches[0].clientY;
-        this.menuStart = this.getMenuTop();
+        // Save the original touch position of the input
+        this.startY = e.changedTouches[0].clientY;
+        // Save the distance of the input from the top of the menu
+        this.offset = this.getTop() - this.startY;
+        // Stop CSS transitions to keep things smooth
+        this.menu.style.transition = "none";
     },
     touchMove: function(e) {
-        let y = e.changedTouches[0].clientY;
-        let dy = y - this.y0;
+        // Get distance moved from original touch
+        let newY = e.changedTouches[0].clientY;
+        let dy = newY - this.startY;
 
-        let container = ui.el("pullUpMenuContainer");
-        let scrollTop = container.scrollTop <= 0;
-        let scrollBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
-        let onButtonTab = e.path[0] == ui.el("buttonTab") || e.path[1] == ui.el("buttonTab");
-
-        if (!this.moving && ui.state != ui.states.pointMenu && Math.abs(dy) > 10) this.moving = true;
-
-        if (this.moving && (onButtonTab || scrollTop || scrollBottom)) {
-            let newTop = this.menuStart + dy;
-
-            if (newTop < this.padding * document.body.clientHeight) {
-                this.setState(ui.states.menuExtended);
-                newTop = "";
-            } else if (newTop > (this.openOffset - this.padding) * document.body.clientHeight && newTop < (this.openOffset + this.padding) * document.body.clientHeight) {
-                this.setState(ui.states.menuOpen);
-                newTop = "";
-            } else if (newTop > (1 - (this.padding * 2)) * document.body.clientHeight) {
-                this.setState(ui.states.pointMenu);
-                newTop = "";
-            } else {
-                this.setState(ui.states.menuDrag);
-                newTop += "px";
-            }
+        // If it has been far enough to move, and the container are scrolled to the top
+        if ((Math.abs(dy) > this.threshold || this.moving) && this.container.scrollTop == 0) {
+            // The menu is now dragging
+            this.moving = true;
             
-            ui.el("pullUpMenu").style.top = newTop;
+            // The new top position for the menu
+            let newTop = this.startY + this.offset + dy;
+            if (newTop <= 0) {
+                // Fully extended
+                newTop = 0;
+                this.container.style.overflowY = "scroll";
+            } else if (newTop >= this.maxY) {
+                // Minimised
+                newTop = this.maxY;
+            } else this.container.style.overflowY = "";
+
+            // Set the new top position
+            this.menu.style.top = newTop + "px";
         }
     },
     touchEnd: function(e) {
+        // Start transitions again
+        this.menu.style.transition = "";
+        // Menu no longer moving
         this.moving = false;
 
-        let top = Number(ui.el("pullUpMenu").style.top.replace("px", ""));
+        // Calculate the current position of the menu
+        let newY = e.changedTouches[0].clientY;
+        let dy = newY - this.startY;
+        let pos = this.startY + this.offset + dy;
 
-        if (top < (1 - (this.padding * 2)) * document.body.clientHeight && top > (this.openOffset + this.padding) * document.body.clientHeight) {
-            this.setState(ui.states.pointMenu);
-            ui.el("pullUpMenu").style.top = "";
-        } else if (top < (this.openOffset - this.padding) * document.body.clientHeight && top > this.padding * document.body.clientHeight) {
-            this.setState(ui.states.menuExtended);
-            ui.el("pullUpMenu").style.top = "";
-        }
+        // Find the closest snap point and move the menu to it
+        pos = this.snap[this.getClosestSnap(pos)];
+
+        // Set the final top position
+        this.menu.style.top = pos + "px";
     },
 
-    getMenuTop: function() {
-        return Number(window.getComputedStyle(ui.el("pullUpMenu")).top.replace("px", ""));
+    getTop: function() {
+        return Number(window.getComputedStyle(this.menu).top.replace("px", ""));
     },
 
-    setState: function(newState) {
-        // Change the state of the UI if needed
-        if (newState == "peek" && ui.state != ui.states.pointMenu) ui.state = ui.states.pointMenu;
-        else ui.state = newState;
+    getClosestSnap: function(y) {
+        let distance = Infinity;
+        let closest;
+        this.snap.forEach((p, i) => {
+            if (Math.abs(p - y) < Math.abs(distance)) {
+                distance = p - y;
+                closest = i;
+            }
+        });
+        return closest;
+    },
+
+    moveTo: function(i) {
+        let current = this.getClosestSnap(this.getTop());
+        if (i <= current) this.menu.style.top = this.snap[i] + "px";
+    },
+
+    hide() {
+        this.menu.style.top = "100%";
     }
 }
-menuDrag.init();
 
-// ui.state = 3;
+menu.init();
+
 
 // let data;
 // let xhr = new XMLHttpRequest();
