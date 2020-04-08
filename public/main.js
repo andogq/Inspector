@@ -29,8 +29,67 @@ geo.on("change", () => {
     }, 1);
 });
 
-menu.init();
+let controller = new Controller();
+// Map state, for when the user is only on the map
+controller.addState("map", [
+    {
+        target: "pointMenu",
+        add: "hidden"
+    },
+    {
+        target: "map",
+        remove: "faded"
+    }
+], {
+    trigger: {
+        mousemove: "map"
+    },
+    callback: function() {
+        menu.hide();
+    }
+});
+// Menu state, when the menu is peeking and the point menu is showing
+controller.addState("menu", [
+    {
+        target: "pointMenu",
+        remove: "hidden"
+    },
+    {
+        target: "map",
+        add: "faded"
+    }
+], {
+    trigger: {click: "centerPoint"},
+    callback: function() {
+        menu.show();
+    }
+});
 
+// States for the pages
+controller.addState("reportPage", ["menu",
+    {
+        target: "reportPage",
+        add: "show"
+    }
+], {
+    trigger: {click: "report"},
+    callback: function() {
+        menu.moveTo(1);
+    }
+});
+controller.addState("accountPage", ["menu",
+    {
+        target: "accountPage",
+        add: "show"
+    }
+], {
+    trigger: {click: "account"},
+    callback: function() {
+        menu.moveTo(1);
+    }
+});
+
+menu.init();
 
 // let data;
 // let xhr = new XMLHttpRequest();

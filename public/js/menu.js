@@ -23,6 +23,9 @@ let menu = {
         this.menu.addEventListener("touchmove", this.touchMove.bind(this));
         this.menu.addEventListener("touchend", this.touchEnd.bind(this));
         this.menu.addEventListener("touchcancel", this.touchEnd.bind(this));
+
+        // Ensure the menu starts hidden
+        this.hide();
     },
 
     touchStart: function(e) {
