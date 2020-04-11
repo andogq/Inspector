@@ -1,3 +1,9 @@
+# Where the PTV data is stored, both raw and parsed
+data/
+
+# Where any credentials are stored
+creds/
+
 # Logs
 logs
 *.log
