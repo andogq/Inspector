@@ -34,7 +34,6 @@ function getFiles(dir) {
 }
 
 function convertFile(oldPath) {
-    console.log(`Starting ${oldPath}`);
     return new Promise((resolve) => {
         if (path.extname(oldPath) == ".txt") {
             // Generate the new paths
@@ -43,33 +42,33 @@ function convertFile(oldPath) {
 
             let pathStub = path.relative(dataDir, oldDir);
             let newDir = path.resolve(outDir, pathStub);
-            let newName = oldName.replace(/txt$/, "json");
+            let newName = oldName.replace(/txt$/, "ndjson");
             let newPath = path.resolve(newDir, newName);
             
             // Create the directory in the output directory, if it doesn't exist
             fs.mkdir(newDir, {recursive: true}, () => {
-                // Read the file in
-                csv().fromFile(oldPath).then((parsed) => {
-                    // Save the parsed json file
-                    let output = JSON.stringify(parsed);
+                let oldFile = fs.createReadStream(oldPath);
+                let newFile = fs.createWriteStream(newPath);
 
-                    // Write the actual file
-                    fs.writeFile(newPath, output, () => {
-                        resolve();
-                    });
-                }).catch(() => {
-                    // Not a CSV file, handle gracefully
-                    console.log(`${oldPath} not a CSV file`);
+                let converter = csv();
+
+                converter.on("error", (err) => {
+                    console.error(`Error parsing CSV in ${oldPath}`);
+                    console.error(err);
                     resolve();
                 });
+                converter.on("done", () => {
+                    console.log(`Completed ${oldPath}`);
+                    resolve();
+                });
+
+                console.log(`Starting ${oldPath}`);
+                oldFile.pipe(converter).pipe(newFile);
             });
         } else {
-            // Not a txt file, handle gracefully
-            console.log(`${oldPath} not a .txt file`);
+            // Not a  txt file, handle gracefully
             resolve();
         }
-    }).then(() => {
-        console.log(`Ending ${oldPath}`);
     });
 }
 
