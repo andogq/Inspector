@@ -99,6 +99,14 @@ function parseLine(line, fileName) {
     // Add the object to the relevent object
     lat[rLat][path.basename(fileName, ".ndjson")].push(parsed.id);
     lon[rLon][path.basename(fileName, ".ndjson")].push(parsed.id);
+
+    return new Promise((resolve) => {
+        // Save the object it's own file
+        fs.writeFile(path.resolve(dataDir, path.basename(fileName, ".ndjson"), parsed.id + ".json"), JSON.stringify(parsed), (err) => {
+            if (err) console.error(err);
+            resolve();
+        });
+    });
 }
 
 function parseFile(filePath) {
@@ -106,13 +114,15 @@ function parseFile(filePath) {
         // Stream the file to reduce memory usage
         let stream = fs.createReadStream(filePath, {encoding: "utf8"});
 
+        let promises = [];
+
         let line = "";
         // Emits whenever data is added to the buffer
         stream.on("readable", () => {
             // Loop over character by character
             while (c = stream.read(1)) {
                 if (c == "\n") {
-                    parseLine(line, path.basename(filePath));
+                    promises.push(parseLine(line, path.basename(filePath)));
                     line = "";
                 } else line += c;
             }
@@ -120,7 +130,7 @@ function parseFile(filePath) {
 
         // End of the stream
         stream.on("end", () => {
-            resolve();
+            Promise.all(promises).then(resolve);
         });
     });
 }
@@ -133,6 +143,10 @@ function init() {
     let lonDir = path.resolve(dataDir, "lon");
     fs.mkdirSync(latDir, {recursive: true});
     fs.mkdirSync(lonDir, {recursive: true});
+    Object.keys(propertyMaps).forEach((type) => {
+        type = path.basename(type, ".ndjson");
+        fs.mkdirSync(path.resolve(dataDir, type), {recursive: true});
+    });
 
     // Parse the files
     getFiles(jsonDir).then((files) => {
