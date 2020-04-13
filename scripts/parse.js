@@ -66,8 +66,9 @@ function saveFile(type, l, data) {
     });
 }
 
-function parseLine(line, fileName) {
+function parseLine(line, filePath) {
     line = JSON.parse(line);
+    let fileName = path.basename(filePath);
 
     let parsed = {};
     let map = propertyMaps[fileName];
@@ -77,6 +78,9 @@ function parseLine(line, fileName) {
         let newProperty = map[oldProperty];
         parsed[newProperty] = line[oldProperty];
     });
+
+    // Hack to get the type for the stop in the document
+    parsed.type = path.basename(path.dirname(filePath));
 
     // Round lat and lon for use in object
     let rLat = round(parsed.lat);
@@ -122,7 +126,7 @@ function parseFile(filePath) {
             // Loop over character by character
             while (c = stream.read(1)) {
                 if (c == "\n") {
-                    promises.push(parseLine(line, path.basename(filePath)));
+                    promises.push(parseLine(line, filePath));
                     line = "";
                 } else line += c;
             }
