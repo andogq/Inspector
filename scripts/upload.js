@@ -5,6 +5,7 @@ const admin = require("firebase-admin");
 
 // Globals
 const dataDir = "../data/parsed";
+let include = [];
 let db;
 
 function uploadFile(collection, file) {
@@ -65,7 +66,7 @@ function init() {
 
             // Upload each directory
             items.forEach((item) => {
-                if (item.isDirectory()) promises.push(uploadDir(item.name));
+                if (item.isDirectory() && include.indexOf(item.name) != -1) promises.push(uploadDir(item.name));
             });
 
             Promise.all(promises).then(() => {
