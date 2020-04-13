@@ -70,7 +70,7 @@ function nearby(lat, lon) {
     });
 }
 
-exports.suggest = functions.https.onRequest((req, res) => {
+exports.nearby = functions.https.onRequest((req, res) => {
     new Promise((resolve, reject) => {
         // Only accept post requests
         if (req.method == "POST") {

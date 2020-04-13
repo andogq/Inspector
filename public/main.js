@@ -21,13 +21,39 @@ let geo = new ol.Geolocation({
     projection: map.view.getProjection()
 });
 
-geo.on("change", () => {
+setInterval(() => {
     map.view.animate({
         center: geo.getPosition(),
         zoom: 15,
         rotation: 0
     }, 1);
-});
+
+    let lonLat = ol.proj.toLonLat(geo.getPosition());
+
+    new APIRequest({endpoint: "/nearby", data: JSON.stringify({
+        "lat": lonLat[1],
+        "lon": lonLat[0]
+    }), callback: (data) => {
+        console.log(JSON.parse(data));
+    }});
+}, 10000);
+
+// geo.on("change", () => {
+//     map.view.animate({
+//         center: geo.getPosition(),
+//         zoom: 15,
+//         rotation: 0
+//     }, 1);
+
+//     let lonLat = ol.proj.toLonLat(geo.getPosition());
+
+//     new APIRequest({endpoint: "/nearby", data: JSON.stringify({
+//         "lat": lonLat[1],
+//         "lon": lonLat[0]
+//     }), callback: (data) => {
+//         console.log(JSON.parse(data));
+//     }});
+// });
 
 let controller = new Controller();
 // Map state, for when the user is only on the map
@@ -90,15 +116,3 @@ controller.addState("accountPage", ["menu",
 });
 
 menu.init();
-
-// let data;
-// let xhr = new XMLHttpRequest();
-// xhr.onload = () => {
-//     data = JSON.parse(xhr.responseText);
-
-//     data.forEach((line) => {
-//         network.addLine(line.map(p => new Coord(...p)));
-//     });
-// }
-// xhr.open("GET", "/data.json");
-// xhr.send();
