@@ -87,7 +87,18 @@ exports.nearby = functions.https.onRequest((req, res) => {
 
             // Find nearby based on lat and lon
             nearby(body.lat, body.lon).then((near) => {
-                resolve({body: JSON.stringify(near)});
+                let data = [];
+                let promises = [];
+
+                near.forEach((stop) => {
+                    promises.push(db.collection("stops").doc(stop).get().then((v) => {
+                        data.push(v.data());
+                    }));
+                });
+
+                Promise.all(promises).then(() => {
+                    resolve({body: JSON.stringify(data)});
+                });
             });
         } else {
             reject();

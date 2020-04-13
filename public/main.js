@@ -21,7 +21,7 @@ let geo = new ol.Geolocation({
     projection: map.view.getProjection()
 });
 
-setInterval(() => {
+geo.on("change", () => {
     map.view.animate({
         center: geo.getPosition(),
         zoom: 15,
@@ -36,7 +36,7 @@ setInterval(() => {
     }), callback: (data) => {
         console.log(JSON.parse(data));
     }});
-}, 10000);
+});
 
 // geo.on("change", () => {
 //     map.view.animate({
