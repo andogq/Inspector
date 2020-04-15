@@ -17,9 +17,6 @@ function round(n) {
 
 function nearby(lat, lon) {
     return new Promise((resolve) => {
-        let roundedLat = round(lat);
-        let roundedLon = round(lon);
-        
         let inc = 1 / Math.pow(10, rounding);
 
         // Pull the lats and lons from the database
@@ -27,8 +24,8 @@ function nearby(lat, lon) {
         let lats = {};
         let lons = {};
         for (let i = -radius; i <= radius; i++) {
-            let tempLat = round(roundedLat + (i * inc));
-            let tempLon = round(roundedLon + (i * inc));
+            let tempLat = round(lat + (i * inc));
+            let tempLon = round(lon + (i * inc));
 
             // Pull lat from the database
             firestorePromises.push(db.collection("lat").doc(String(tempLat)).get().then((v) => {
@@ -46,11 +43,11 @@ function nearby(lat, lon) {
 
             // For each offset in lat
             for (let i = -radius; i <= radius; i++) {
-                let tempLat = round(roundedLat + (i * inc));
+                let tempLat = round(lat + (i * inc));
 
                 // For each offset in lon
                 for (let j = -radius; j <= radius; j++) {
-                    let tempLon = round(roundedLon + (j * inc));
+                    let tempLon = round(lon + (j * inc));
 
                     // Ensure both exist
                     if (lats[tempLat] != undefined && lons[tempLon] != undefined) {
@@ -64,7 +61,6 @@ function nearby(lat, lon) {
                     }
                 }
             }
-
             resolve(close);
         });
     });
@@ -84,21 +80,33 @@ exports.nearby = functions.https.onRequest((req, res) => {
             } catch {
                 reject();
             }
+            
+            let rLat = round(body.lat);
+            let rLon = round(body.lon);
 
-            // Find nearby based on lat and lon
-            nearby(body.lat, body.lon).then((near) => {
-                let data = [];
-                let promises = [];
-
-                near.forEach((stop) => {
-                    promises.push(db.collection("stops").doc(stop).get().then((v) => {
-                        data.push(v.data());
-                    }));
-                });
-
-                Promise.all(promises).then(() => {
-                    resolve({body: JSON.stringify(data)});
-                });
+            // Check the cache to see if it's been requested before
+            let cacheDoc = db.collection("coordCache").doc(`${rLat},${rLon}`);
+            cacheDoc.get().then((v) => {
+                if (v.exists) resolve({body: JSON.stringify(v.data().stops)});
+                else {
+                    // Find nearby based on lat and lon
+                    nearby(rLat, rLon).then((near) => {
+                        let data = [];
+                        let promises = [];
+        
+                        near.forEach((stop) => {
+                            promises.push(db.collection("stops").doc(stop).get().then((v) => {
+                                data.push(v.data());
+                            }));
+                        });
+        
+                        Promise.all(promises).then(() => {
+                            cacheDoc.set({stops: data}).then(() => {
+                                resolve({body: JSON.stringify(data)});
+                            });
+                        });
+                    });
+                }
             });
         } else {
             reject();
