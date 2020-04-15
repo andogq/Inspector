@@ -2,6 +2,7 @@ let melbCoords = new Coord(144.9631, -37.8136);
 
 let map = new Map({
     id: "map",
+    source: "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png",
     center: melbCoords,
     zoom: 10,
     showZoom: false
@@ -34,26 +35,50 @@ geo.on("change", () => {
         "lat": lonLat[1],
         "lon": lonLat[0]
     }), callback: (data) => {
-        console.log(JSON.parse(data));
+        data = JSON.parse(data);
+        data.forEach((stop) => {
+            drawStop(new Coord(stop.lon, stop.lat), stop.type);
+        });
     }});
 });
 
-// geo.on("change", () => {
-//     map.view.animate({
-//         center: geo.getPosition(),
-//         zoom: 15,
-//         rotation: 0
-//     }, 1);
+let layers = {};
+function newLayer(name, color, icon) {
+    let layer = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+        style: new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({color: color})
+            }),
+            text: new ol.style.Text({
+                text: icon,
+                font: '5vmin Material Icons',
+                fill: new ol.style.Fill({color: "white"})
+            })
+        })
+    });
+    map.addLayer(layer);
+    layers[name] = layer;
 
-//     let lonLat = ol.proj.toLonLat(geo.getPosition());
+    return layer;
+}
 
-//     new APIRequest({endpoint: "/nearby", data: JSON.stringify({
-//         "lat": lonLat[1],
-//         "lon": lonLat[0]
-//     }), callback: (data) => {
-//         console.log(JSON.parse(data));
-//     }});
-// });
+newLayer("bus_metro", "orange", "directions_bus");
+newLayer("bus_regional", "orange", "directions_bus");
+newLayer("train_metro", "blue", "train");
+newLayer("train_regional", "purple", "train");
+newLayer("tram_metro", "green", "tram");
+
+function drawStop(coord, type) {
+    let layer = layers[type];
+    if (layer != undefined) {
+        let feature = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([coord.lon, coord.lat]))
+        });
+        layer.getSource().addFeature(feature);
+    }
+}
 
 let controller = new Controller();
 // Map state, for when the user is only on the map
