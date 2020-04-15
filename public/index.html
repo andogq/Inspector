@@ -7,7 +7,9 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css">
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css"/>
 
     <link rel="stylesheet" href="css/classes.css"/>
     <link rel="stylesheet" href="css/inputs.css"/>
@@ -130,15 +132,12 @@
     </div>
     
     <div id="scripts">
-        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js"></script>
-
-        <script src="js/coord.js"></script>
-        <script src="js/map.js"></script>
-        <script src="js/heatmap.js"></script>
         <script src="js/network.js"></script>
         <script src="js/controller.js"></script>
         <script src="js/menu.js"></script>
-        <script src="js/apiRequest.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/geo.js"></script>
         <script src="main.js"></script>
     </div>
 </body>
