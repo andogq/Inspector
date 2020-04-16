@@ -1,9 +1,12 @@
 // Constants
 const melbCoords = [144.9631, -37.8136];
 const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ";
+const rounding = 3;
 
 // Globals
 let map, controller;
+let stops = [];
+let loadedCoords = [];
 
 function init() {
     // Other init functions
@@ -11,7 +14,8 @@ function init() {
     menu.init();
     initMap();
 
-    // Add callbacks
+    // Add event listeners
+    controller.listen("map", "touchend", {callback: getSurrounding});
     controller.click("recenter", {callback: centerOnUser, state: "map"});    
 }
 
@@ -26,8 +30,7 @@ function initMap() {
     });
 
     // Center on the user and load nearby stops
-    centerOnUser();
-    getSurrounding();
+    centerOnUser().then(getSurrounding);
 }
 
 function initController() {

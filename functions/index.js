@@ -3,7 +3,7 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
 // Globals
-const radius = 5;
+const radius = 10;
 const rounding = 3;
 
 // Initialise the database
