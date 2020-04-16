@@ -1,5 +1,6 @@
 // Constants
 const melbCoords = [144.9631, -37.8136];
+const vicBounds = [[140.9553,-39.2516],[150.0849,-33.9732]];
 const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ";
 const rounding = 3;
 
@@ -26,7 +27,8 @@ function initMap() {
         container: "map",
         style: "mapbox://styles/mapbox/light-v10",
         center: melbCoords,
-        zoom: 10
+        zoom: 10,
+        maxBounds: vicBounds
     });
 
     // Center on the user and load nearby stops

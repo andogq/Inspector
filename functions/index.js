@@ -5,6 +5,7 @@ const admin = require("firebase-admin");
 // Globals
 const radius = 10;
 const rounding = 3;
+const vicBounds = [[140.9553,-39.2516],[150.0849,-33.9732]];
 
 // Initialise the database
 admin.initializeApp();
@@ -16,53 +17,56 @@ function round(n) {
 }
 
 function nearby(lat, lon) {
-    return new Promise((resolve) => {
-        let inc = 1 / Math.pow(10, rounding);
+    return new Promise((resolve, reject) => {
+        let b = vicBounds;
+        if (lat >= b[0][1] && lat <= b[1][1] && lon >= b[0][0] && lon <= b[1][0]) {
+            let inc = 1 / Math.pow(10, rounding);
 
-        // Pull the lats and lons from the database
-        let firestorePromises = [];
-        let lats = {};
-        let lons = {};
-        for (let i = -radius; i <= radius; i++) {
-            let tempLat = round(lat + (i * inc));
-            let tempLon = round(lon + (i * inc));
-
-            // Pull lat from the database
-            firestorePromises.push(db.collection("lat").doc(String(tempLat)).get().then((v) => {
-                if (v.exists) lats[tempLat] = v.data();
-            }));
-            // Pull lon from the database
-            firestorePromises.push(db.collection("lon").doc(String(tempLon)).get().then((v) => {
-                if (v.exists) lons[tempLon] = v.data();
-            }));
-        }
-
-        // When everything is pulled from the database
-        Promise.all(firestorePromises).then(() => {
-            let close = [];
-
-            // For each offset in lat
+            // Pull the lats and lons from the database
+            let firestorePromises = [];
+            let lats = {};
+            let lons = {};
             for (let i = -radius; i <= radius; i++) {
                 let tempLat = round(lat + (i * inc));
+                let tempLon = round(lon + (i * inc));
 
-                // For each offset in lon
-                for (let j = -radius; j <= radius; j++) {
-                    let tempLon = round(lon + (j * inc));
+                // Pull lat from the database
+                firestorePromises.push(db.collection("lat").doc(String(tempLat)).get().then((v) => {
+                    if (v.exists) lats[tempLat] = v.data();
+                }));
+                // Pull lon from the database
+                firestorePromises.push(db.collection("lon").doc(String(tempLon)).get().then((v) => {
+                    if (v.exists) lons[tempLon] = v.data();
+                }));
+            }
 
-                    // Ensure both exist
-                    if (lats[tempLat] != undefined && lons[tempLon] != undefined) {
-                        // Will need to change once more things than stops are added
-                        lats[tempLat].stops.forEach((latStation) => {
-                            lons[tempLon].stops.forEach((lonStation) => {
-                                // Check if the IDs match up
-                                if (latStation == lonStation) close.push(lonStation);
+            // When everything is pulled from the database
+            Promise.all(firestorePromises).then(() => {
+                let close = [];
+
+                // For each offset in lat
+                for (let i = -radius; i <= radius; i++) {
+                    let tempLat = round(lat + (i * inc));
+
+                    // For each offset in lon
+                    for (let j = -radius; j <= radius; j++) {
+                        let tempLon = round(lon + (j * inc));
+
+                        // Ensure both exist
+                        if (lats[tempLat] != undefined && lons[tempLon] != undefined) {
+                            // Will need to change once more things than stops are added
+                            lats[tempLat].stops.forEach((latStation) => {
+                                lons[tempLon].stops.forEach((lonStation) => {
+                                    // Check if the IDs match up
+                                    if (latStation == lonStation) close.push(lonStation);
+                                });
                             });
-                        });
+                        }
                     }
                 }
-            }
-            resolve(close);
-        });
+                resolve(close);
+            });
+        } else reject("Out of bounds");
     });
 }
 
@@ -105,7 +109,7 @@ exports.nearby = functions.https.onRequest((req, res) => {
                                 resolve({body: JSON.stringify(data)});
                             });
                         });
-                    });
+                    }).catch(reject);
                 }
             });
         } else {
