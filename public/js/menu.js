@@ -1,5 +1,5 @@
-let menu = {
-    init: function() {
+class Menu {
+    constructor() {
         // Elements used in the menu
         this.menu = document.getElementById("pullUpMenu");
         this.container = document.getElementById("pullUpMenuContainer");
@@ -26,17 +26,18 @@ let menu = {
 
         // Ensure the menu starts hidden
         this.hide();
-    },
+    }
 
-    touchStart: function(e) {
+    touchStart(e) {
         // Save the original touch position of the input
         this.startY = e.changedTouches[0].clientY;
         // Save the distance of the input from the top of the menu
         this.offset = this.getTop() - this.startY;
         // Stop CSS transitions to keep things smooth
         this.menu.style.transition = "none";
-    },
-    touchMove: function(e) {
+    }
+
+    touchMove(e) {
         // Get distance moved from original touch
         let newY = e.changedTouches[0].clientY;
         let dy = newY - this.startY;
@@ -60,8 +61,9 @@ let menu = {
             // Set the new top position
             this.menu.style.top = newTop + "px";
         }
-    },
-    touchEnd: function(e) {
+    }
+
+    touchEnd(e) {
         // Start transitions again
         this.menu.style.transition = "";
         // Menu no longer moving
@@ -77,13 +79,13 @@ let menu = {
 
         // Set the final top position
         this.menu.style.top = pos + "px";
-    },
+    }
 
-    getTop: function() {
+    getTop() {
         return Number(window.getComputedStyle(this.menu).top.replace("px", ""));
-    },
+    }
 
-    getClosestSnap: function(y) {
+    getClosestSnap(y) {
         let distance = Infinity;
         let closest;
         this.snap.forEach((p, i) => {
@@ -93,16 +95,16 @@ let menu = {
             }
         });
         return closest;
-    },
+    }
 
-    moveTo: function(i) {
+    moveTo(i) {
         let current = this.getClosestSnap(this.getTop());
         if (i <= current) this.menu.style.top = this.snap[i] + "px";
-    },
+    }
 
     hide() {
         this.menu.style.top = "100%";
-    },
+    }
 
     show() {
         this.moveTo(2);

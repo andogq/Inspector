@@ -5,15 +5,15 @@ const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21u
 const rounding = 3;
 
 // Globals
-let map, controller;
+let map, controller, menu;
 let stops = [];
 let loadedCoords = [];
 
 function init() {
     // Other init functions
     initController();
-    menu.init();
     initMap();
+    menu = new Menu();
 
     // Add event listeners
     controller.listen("map", "touchend", {callback: getSurrounding});
