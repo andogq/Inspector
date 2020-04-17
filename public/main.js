@@ -10,31 +10,38 @@ let stops = [];
 let loadedCoords = [];
 
 function init() {
+    startLoad();
+
     // Other init functions
     initController();
-    initMap();
     menu = new Menu();
-
+    
     // Add event listeners
     controller.click("recenter", {callback: centerOnUser, state: "map"});    
+    
+    initMap().then(stopLoad);
 }
 
 function initMap() {
-    // Initialise Mapbox
-    mapboxgl.accessToken = mapboxToken;
-    map = new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/mapbox/light-v10",
-        center: melbCoords,
-        zoom: 10,
-        maxBounds: vicBounds
-    });
-
-    map.on("load", () => {
-        loadStops();
+    return new Promise((resolve) => {
+        // Initialise Mapbox
+        mapboxgl.accessToken = mapboxToken;
+        map = new mapboxgl.Map({
+            container: "map",
+            style: "mapbox://styles/mapbox/light-v10",
+            center: melbCoords,
+            zoom: 10,
+            maxBounds: vicBounds
+        });
     
-        // Center on the user and load nearby stops
-        centerOnUser();
+        map.on("load", () => {
+            let promises = [];
+
+            promises.push(loadStops());
+            promises.push(centerOnUser());
+
+            Promise.all(promises).then(resolve);
+        });
     });
 }
 
@@ -100,6 +107,13 @@ function initController() {
             menu.moveTo(1);
         }
     });
+}
+
+function startLoad() {
+    document.getElementById("loader").classList.add("loading");
+}
+function stopLoad() {
+    document.getElementById("loader").classList.remove("loading");
 }
 
 init();
