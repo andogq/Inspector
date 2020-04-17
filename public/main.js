@@ -16,7 +16,6 @@ function init() {
     menu = new Menu();
 
     // Add event listeners
-    controller.listen("map", "touchend", {callback: getSurrounding});
     controller.click("recenter", {callback: centerOnUser, state: "map"});    
 }
 
@@ -31,8 +30,12 @@ function initMap() {
         maxBounds: vicBounds
     });
 
-    // Center on the user and load nearby stops
-    centerOnUser().then(getSurrounding);
+    map.on("load", () => {
+        loadStops();
+    
+        // Center on the user and load nearby stops
+        centerOnUser();
+    });
 }
 
 function initController() {
