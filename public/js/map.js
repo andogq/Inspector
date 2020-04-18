@@ -51,5 +51,7 @@ function loadStops() {
 }
 
 function nearby(lat, lon) {
-    
+    let point1 = map.project([lon - nearbyOffset, lat - nearbyOffset]);
+    let point2 = map.project([lon + nearbyOffset, lat + nearbyOffset]);
+    console.log(map.queryRenderedFeatures([point1, point2], {layers: ["stops"]}));
 }
