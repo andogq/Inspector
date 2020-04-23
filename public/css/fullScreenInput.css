@@ -1,0 +1,46 @@
+#fullScreenInput {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    padding: var(--unit);
+
+    background-color: var(--white);
+}
+
+#fullScreenInput > .suggestions {
+    height: calc(100% - (var(--unit) * 2.5));
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#fullScreenInput > .suggestions > .row {
+    width: 100%;
+    height: calc(var(--unit) * 2.5);
+
+    display: grid;
+    grid: 1fr / calc(var(--unit) * 2) 1fr;
+    align-items: center;
+
+    border-bottom: 2px solid var(--grey);
+}
+
+#fullScreenInput > .suggestions > .row > .dot {
+    height: calc(var(--unit) * 0.8);
+    width: calc(var(--unit) * 0.8);
+    border-radius: 50%;
+
+    justify-self: center;
+}
+
+#fullScreenInput > .suggestions > .row > p {
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: calc(var(--unit) * 0.8);
+
+}

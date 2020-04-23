@@ -30,16 +30,16 @@ function loadStops() {
                 "circle-radius": 5,
                 "circle-color": [
                     "match", ["get", "type"],
-                    "bus_metro", "#e67e22",
-                    "bus_night", "#e67e22",
-                    "bus_regional", "#e67e22",
-                    "bus_sky", "#e74c3c",
-                    "bus_tele", "#e67e22",
-                    "coach_regional", "#8e44ad",
-                    "interstate", "#8e44ad",
-                    "train_metro", "#2980b9",
-                    "train_regional", "#8e44ad",
-                    "tram_metro", "#27ae60",
+                    "bus_metro", colors["bus_metro"],
+                    "bus_night", colors["bus_night"],
+                    "bus_regional", colors["bus_regional"],
+                    "bus_sky", colors["bus_sky"],
+                    "bus_tele", colors["bus_tele"],
+                    "coach_regional", colors["coach_regional"],
+                    "interstate", colors["interstate"],
+                    "train_metro", colors["train_metro"],
+                    "train_regional", colors["train_regional"],
+                    "tram_metro", colors["tram_metro"],
                     "white"
                 ]
             }
@@ -53,5 +53,5 @@ function loadStops() {
 function nearby(lat, lon) {
     let point1 = map.project([lon - nearbyOffset, lat - nearbyOffset]);
     let point2 = map.project([lon + nearbyOffset, lat + nearbyOffset]);
-    console.log(map.queryRenderedFeatures([point1, point2], {layers: ["stops"]}));
+    return map.queryRenderedFeatures([point1, point2], {layers: ["stops"]});
 }

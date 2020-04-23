@@ -3,7 +3,7 @@
  */
 input, .input {
     width: 100%;
-    height: calc(var(--unit) * 2.5);   
+    height: calc(var(--unit) * 2.5);
 
     background: var(--white);
     font-size: calc(var(--unit) * 0.75);

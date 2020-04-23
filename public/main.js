@@ -5,6 +5,19 @@ const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21u
 const rounding = 3;
 const nearbyOffset = 0.001;
 
+const colors = {
+    bus_metro: "#e67e22",
+    bus_night: "#e67e22",
+    bus_regional: "#e67e22",
+    bus_sky: "#e74c3c",
+    bus_tele: "#e67e22",
+    coach_regional: "#8e44ad",
+    interstate: "#8e44ad",
+    train_metro: "#2980b9",
+    train_regional: "#8e44ad",
+    tram_metro: "#27ae60"
+}
+
 // Globals
 let map, controller, menu;
 let stops = [];
@@ -19,7 +32,8 @@ function init() {
     menu = new Menu();
     
     // Add event listeners
-    controller.click("recenter", {callback: centerOnUser, state: "map"});    
+    controller.click("recenter", {callback: centerOnUser, state: "map"});
+    controller.click("location", {callback: locationAutoFill});
     
     initMap().then(stopLoad);
 }
