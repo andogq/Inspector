@@ -15,6 +15,7 @@ function init() {
 
     // Other init functions
     initController();
+    initElements();
     menu = new Menu();
     
     // Add event listeners
