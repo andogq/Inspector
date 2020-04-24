@@ -38,47 +38,53 @@ class Menu {
     }
 
     touchMove(e) {
-        // Get distance moved from original touch
-        let newY = e.changedTouches[0].clientY;
-        let dy = newY - this.startY;
+        // Prevent the menu from being dragged when it's minimised
+        if (this.getTop() < this.maxY) {
+            // Get distance moved from original touch
+            let newY = e.changedTouches[0].clientY;
+            let dy = newY - this.startY;
 
-        // If it has been far enough to move, and the container are scrolled to the top
-        if ((Math.abs(dy) > this.threshold || this.moving) && this.container.scrollTop == 0) {
-            // The menu is now dragging
-            this.moving = true;
-            
-            // The new top position for the menu
-            let newTop = this.startY + this.offset + dy;
-            if (newTop <= 0) {
-                // Fully extended
-                newTop = 0;
-                this.container.style.overflowY = "scroll";
-            } else if (newTop >= this.maxY) {
-                // Minimised
-                newTop = this.maxY;
-            } else this.container.style.overflowY = "";
+            // If it has been far enough to move, and the container are scrolled to the top
+            if ((Math.abs(dy) > this.threshold || this.moving) && this.container.scrollTop == 0) {
+                // The menu is now dragging
+                this.moving = true;
+                
+                // The new top position for the menu
+                let newTop = this.startY + this.offset + dy;
+                if (newTop <= 0) {
+                    // Fully extended
+                    newTop = 0;
+                    this.container.style.overflowY = "scroll";
+                } else if (newTop >= this.maxY) {
+                    // Minimised
+                    newTop = this.maxY;
+                } else this.container.style.overflowY = "";
 
-            // Set the new top position
-            this.menu.style.top = newTop + "px";
+                // Set the new top position
+                this.menu.style.top = newTop + "px";
+            }
         }
     }
 
     touchEnd(e) {
-        // Start transitions again
-        this.menu.style.transition = "";
-        // Menu no longer moving
-        this.moving = false;
+        // Prevent the menu from being dragged when it's minimised
+        if (this.getTop() <= this.snap[1]) {
+            // Start transitions again
+            this.menu.style.transition = "";
+            // Menu no longer moving
+            this.moving = false;
 
-        // Calculate the current position of the menu
-        let newY = e.changedTouches[0].clientY;
-        let dy = newY - this.startY;
-        let pos = this.startY + this.offset + dy;
+            // Calculate the current position of the menu
+            let newY = e.changedTouches[0].clientY;
+            let dy = newY - this.startY;
+            let pos = this.startY + this.offset + dy;
 
-        // Find the closest snap point and move the menu to it
-        pos = this.snap[this.getClosestSnap(pos)];
+            // Find the closest snap point and move the menu to it
+            pos = this.snap[this.getClosestSnap(pos)];
 
-        // Set the final top position
-        this.menu.style.top = pos + "px";
+            // Set the final top position
+            this.menu.style.top = pos + "px";
+        }
     }
 
     getTop() {
