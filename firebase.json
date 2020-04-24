@@ -6,6 +6,11 @@
             "**/.*",
             "**/node_modules/**"
         ],
-        "rewrites": []
+        "rewrites": [
+            {
+                "source": "/report",
+                "function": "report"
+            }
+        ]
     }
 }

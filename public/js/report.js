@@ -99,7 +99,6 @@ function sendReport() {
     let time = controller.e("time").value;
 
     if (amount != undefined && stopId != undefined && time != "") {
-        console.log("Hi")
         // Hide the report page
         controller.state = "map";
         menu.hide();
