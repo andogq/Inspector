@@ -45,6 +45,8 @@ function addSuggestions(suggestions) {
             
             // Hide the element
             fullScreenEl.classList.add("hidden");
+
+            validateInput();
         });
         
         // Create and color the dot
@@ -78,5 +80,40 @@ function addSuggestions(suggestions) {
 
         // Add the row to the container
         container.appendChild(row);
+    }
+}
+
+function validateInput() {
+    let amount = controller.e("amount");
+    let location = controller.e("location");
+    let time = controller.e("time");
+    let reportButton = controller.e("submit");
+
+    if (amount.value != undefined && location.stopId != undefined && time.value != "") reportButton.disabled = false;
+    else reportButton.disabled = true;
+}
+
+function sendReport() {
+    let amount = controller.e("amount").value;
+    let stopId = controller.e("location").stopId;
+    let time = controller.e("time").value;
+
+    if (amount != undefined && stopId != undefined && time != "") {
+        console.log("Hi")
+        // Hide the report page
+        controller.state = "map";
+        menu.hide();
+
+        startLoad();
+
+        let xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+            stopLoad();
+        }
+        xhr.onerror = (e) => {
+            console.error(e);
+        }
+        xhr.open("POST", "/report");
+        xhr.send(JSON.stringify({amount, stopId, time}));
     }
 }

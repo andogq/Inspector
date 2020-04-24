@@ -34,6 +34,9 @@ function init() {
     // Add event listeners
     controller.click("recenter", {callback: centerOnUser, state: "map"});
     controller.click("location", {callback: locationInput});
+    controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
+    controller.click("amount", {callback: validateInput});
+    controller.click("submit", {callback: sendReport});
     
     initMap().then(stopLoad);
 }
