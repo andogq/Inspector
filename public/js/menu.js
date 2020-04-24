@@ -29,12 +29,14 @@ class Menu {
     }
 
     touchStart(e) {
-        // Save the original touch position of the input
-        this.startY = e.changedTouches[0].clientY;
-        // Save the distance of the input from the top of the menu
-        this.offset = this.getTop() - this.startY;
-        // Stop CSS transitions to keep things smooth
-        this.menu.style.transition = "none";
+        if (this.getTop() < this.maxY) {
+            // Save the original touch position of the input
+            this.startY = e.changedTouches[0].clientY;
+            // Save the distance of the input from the top of the menu
+            this.offset = this.getTop() - this.startY;
+            // Stop CSS transitions to keep things smooth
+            this.menu.style.transition = "none";
+        }
     }
 
     touchMove(e) {

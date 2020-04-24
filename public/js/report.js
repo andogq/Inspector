@@ -108,9 +108,21 @@ function sendReport() {
         let xhr = new XMLHttpRequest();
         xhr.onload = () => {
             stopLoad();
+
+            // Reset the form
+            controller.e("amount").value = undefined;
+            controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
+            controller.e("location").stopId = undefined;
+            controller.e("location").value = "";
+            let d = new Date();
+            controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+            controller.e("submit").disabled = true;
         }
         xhr.onerror = (e) => {
             console.error(e);
+
+            stopLoad();
+            setNotification("There was an error submitting your report", "error");
         }
         xhr.open("POST", "/report");
         xhr.send(JSON.stringify({amount, stopId, time}));

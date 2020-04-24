@@ -79,7 +79,7 @@ function initController() {
         }
     ], {
         trigger: {
-            mousemove: "map",
+            touchstart: "map",
             click: "recenter"
         },
         callback: function() {
