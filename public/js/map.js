@@ -14,6 +14,9 @@ function centerOnUser() {
             setTimeout(() => {
                 resolve();
             }, duration);
+        }).catch(() => {
+            setNotification("Geolocation not available", "gps_off");
+            stopLoad();
         });
     });
 }

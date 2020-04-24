@@ -6,11 +6,11 @@ const rounding = 3;
 const nearbyOffset = 0.001;
 
 const colors = {
-    bus_metro: "#e67e22",
-    bus_night: "#e67e22",
-    bus_regional: "#e67e22",
+    bus_metro: "#d66540",
+    bus_night: "#d66540",
+    bus_regional: "#d66540",
     bus_sky: "#e74c3c",
-    bus_tele: "#e67e22",
+    bus_tele: "#d66540",
     coach_regional: "#8e44ad",
     interstate: "#8e44ad",
     train_metro: "#2980b9",
@@ -133,6 +133,17 @@ function startLoad() {
 }
 function stopLoad() {
     document.getElementById("loader").classList.remove("loading");
+}
+
+function setNotification(text, icon) {
+    let notification = controller.e("notification");
+    notification.children[0].innerHTML = icon;
+    notification.children[1].innerHTML = text;
+
+    notification.classList.remove("hidden");
+}
+function hideNotification() {
+    controller.e("notification").classList.add("hidden");
 }
 
 init();

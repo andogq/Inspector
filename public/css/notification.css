@@ -1,0 +1,24 @@
+#notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(var(--unit) * 2);
+
+    background: var(--accent);
+
+    display: grid;
+    grid: 1fr / calc(var(--unit) * 2) 1fr;
+
+    align-items: center;
+}
+
+#notification > span {
+    justify-self: center;
+    color: var(--white);
+}
+
+#notification > p {
+    color: var(--white);
+    font-size: calc(var(--unit) * 0.8);
+}
