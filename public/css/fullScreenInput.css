@@ -11,6 +11,16 @@
     background-color: var(--white);
 }
 
+#fullScreenInput > .topRow {
+    height: calc(var(--unit) * 2.5);
+    width: 100%;
+
+    display: grid;
+    grid: 1fr / calc(var(--unit) * 2) 1fr;
+
+    align-items: center;
+}
+
 #fullScreenInput > .suggestions {
     height: calc(100% - (var(--unit) * 2.5));
     overflow-x: hidden;

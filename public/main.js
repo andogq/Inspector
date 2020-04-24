@@ -33,7 +33,7 @@ function init() {
     
     // Add event listeners
     controller.click("recenter", {callback: centerOnUser, state: "map"});
-    controller.click("location", {callback: locationAutoFill});
+    controller.click("location", {callback: locationInput});
     
     initMap().then(stopLoad);
 }
