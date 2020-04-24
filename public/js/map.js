@@ -55,3 +55,13 @@ function nearby(lat, lon) {
     let point2 = map.project([lon + nearbyOffset, lat + nearbyOffset]);
     return map.queryRenderedFeatures([point1, point2], {layers: ["stops"]});
 }
+
+function searchNearbyStops(query="") {
+    let bounds = map.getBounds();
+
+    let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
+
+    let stops = map.queryRenderedFeatures([map.project(bounds._sw), map.project(bounds._ne)], {layers: ["stops"], filter});
+    
+    return stops;
+}

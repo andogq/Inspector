@@ -5,19 +5,28 @@ function locationInput() {
 
     // Save elements
     let actualInput = fullScreenEl.children[0].children[1];
-    let locationInput = controller.e("location");
-    let container = fullScreenEl.children[1];
     
     // Clear any suggestions and focus the input
-    container.innerHTML = "";
     actualInput.focus();
 
     // Back button
     fullScreenEl.children[0].children[0].addEventListener("click", () => fullScreenEl.classList.add("hidden"), true);
 
+    actualInput.addEventListener("keyup", () => {
+        addSuggestions(searchNearbyStops(actualInput.value));
+    });
+
     // Load the suggestions
-    let pos = map.getCenter();
-    nearby(pos.lat, pos.lng).forEach((suggestion) => {
+    addSuggestions(map.queryRenderedFeatures({layers: ["stops"]}));
+}
+
+function addSuggestions(suggestions) {
+    let fullScreenEl = controller.e("fullScreenInput");
+    let container = fullScreenEl.children[1];
+    let input = controller.e("location");
+    container.innerHTML = "";
+
+    if (suggestions.length > 0) suggestions.forEach((suggestion) => {
         // Create the row and save the data for it
         let row = document.createElement("div");
         row.classList.add("row");
@@ -31,14 +40,14 @@ function locationInput() {
 
             // Load the data into the location input
             let data = JSON.parse(target.stopData);
-            locationInput.value = data.name;
-            locationInput.stopId = data.id;
+            input.value = data.name;
+            input.stopId = data.id;
             
             // Hide the element
             fullScreenEl.classList.add("hidden");
         });
         
-        //  Create and color the dot
+        // Create and color the dot
         let dot = document.createElement("div");
         dot.classList.add("dot");
         dot.style.background = colors[suggestion.properties.type];
@@ -52,4 +61,22 @@ function locationInput() {
         // Add the row to the container
         container.appendChild(row);
     });
+    else {
+        let row = document.createElement("div");
+        row.classList.add("row");
+        
+        // Create and color the dot
+        let dot = document.createElement("div");
+        dot.classList.add("dot");
+        dot.style.background = "red";
+        row.appendChild(dot);
+
+        // Create and add the name of the stop
+        let name = document.createElement("p");
+        name.innerText = "No nearby places found...";
+        row.appendChild(name);
+
+        // Add the row to the container
+        container.appendChild(row);
+    }
 }
