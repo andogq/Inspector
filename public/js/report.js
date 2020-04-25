@@ -94,9 +94,15 @@ function validateInput() {
 }
 
 function sendReport() {
-    let amount = controller.e("amount").value;
-    let stopId = controller.e("location").stopId;
-    let time = controller.e("time").value;
+    let amount = Number(controller.e("amount").value.replace("+", ""));
+    let stopId = Number(controller.e("location").stopId);
+    let d = controller.e("time").value.split(":");
+    
+    let time = new Date();
+
+    time.setHours(d[0]);
+    time.setMinutes(d[1]);
+    time = time.toISOString();
 
     if (amount != undefined && stopId != undefined && time != "") {
         // Hide the report page
@@ -108,6 +114,11 @@ function sendReport() {
         let xhr = new XMLHttpRequest();
         xhr.onload = () => {
             stopLoad();
+
+            if (xhr.status == 404) {
+                setNotification("There was an error submitting your report", "error");
+                setTimeout(hideNotification, 5000);
+            }
 
             // Reset the form
             controller.e("amount").value = undefined;

@@ -24,7 +24,7 @@ exports.report = functions.https.onRequest((req, res) => {
                 // Only accept dates for previous hour and next 5 minutes
                 let min = new Date(Date.now() - (1000 * 60 * 60)); // 1 hour in the past
                 let max = new Date(Date.now() + (1000 * 60 * 5)); // 5 minutes in the future
-                let timeValid = data.time > min || data.time < max
+                let timeValid = data.time > min && data.time < max
                 // Error checking
                 if (!(stopIdValid && amountValid && timeValid)) throw("Problem with data");
             } catch (e) {
