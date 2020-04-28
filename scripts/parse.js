@@ -10,10 +10,10 @@ const include = ["bus_metro", "bus_regional", "train_metro", "train_regional", "
 // Which files within folders, and the new names for the properties
 const propertyMaps = {
     "stops.ndjson": {
-        "stop_id": "id",
-        "stop_name": "name",
-        "stop_lat": "lat",
-        "stop_lon": "lon"
+        "stop_id": ["id", Number],
+        "stop_name": ["name", String],
+        "stop_lat": ["lat", Number],
+        "stop_lon": ["lon", Number]
     }
 };
 
@@ -75,8 +75,9 @@ function parseLine(line, filePath) {
 
     // Map the old property to the new property
     Object.keys(map).forEach((oldProperty) => {
-        let newProperty = map[oldProperty];
-        parsed[newProperty] = line[oldProperty];
+        let newProperty = map[oldProperty][0];
+        let newType = map[oldProperty][1];
+        parsed[newProperty] = newType(line[oldProperty]);
     });
 
     // Hack to get the type for the stop in the document

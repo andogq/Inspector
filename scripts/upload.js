@@ -5,7 +5,7 @@ const admin = require("firebase-admin");
 
 // Globals
 const dataDir = "../data/parsed";
-let include = [];
+let include = ["stops"];
 let db;
 
 function uploadFile(collection, file) {
