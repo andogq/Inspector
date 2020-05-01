@@ -56,6 +56,7 @@ function initMap() {
         map.on("load", () => {
             let promises = [];
 
+            promises.push(loadHeatmap());
             promises.push(loadStops());
             promises.push(centerOnUser());
 

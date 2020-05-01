@@ -10,6 +10,10 @@
             {
                 "source": "/report",
                 "function": "report"
+            },
+            {
+                "source": "/reports",
+                "function": "reports"
             }
         ]
     }

@@ -68,3 +68,36 @@ function searchNearbyStops(query="") {
     
     return stops;
 }
+
+function loadHeatmap() {
+    map.addSource("reports", {
+        type: "geojson",
+        data: "/reports"
+    });
+    map.addLayer({
+        id: "reports",
+        type: "heatmap",
+        source: "reports",
+        paint: {
+            "heatmap-weight": ["get", "intensity"],
+            "heatmap-radius": [
+                "interpolate",
+                ["linear"], ["zoom"],
+                13, 30,
+                15, 50,
+                18, 100
+            ],
+            "heatmap-color": [
+                "interpolate",
+                ["linear"], ["heatmap-density"],
+                0, "rgba(0,0,255,0)",
+                0.1, "#ffffb2",
+                0.3, "#feb24c",
+                0.5, "#fd8d3c",
+                0.7, "#fc4e2a",
+                1, "#e31a1c"
+            ],
+            "heatmap-opacity": 0.9
+        }
+    });
+}
