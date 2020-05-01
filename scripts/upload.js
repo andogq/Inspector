@@ -21,29 +21,46 @@ function uploadFile(collection, file) {
     })
 }
 
+function upload(files, start, amount) {
+    let collection = db.collection(path.basename(path.dirname(files[0])));
+    
+    let promises = [];
+    for (let i = start; i < start + amount; i++) {
+        promises.push(uploadFile(collection, files[i]));
+    }
+
+    return Promise.all(promises);
+}
+
 function uploadDir(dir) {
     return new Promise((resolve, reject) => {
         console.log(`Uploading ${dir}`);
 
         // Save the collection named after the directory
-        let collection = db.collection(dir);
 
         // Check each file in the directory
-        fs.readdir(path.resolve(dataDir, dir), {withFileTypes: true}, (err, items) => {
+        fs.readdir(path.resolve(dataDir, dir), {withFileTypes: true}, async (err, items) => {
             if (err) reject(err);
             else {
-                let promises = [];
+                let files = [];
 
                 items.forEach((item) => {
                     if (item.isFile()) {
-                        promises.push(uploadFile(collection, path.resolve(dataDir, dir, item.name)));
+                        files.push(path.resolve(dataDir, dir, item.name));
                     }
                 });
 
-                Promise.all(promises).then(() => {
-                    console.log(`Finished uploading ${dir}`);
-                    resolve();
-                }).catch(reject);
+                let start = 0;
+                let amount = 100;
+
+                while (start + amount < files.length) {
+                    await upload(files, start, amount);
+                    console.log(`Uploaded ${start} -> ${start + amount}`);
+                    start += amount;
+                }
+                await upload(files, start, files.length - start);
+                console.log("Completed");
+                resolve();
             }
         });
     });

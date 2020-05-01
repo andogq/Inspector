@@ -31,8 +31,8 @@ function init() {
                             if (!doc.exists) {
                                 notUploaded.push(id);
                                 console.log(`${notUploaded.length}: ${id}`);
-                                resolve();
                             }
+                            resolve();
                         });
                     }));
                 }
@@ -40,7 +40,7 @@ function init() {
 
             Promise.all(promises).then(() => {
                 console.log(`Found ${notUploaded.length} to upload`);
-                fs.writeFile(output, {encoding: "utf8"}, JSON.stringify(notUploaded), (err) => {
+                fs.writeFile(output, JSON.stringify(notUploaded), (err) => {
                     if (err) console.error(err);
                     else console.log(`File written to ${output}`);
                 });
