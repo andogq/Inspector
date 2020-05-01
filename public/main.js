@@ -4,6 +4,7 @@ const vicBounds = [[140.9553,-39.2516],[150.0849,-33.9732]];
 const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ";
 const rounding = 3;
 const nearbyOffset = 0.001;
+const heatmapUpdateInterval = 5;
 
 const colors = {
     bus_metro: "#d66540",
@@ -32,7 +33,10 @@ function init() {
     menu = new Menu();
     
     // Add event listeners
-    controller.click("recenter", {callback: centerOnUser, state: "map"});
+    controller.click("recenter", {callback: () => {
+        centerOnUser();
+        updateHeatmap();
+    }, state: "map"});
     controller.click("location", {callback: locationInput});
     controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
     controller.click("amount", {callback: validateInput});

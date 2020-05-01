@@ -100,4 +100,11 @@ function loadHeatmap() {
             "heatmap-opacity": 0.9
         }
     });
+
+    // Update the heatmap every x minutes
+    setInterval(updateHeatmap, 1000 * 60 * heatmapUpdateInterval);
+}
+
+function updateHeatmap() {
+    map.getSource("reports").setData("/reports");
 }

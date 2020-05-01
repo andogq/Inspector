@@ -128,6 +128,9 @@ function sendReport() {
             let d = new Date();
             controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
             controller.e("submit").disabled = true;
+
+            // Refresh the heatmap
+            updateHeatmap();
         }
         xhr.onerror = (e) => {
             console.error(e);
