@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/loader.css"/>
     <link rel="stylesheet" href="css/fullScreenInput.css"/>
     <link rel="stylesheet" href="css/notification.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
 </head>
 <body>
     <div id="map"></div>
@@ -75,6 +76,18 @@
         </div>
     </div>
 
+    <div id="loginPage" class="hidden">
+        <div class="background"></div>
+        <div class="container">
+        <span class="material-icons" id="loginBack">keyboard_arrow_left</span>
+            <h1>Login or Signup</h1>
+            <div id="phoneNumberInput">
+                <h2>Phone Number</h2>
+                <input type="number" id="phoneNumber" placeholder="Phone Number"/>
+            </div>
+            <input type="button" id="login" value="Login"/>
+        </div>
+    </div>
     <div id="notification" class="hidden">
         <span class="material-icons"></span>
         <p></p>

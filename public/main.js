@@ -85,7 +85,7 @@ function initController() {
     ], {
         trigger: {
             touchstart: "map",
-            click: "recenter"
+            click: ["recenter", "loginBack"]
         },
         callback: function() {
             menu.hide();
@@ -129,6 +129,16 @@ function initController() {
         trigger: {click: "account"},
         callback: function() {
             menu.moveTo(1);
+        }
+    });
+    controller.addState("loginPage", ["map", 
+        {
+            target: "loginPage",
+            remove: "hidden"
+        }
+    ], {
+        callback: function() {
+            menu.hide();
         }
     });
 }

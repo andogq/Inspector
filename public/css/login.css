@@ -1,0 +1,50 @@
+#loginPage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#loginPage > .background, #loginPage > .container {
+    position: absolute;
+    
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#loginPage > .background {
+    background: var(--white);
+    opacity: 0.9;
+}
+
+#loginPage > .container {
+    margin: var(--unit);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#loginPage > .container > * {
+    margin: calc(var(--unit) / 2) 0;
+}
+
+#loginPage h2 {
+    color: var(--dark);
+    font-size: calc(var(--unit) * 0.75);
+    font-weight: normal;
+}
+
+#loginPage h1 {
+    font-size: calc(var(--unit) * 1.75);
+    color: var(--accent);
+}
+
+#loginBack {
+    position: fixed;
+    top: var(--unit);
+    left: var(--unit);
+}
