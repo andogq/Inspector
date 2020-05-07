@@ -10,14 +10,14 @@ function locationInput() {
     actualInput.focus();
 
     // Back button
-    fullScreenEl.children[0].children[0].addEventListener("click", () => fullScreenEl.classList.add("hidden"), true);
+    fullScreenEl.children[0].children[0].addEventListener("click", () => fullScreenEl.classList.add("hidden"), {once: true});
 
     actualInput.addEventListener("keyup", () => {
-        addSuggestions(searchNearbyStops(actualInput.value));
+        searchNearbyStops(actualInput.value).then(addSuggestions);
     });
 
     // Load the suggestions
-    addSuggestions(g.map.queryRenderedFeatures({layers: ["stops"]}));
+    searchNearbyStops(actualInput.value).then(addSuggestions);
 }
 
 function addSuggestions(suggestions) {

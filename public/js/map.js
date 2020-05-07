@@ -4,8 +4,8 @@ function centerOnUser() {
         getCurrentPosition().then((pos) => {
             g.map.flyTo({
                 center: [
-                    pos.coords.longitude,
-                    pos.coords.latitude
+                    pos.lon,
+                    pos.lat
                 ],
                 zoom: 15,
                 duration: c.map.animationDuration
@@ -53,20 +53,17 @@ function loadStops() {
     });
 }
 
-function nearby(lat, lon) {
-    let point1 = g.map.project([lon - c.map.nearbyRadius, lat - c.map.nearbyRadius]);
-    let point2 = g.map.project([lon + c.map.nearbyRadius, lat + c.map.nearbyRadius]);
-    return g.map.queryRenderedFeatures([point1, point2], {layers: ["stops"]});
-}
-
 function searchNearbyStops(query="") {
-    let bounds = g.map.getBounds();
+    return getCurrentPosition().then((pos) => {
+        let point1 = g.map.project([pos.lon - c.map.nearbyRadius, pos.lat - c.map.nearbyRadius]);
+        let point2 = g.map.project([pos.lon + c.map.nearbyRadius, pos.lat + c.map.nearbyRadius]);
 
-    let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
+        let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
 
-    let stops = g.map.queryRenderedFeatures([g.map.project(bounds._sw), g.map.project(bounds._ne)], {layers: ["stops"], filter});
-    
-    return stops;
+        let stops = g.map.queryRenderedFeatures([point1, point2], {layers: ["stops"], filter});
+        
+        return stops;
+    });
 }
 
 function loadHeatmap() {

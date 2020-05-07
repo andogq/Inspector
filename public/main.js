@@ -6,7 +6,7 @@ const c = {
     },
     map: {
         token: "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ",
-        nearbyRadius: 0.001,
+        nearbyRadius: 0.0015,
         updateInterval: 5,
         animationDuration: 1000
     },
