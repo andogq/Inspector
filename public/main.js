@@ -21,6 +21,9 @@ const c = {
         train_metro: "#2980b9",
         train_regional: "#8e44ad",
         tram_metro: "#27ae60"
+    },
+    notification: {
+        timeout: 5000
     }
 }
 
@@ -169,15 +172,25 @@ function stopLoad() {
     document.getElementById("loader").classList.remove("loading");
 }
 
-function setNotification(text, icon) {
-    let notification = g.controller.e("notification");
-    notification.children[0].innerHTML = icon;
-    notification.children[1].innerHTML = text;
+const notification = {
+    set(text, icon = "error") {
+        let el = document.getElementById("notification");
 
-    notification.classList.remove("hidden");
-}
-function hideNotification() {
-    g.controller.e("notification").classList.add("hidden");
+        el.children[0].innerText = icon;
+        el.children[1].innerText = text;
+        el.classList.remove("hidden");
+
+        this.lastNotification = Date.now();
+
+        setTimeout(this.hide.bind(this), c.notification.timeout, this.lastNotification);
+        return this.lastNotification;
+    },
+    hide(notificationId = 0) {
+        // Only hide the notification if it was the last one called
+        if (notificationId == this.lastNotification) {
+            document.getElementById("notification").classList.add("hidden");
+        }
+    }
 }
 
 init();

@@ -25,11 +25,11 @@ function login() {
                 g.loggedIn = true;
             }).catch((err) => {
                 console.error(err);
-                setNotification("Incorrect verification code", "error");
+                notification.set("Incorrect verification code");
             }).finally(() => stopLoad());
         }, {once: true});
     }).catch((err) => {
         console.error(err);
-        setNotification("Invalid phone number", "error");
+        notification.set("Invalid phone number");
     }).finally(() => stopLoad());
 }

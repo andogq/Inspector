@@ -117,8 +117,7 @@ function sendReport() {
                 stopLoad();
 
                 if (xhr.status == 404) {
-                    setNotification("There was an error submitting your report", "error");
-                    setTimeout(hideNotification, 5000);
+                    notification.set("There was an error submitting your report");
                 }
 
                 // Reset the form
@@ -137,7 +136,7 @@ function sendReport() {
                 console.error(e);
 
                 stopLoad();
-                setNotification("There was an error submitting your report", "error");
+                notification.set("There was an error submitting your report");
             }
             xhr.open("POST", "/report");
             xhr.send(JSON.stringify({amount, stopId, time, token}));
