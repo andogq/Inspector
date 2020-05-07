@@ -110,11 +110,11 @@ function sendReport() {
             g.controller.state = "map";
             g.menu.hide();
 
-            startLoad();
+            let loadId = load.start();
 
             let xhr = new XMLHttpRequest();
             xhr.onload = () => {
-                stopLoad();
+                load.stop(loadId);
 
                 if (xhr.status == 404) {
                     notification.set("There was an error submitting your report");
@@ -133,9 +133,9 @@ function sendReport() {
                 updateHeatmap();
             }
             xhr.onerror = (e) => {
+                load.stop(loadId);
+                
                 console.error(e);
-
-                stopLoad();
                 notification.set("There was an error submitting your report");
             }
             xhr.open("POST", "/report");

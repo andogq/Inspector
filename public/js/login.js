@@ -1,5 +1,5 @@
 function login() {
-    startLoad();
+    let loadId = load.start();
     
     let phoneNumber = g.controller.e("phoneNumber").value;
 
@@ -9,8 +9,6 @@ function login() {
     if (!/^\+61/.test(phoneNumber)) phoneNumber = "+61" + phoneNumber;
 
     firebase.auth().signInWithPhoneNumber(phoneNumber, g.recaptchaVerifier).then((confirmation) => {
-        stopLoad();
-
         g.controller.e("login").style.display = "none";
         g.controller.e("phoneNumberInput").style.display = "none";
 
@@ -18,7 +16,7 @@ function login() {
         g.controller.e("verify").style.display = "block";
 
         g.controller.e("verify").addEventListener("click", () => {
-            startLoad();
+            let verifyLoadId = load.start();
             
             confirmation.confirm(g.controller.e("verificationCode").value).then(() => {
                 g.controller.state = "map";
@@ -26,10 +24,10 @@ function login() {
             }).catch((err) => {
                 console.error(err);
                 notification.set("Incorrect verification code");
-            }).finally(() => stopLoad());
+            }).finally(() => load.stop(verifyLoadId));
         }, {once: true});
     }).catch((err) => {
         console.error(err);
         notification.set("Invalid phone number");
-    }).finally(() => stopLoad());
+    }).finally(() => load.stop(loadId));
 }

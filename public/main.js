@@ -31,7 +31,7 @@ const c = {
 let g = {};
 
 function init() {
-    startLoad();
+    let loadId = load.start();
 
     // Other init functions
     initController();
@@ -55,7 +55,7 @@ function init() {
         } else g.controller.state = "loginPage";
     }});
     
-    initMap().then(stopLoad);
+    initMap().then(() => load.stop(loadId));
 
     // ! REMOVE, ONLY FOR TESTING
     firebase.auth().settings.appVerificationDisabledForTesting = true;
@@ -79,7 +79,7 @@ function initMap() {
             zoom: 10,
             maxBounds: c.coords.victoria
         });
-    
+
         g.map.on("load", () => {
             let promises = [];
 
@@ -165,11 +165,18 @@ function initController() {
     });
 }
 
-function startLoad() {
-    document.getElementById("loader").classList.add("loading");
-}
-function stopLoad() {
-    document.getElementById("loader").classList.remove("loading");
+const load = {
+    start() {
+        document.getElementById("loader").classList.add("loading");
+
+        this.lastLoad = Date.now();
+        return this.lastLoad;
+    },
+    stop(loadId = 0) {
+        if (loadId == this.lastLoad) {
+            document.getElementById("loader").classList.remove("loading");
+        }
+    }
 }
 
 const notification = {
