@@ -61,8 +61,12 @@ function searchNearbyStops(query="") {
         let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
 
         let stops = g.map.queryRenderedFeatures([point1, point2], {layers: ["stops"], filter});
-        
-        return stops;
+
+        return stops.sort((a, b) => {
+            let dA = Math.hypot((pos.lon - a.geometry.coordinates[0]), (pos.lat - a.geometry.coordinates[1]));
+            let dB = Math.hypot((pos.lon - b.geometry.coordinates[0]), (pos.lat - b.geometry.coordinates[1]));
+            return dA - dB;
+        });
     });
 }
 
