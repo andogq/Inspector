@@ -23,6 +23,7 @@ const colors = {
 let map, controller, menu;
 let stops = [];
 let loadedCoords = [];
+let recaptchaVerifier, loggedIn;
 
 function init() {
     startLoad();
@@ -41,8 +42,25 @@ function init() {
     controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
     controller.click("amount", {callback: validateInput});
     controller.click("submit", {callback: sendReport});
+    controller.click("login", {callback: login});
+    controller.click("report", {callback: () => {
+        if (loggedIn) {
+            controller.state = "reportPage";
+            menu.moveTo(1);
+        } else controller.state = "loginPage";
+    }});
     
     initMap().then(stopLoad);
+
+    // ! REMOVE, ONLY FOR TESTING
+    firebase.auth().settings.appVerificationDisabledForTesting = true;
+    // Setup the recaptcha
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier("login");
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) loggedIn = true;
+        else loggedIn = false
+    });
 }
 
 function initMap() {
@@ -115,7 +133,6 @@ function initController() {
             add: "show"
         }
     ], {
-        trigger: {click: "report"},
         callback: function() {
             menu.moveTo(1);
         }

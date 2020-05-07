@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="css/fullScreenInput.css"/>
     <link rel="stylesheet" href="css/notification.css"/>
     <link rel="stylesheet" href="css/login.css"/>
+
+    <!-- Firebase Scripts -->
+    <script src="/__/firebase/7.14.2/firebase-app.js"></script>
+    <script src="/__/firebase/7.14.2/firebase-auth.js"></script>
+    <script src="/__/firebase/init.js"></script>
 </head>
 <body>
     <div id="map"></div>
@@ -83,9 +88,14 @@
             <h1>Login or Signup</h1>
             <div id="phoneNumberInput">
                 <h2>Phone Number</h2>
-                <input type="number" id="phoneNumber" placeholder="Phone Number"/>
+                <input type="tel" id="phoneNumber" placeholder="Phone Number"/>
             </div>
-            <input type="button" id="login" value="Login"/>
+            <input type="button" id="login" value="Go!"/>
+            <div id="codeInput">
+                <h2>Verification Code</h2>
+                <input type="number" id="verificationCode" placeholder="Verification Code"/>
+            </div>
+            <input type="button" id="verify" value="Verify"/>
         </div>
     </div>
     <div id="notification" class="hidden">
@@ -102,6 +112,7 @@
         <script src="js/geo.js"></script>
         <script src="js/elements.js"></script>
         <script src="js/report.js"></script>
+        <script src="js/login.js"></script>
         <script src="main.js"></script>
     </div>
 </body>

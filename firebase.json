@@ -14,6 +14,10 @@
             {
                 "source": "/reports",
                 "function": "reports"
+            },
+            {
+                "source": "/login",
+                "function": "login"
             }
         ]
     }

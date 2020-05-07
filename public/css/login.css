@@ -48,3 +48,7 @@
     top: var(--unit);
     left: var(--unit);
 }
+
+#codeInput, #verify {
+    display: none;
+}

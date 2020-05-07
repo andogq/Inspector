@@ -75,6 +75,7 @@ exports.report = functions.https.onRequest((req, res) => {
     new Promise((resolve, reject) => {
         if (req.method == "POST") {
             let data;
+            let token;
             try {
                 data = JSON.parse(req.body);
 
@@ -82,6 +83,7 @@ exports.report = functions.https.onRequest((req, res) => {
                 data.stopId = Number(data.stopId);
                 data.time = new Date(data.time);
                 data.amount = Number(data.amount);
+                token = data.token;
 
                 let stopIdValid = !isNaN(data.stopId);
                 let amountValid = !isNaN(data.amount) && data.amount > 0 && data.amount <= 4;
@@ -96,13 +98,16 @@ exports.report = functions.https.onRequest((req, res) => {
                 reject();
             }
             
-            db.collection("reports").add({
-                amount: data.amount,
-                stopId: data.stopId,
-                time: data.time
-            }).then(() => {
-                resolve();
-            });
+            admin.auth().verifyIdToken(token, true).then((user) => {
+                db.collection("reports").add({
+                    amount: data.amount,
+                    stopId: data.stopId,
+                    time: data.time,
+                    user: user.uid
+                }).then(() => {
+                    resolve();
+                });
+            }).catch(() => reject());
         } else reject();
     }).then((body = "") => {
         res.status(200).send(JSON.stringify(body));

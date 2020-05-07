@@ -94,51 +94,53 @@ function validateInput() {
 }
 
 function sendReport() {
-    let amount = Number(controller.e("amount").value.replace("+", ""));
-    let stopId = Number(controller.e("location").stopId);
-    let d = controller.e("time").value.split(":");
-    
-    let time = new Date();
+    firebase.auth().currentUser.getIdToken().then((token) => {
+        let amount = Number(controller.e("amount").value.replace("+", ""));
+        let stopId = Number(controller.e("location").stopId);
+        let d = controller.e("time").value.split(":");
+        
+        let time = new Date();
 
-    time.setHours(d[0]);
-    time.setMinutes(d[1]);
-    time = time.toISOString();
+        time.setHours(d[0]);
+        time.setMinutes(d[1]);
+        time = time.toISOString();
 
-    if (amount != undefined && stopId != undefined && time != "") {
-        // Hide the report page
-        controller.state = "map";
-        menu.hide();
+        if (amount != undefined && stopId != undefined && time != "") {
+            // Hide the report page
+            controller.state = "map";
+            menu.hide();
 
-        startLoad();
+            startLoad();
 
-        let xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-            stopLoad();
+            let xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                stopLoad();
 
-            if (xhr.status == 404) {
-                setNotification("There was an error submitting your report", "error");
-                setTimeout(hideNotification, 5000);
+                if (xhr.status == 404) {
+                    setNotification("There was an error submitting your report", "error");
+                    setTimeout(hideNotification, 5000);
+                }
+
+                // Reset the form
+                controller.e("amount").value = undefined;
+                controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
+                controller.e("location").stopId = undefined;
+                controller.e("location").value = "";
+                let d = new Date();
+                controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+                controller.e("submit").disabled = true;
+
+                // Refresh the heatmap
+                updateHeatmap();
             }
+            xhr.onerror = (e) => {
+                console.error(e);
 
-            // Reset the form
-            controller.e("amount").value = undefined;
-            controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
-            controller.e("location").stopId = undefined;
-            controller.e("location").value = "";
-            let d = new Date();
-            controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-            controller.e("submit").disabled = true;
-
-            // Refresh the heatmap
-            updateHeatmap();
+                stopLoad();
+                setNotification("There was an error submitting your report", "error");
+            }
+            xhr.open("POST", "/report");
+            xhr.send(JSON.stringify({amount, stopId, time, token}));
         }
-        xhr.onerror = (e) => {
-            console.error(e);
-
-            stopLoad();
-            setNotification("There was an error submitting your report", "error");
-        }
-        xhr.open("POST", "/report");
-        xhr.send(JSON.stringify({amount, stopId, time}));
-    }
+    });
 }
