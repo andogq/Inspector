@@ -81,21 +81,26 @@
         </div>
     </div>
 
-    <div id="loginPage" class="hidden">
+    <div id="loginPage" class="hidden step1">
         <div class="background"></div>
         <div class="container">
-        <span class="material-icons" id="loginBack">keyboard_arrow_left</span>
+            <span class="material-icons" id="loginBack">keyboard_arrow_left</span>
             <h1>Login or Signup</h1>
-            <div id="phoneNumberInput">
-                <h2>Phone Number</h2>
-                <input type="tel" id="phoneNumber" placeholder="Phone Number"/>
+            <div id="loginStep1">
+                <div id="phoneNumberInput">
+                    <h2>Phone Number</h2>
+                    <input type="tel" id="phoneNumber" placeholder="Phone Number"/>
+                </div>
+                <input type="button" id="login" value="Go!"/>
             </div>
-            <input type="button" id="login" value="Go!"/>
-            <div id="codeInput">
-                <h2>Verification Code</h2>
-                <input type="number" id="verificationCode" placeholder="Verification Code"/>
+            <div id="loginStep2">
+                <div id="codeInput">
+                    <h2>Verification Code</h2>
+                    <input type="number" id="verificationCode" placeholder="Verification Code"/>
+                </div>
+                <input type="button" id="verify" value="Verify"/>
             </div>
-            <input type="button" id="verify" value="Verify"/>
+            <p>You will recieve a code via SMS for verification. Standard rates apply.</p>
         </div>
     </div>
     <div id="notification" class="hidden">

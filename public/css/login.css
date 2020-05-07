@@ -1,14 +1,12 @@
 #loginPage {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 #loginPage > .background, #loginPage > .container {
     position: absolute;
-    
+}
+
+#loginPage, #loginPage > .background, #loginPage > .container {
     top: 0;
     left: 0;
     right: 0;
@@ -49,6 +47,15 @@
     left: var(--unit);
 }
 
-#codeInput, #verify {
+#loginPage.step1 > .container > #loginStep2 {
     display: none;
+}
+
+#loginPage.step2 > .container > #loginStep1 {
+    display: none;
+}
+
+#loginPage > .container > p {
+    font-size: calc(var(--unit) / 1.5);
+    text-align: center;
 }

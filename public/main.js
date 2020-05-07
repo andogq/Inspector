@@ -54,13 +54,12 @@ function init() {
             g.menu.moveTo(1);
         } else g.controller.state = "loginPage";
     }});
+    g.controller.e("verify").addEventListener("click", verifyCode);
     
     initMap().then(() => load.stop(loadId));
 
     // ! REMOVE, ONLY FOR TESTING
     firebase.auth().settings.appVerificationDisabledForTesting = true;
-    // Setup the recaptcha
-    g.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("login");
 
     firebase.auth().onAuthStateChanged((user) => {
         if (user) g.loggedIn = true;
