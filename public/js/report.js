@@ -1,6 +1,6 @@
 function locationInput() {
     // Show the fullscreen input
-    let fullScreenEl = controller.e("fullScreenInput");
+    let fullScreenEl = g.controller.e("fullScreenInput");
     fullScreenEl.classList.remove("hidden");
 
     // Save elements
@@ -17,13 +17,13 @@ function locationInput() {
     });
 
     // Load the suggestions
-    addSuggestions(map.queryRenderedFeatures({layers: ["stops"]}));
+    addSuggestions(g.map.queryRenderedFeatures({layers: ["stops"]}));
 }
 
 function addSuggestions(suggestions) {
-    let fullScreenEl = controller.e("fullScreenInput");
+    let fullScreenEl = g.controller.e("fullScreenInput");
     let container = fullScreenEl.children[1];
-    let input = controller.e("location");
+    let input = g.controller.e("location");
     container.innerHTML = "";
 
     if (suggestions.length > 0) suggestions.forEach((suggestion) => {
@@ -52,7 +52,7 @@ function addSuggestions(suggestions) {
         // Create and color the dot
         let dot = document.createElement("div");
         dot.classList.add("dot");
-        dot.style.background = colors[suggestion.properties.type];
+        dot.style.background = c.colors[suggestion.properties.type];
         row.appendChild(dot);
 
         // Create and add the name of the stop
@@ -84,10 +84,10 @@ function addSuggestions(suggestions) {
 }
 
 function validateInput() {
-    let amount = controller.e("amount");
-    let location = controller.e("location");
-    let time = controller.e("time");
-    let reportButton = controller.e("submit");
+    let amount = g.controller.e("amount");
+    let location = g.controller.e("location");
+    let time = g.controller.e("time");
+    let reportButton = g.controller.e("submit");
 
     if (amount.value != undefined && location.stopId != undefined && time.value != "") reportButton.disabled = false;
     else reportButton.disabled = true;
@@ -95,9 +95,9 @@ function validateInput() {
 
 function sendReport() {
     firebase.auth().currentUser.getIdToken().then((token) => {
-        let amount = Number(controller.e("amount").value.replace("+", ""));
-        let stopId = Number(controller.e("location").stopId);
-        let d = controller.e("time").value.split(":");
+        let amount = Number(g.controller.e("amount").value.replace("+", ""));
+        let stopId = Number(g.controller.e("location").stopId);
+        let d = g.controller.e("time").value.split(":");
         
         let time = new Date();
 
@@ -107,8 +107,8 @@ function sendReport() {
 
         if (amount != undefined && stopId != undefined && time != "") {
             // Hide the report page
-            controller.state = "map";
-            menu.hide();
+            g.controller.state = "map";
+            g.menu.hide();
 
             startLoad();
 
@@ -122,13 +122,13 @@ function sendReport() {
                 }
 
                 // Reset the form
-                controller.e("amount").value = undefined;
-                controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
-                controller.e("location").stopId = undefined;
-                controller.e("location").value = "";
+                g.controller.e("amount").value = undefined;
+                g.controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
+                g.controller.e("location").stopId = undefined;
+                g.controller.e("location").value = "";
                 let d = new Date();
-                controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-                controller.e("submit").disabled = true;
+                g.controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+                g.controller.e("submit").disabled = true;
 
                 // Refresh the heatmap
                 updateHeatmap();

@@ -1,19 +1,18 @@
 // Centers the map on the user's position
 function centerOnUser() {
     return new Promise((resolve) => {
-        let duration = 1000;
         getCurrentPosition().then((pos) => {
-            map.flyTo({
+            g.map.flyTo({
                 center: [
                     pos.coords.longitude,
                     pos.coords.latitude
                 ],
                 zoom: 15,
-                duration
+                duration: c.map.animationDuration
             });
             setTimeout(() => {
                 resolve();
-            }, duration);
+            }, c.map.animationDuration);
         }).catch(() => {
             setNotification("Geolocation not available", "gps_off");
             stopLoad();
@@ -24,8 +23,10 @@ function centerOnUser() {
 // Loads the stops from the server
 function loadStops() {
     return new Promise((resolve) => {
-        map.addSource("stops", {type: "geojson", data: "/data/stops.geojson"});
-        map.addLayer({
+        let colors = c.colors;
+
+        g.map.addSource("stops", {type: "geojson", data: "/data/stops.geojson"});
+        g.map.addLayer({
             id: "stops",
             type: "circle",
             source: "stops",
@@ -47,34 +48,34 @@ function loadStops() {
                 ]
             }
         });
-        map.on("sourcedata", () => {
-            if (map.getSource("stops") && map.isSourceLoaded("stops")) resolve();
+        g.map.on("sourcedata", () => {
+            if (g.map.getSource("stops") && g.map.isSourceLoaded("stops")) resolve();
         });
     });
 }
 
 function nearby(lat, lon) {
-    let point1 = map.project([lon - nearbyOffset, lat - nearbyOffset]);
-    let point2 = map.project([lon + nearbyOffset, lat + nearbyOffset]);
-    return map.queryRenderedFeatures([point1, point2], {layers: ["stops"]});
+    let point1 = g.map.project([lon - c.map.nearbyRadius, lat - c.map.nearbyRadius]);
+    let point2 = g.map.project([lon + c.map.nearbyRadius, lat + c.map.nearbyRadius]);
+    return g.map.queryRenderedFeatures([point1, point2], {layers: ["stops"]});
 }
 
 function searchNearbyStops(query="") {
-    let bounds = map.getBounds();
+    let bounds = g.map.getBounds();
 
     let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
 
-    let stops = map.queryRenderedFeatures([map.project(bounds._sw), map.project(bounds._ne)], {layers: ["stops"], filter});
+    let stops = g.map.queryRenderedFeatures([g.map.project(bounds._sw), g.map.project(bounds._ne)], {layers: ["stops"], filter});
     
     return stops;
 }
 
 function loadHeatmap() {
-    map.addSource("reports", {
+    g.map.addSource("reports", {
         type: "geojson",
         data: "/reports"
     });
-    map.addLayer({
+    g.map.addLayer({
         id: "reports",
         type: "heatmap",
         source: "reports",
@@ -102,9 +103,9 @@ function loadHeatmap() {
     });
 
     // Update the heatmap every x minutes
-    setInterval(updateHeatmap, 1000 * 60 * heatmapUpdateInterval);
+    setInterval(updateHeatmap, 1000 * 60 * c.map.updateInterval);
 }
 
 function updateHeatmap() {
-    map.getSource("reports").setData("/reports");
+    g.map.getSource("reports").setData("/reports");
 }

@@ -1,29 +1,31 @@
 // Constants
-const melbCoords = [144.9631, -37.8136];
-const vicBounds = [[140.9553,-39.2516],[150.0849,-33.9732]];
-const mapboxToken = "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ";
-const rounding = 3;
-const nearbyOffset = 0.001;
-const heatmapUpdateInterval = 5;
-
-const colors = {
-    bus_metro: "#d66540",
-    bus_night: "#d66540",
-    bus_regional: "#d66540",
-    bus_sky: "#e74c3c",
-    bus_tele: "#d66540",
-    coach_regional: "#8e44ad",
-    interstate: "#8e44ad",
-    train_metro: "#2980b9",
-    train_regional: "#8e44ad",
-    tram_metro: "#27ae60"
+const c = {
+    coords: {
+        melbource: [144.9631, -37.8136],
+        victoria: [[140.9553,-39.2516],[150.0849,-33.9732]],
+    },
+    map: {
+        token: "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ",
+        nearbyRadius: 0.001,
+        updateInterval: 5,
+        animationDuration: 1000
+    },
+    colors: {
+        bus_metro: "#d66540",
+        bus_night: "#d66540",
+        bus_regional: "#d66540",
+        bus_sky: "#e74c3c",
+        bus_tele: "#d66540",
+        coach_regional: "#8e44ad",
+        interstate: "#8e44ad",
+        train_metro: "#2980b9",
+        train_regional: "#8e44ad",
+        tram_metro: "#27ae60"
+    }
 }
 
 // Globals
-let map, controller, menu;
-let stops = [];
-let loadedCoords = [];
-let recaptchaVerifier, loggedIn;
+let g = {};
 
 function init() {
     startLoad();
@@ -31,23 +33,23 @@ function init() {
     // Other init functions
     initController();
     initElements();
-    menu = new Menu();
+    g.menu = new Menu();
     
     // Add event listeners
-    controller.click("recenter", {callback: () => {
+    g.controller.click("recenter", {callback: () => {
         centerOnUser();
         updateHeatmap();
     }, state: "map"});
-    controller.click("location", {callback: locationInput});
-    controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
-    controller.click("amount", {callback: validateInput});
-    controller.click("submit", {callback: sendReport});
-    controller.click("login", {callback: login});
-    controller.click("report", {callback: () => {
-        if (loggedIn) {
-            controller.state = "reportPage";
-            menu.moveTo(1);
-        } else controller.state = "loginPage";
+    g.controller.click("location", {callback: locationInput});
+    g.controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
+    g.controller.click("amount", {callback: validateInput});
+    g.controller.click("submit", {callback: sendReport});
+    g.controller.click("login", {callback: login});
+    g.controller.click("report", {callback: () => {
+        if (g.loggedIn) {
+            g.controller.state = "reportPage";
+            g.menu.moveTo(1);
+        } else g.controller.state = "loginPage";
     }});
     
     initMap().then(stopLoad);
@@ -55,27 +57,27 @@ function init() {
     // ! REMOVE, ONLY FOR TESTING
     firebase.auth().settings.appVerificationDisabledForTesting = true;
     // Setup the recaptcha
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier("login");
+    g.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("login");
 
     firebase.auth().onAuthStateChanged((user) => {
-        if (user) loggedIn = true;
-        else loggedIn = false
+        if (user) g.loggedIn = true;
+        else g.loggedIn = false
     });
 }
 
 function initMap() {
     return new Promise((resolve) => {
         // Initialise Mapbox
-        mapboxgl.accessToken = mapboxToken;
-        map = new mapboxgl.Map({
+        mapboxgl.accessToken = c.map.token;
+        g.map = new mapboxgl.Map({
             container: "map",
             style: "mapbox://styles/mapbox/light-v10",
-            center: melbCoords,
+            center: c.coords.melbource,
             zoom: 10,
-            maxBounds: vicBounds
+            maxBounds: c.coords.victoria
         });
     
-        map.on("load", () => {
+        g.map.on("load", () => {
             let promises = [];
 
             promises.push(loadHeatmap());
@@ -89,9 +91,9 @@ function initMap() {
 
 function initController() {
     // Initialise controller
-    controller = new Controller();
+    g.controller = new Controller();
     // Map state, for when the user is only on the map
-    controller.addState("map", [
+    g.controller.addState("map", [
         {
             target: "pointMenu",
             add: "hidden"
@@ -106,11 +108,11 @@ function initController() {
             click: ["recenter", "loginBack"]
         },
         callback: function() {
-            menu.hide();
+            g.menu.hide();
         }
     });
     // Menu state, when the menu is peeking and the point menu is showing
-    controller.addState("menu", [
+    g.controller.addState("menu", [
         {
             target: "pointMenu",
             remove: "hidden"
@@ -122,22 +124,22 @@ function initController() {
     ], {
         trigger: {click: "centerPoint"},
         callback: function() {
-            menu.show();
+            g.menu.show();
         }
     });
 
     // States for the pages
-    controller.addState("reportPage", ["menu",
+    g.controller.addState("reportPage", ["menu",
         {
             target: "reportPage",
             add: "show"
         }
     ], {
         callback: function() {
-            menu.moveTo(1);
+            g.menu.moveTo(1);
         }
     });
-    controller.addState("accountPage", ["menu",
+    g.controller.addState("accountPage", ["menu",
         {
             target: "accountPage",
             add: "show"
@@ -145,17 +147,17 @@ function initController() {
     ], {
         trigger: {click: "account"},
         callback: function() {
-            menu.moveTo(1);
+            g.menu.moveTo(1);
         }
     });
-    controller.addState("loginPage", ["map", 
+    g.controller.addState("loginPage", ["map", 
         {
             target: "loginPage",
             remove: "hidden"
         }
     ], {
         callback: function() {
-            menu.hide();
+            g.menu.hide();
         }
     });
 }
@@ -168,14 +170,14 @@ function stopLoad() {
 }
 
 function setNotification(text, icon) {
-    let notification = controller.e("notification");
+    let notification = g.controller.e("notification");
     notification.children[0].innerHTML = icon;
     notification.children[1].innerHTML = text;
 
     notification.classList.remove("hidden");
 }
 function hideNotification() {
-    controller.e("notification").classList.add("hidden");
+    g.controller.e("notification").classList.add("hidden");
 }
 
 init();

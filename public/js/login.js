@@ -1,28 +1,28 @@
 function login() {
     startLoad();
     
-    let phoneNumber = controller.e("phoneNumber").value;
+    let phoneNumber = g.controller.e("phoneNumber").value;
 
     // Format the phone number correctly
     phoneNumber = phoneNumber.replace(/[^\d(?:+61)]/g, "");
     phoneNumber = phoneNumber.replace(/^0/, "");
     if (!/^\+61/.test(phoneNumber)) phoneNumber = "+61" + phoneNumber;
 
-    firebase.auth().signInWithPhoneNumber(phoneNumber, recaptchaVerifier).then((confirmation) => {
+    firebase.auth().signInWithPhoneNumber(phoneNumber, g.recaptchaVerifier).then((confirmation) => {
         stopLoad();
 
-        controller.e("login").style.display = "none";
-        controller.e("phoneNumberInput").style.display = "none";
+        g.controller.e("login").style.display = "none";
+        g.controller.e("phoneNumberInput").style.display = "none";
 
-        controller.e("codeInput").style.display = "block";
-        controller.e("verify").style.display = "block";
+        g.controller.e("codeInput").style.display = "block";
+        g.controller.e("verify").style.display = "block";
 
-        controller.e("verify").addEventListener("click", () => {
+        g.controller.e("verify").addEventListener("click", () => {
             startLoad();
             
-            confirmation.confirm(controller.e("verificationCode").value).then(() => {
-                controller.state = "map";
-                loggedIn = true;
+            confirmation.confirm(g.controller.e("verificationCode").value).then(() => {
+                g.controller.state = "map";
+                g.loggedIn = true;
             }).catch((err) => {
                 console.error(err);
                 setNotification("Incorrect verification code", "error");
