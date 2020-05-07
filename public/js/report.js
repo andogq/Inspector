@@ -110,16 +110,11 @@ function sendReport() {
             g.controller.state = "map";
             g.menu.hide();
 
-            let loadId = load.start();
-
-            let xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                load.stop(loadId);
-
-                if (xhr.status == 404) {
-                    notification.set("There was an error submitting your report");
-                }
-
+            request({method: "POST", url: "/report", data: {amount, stopId, time, token}}).then(() => {
+                notification.set("Report submitted!", "done");
+            }).catch(() => {
+                notification.set("There was an error submitting your report");
+            }).finally(() => {
                 // Reset the form
                 g.controller.e("amount").value = undefined;
                 g.controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
@@ -131,15 +126,7 @@ function sendReport() {
 
                 // Refresh the heatmap
                 updateHeatmap();
-            }
-            xhr.onerror = (e) => {
-                load.stop(loadId);
-                
-                console.error(e);
-                notification.set("There was an error submitting your report");
-            }
-            xhr.open("POST", "/report");
-            xhr.send(JSON.stringify({amount, stopId, time, token}));
+            });
         }
     });
 }
