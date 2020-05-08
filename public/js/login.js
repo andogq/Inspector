@@ -1,5 +1,5 @@
 function login() {
-    let phoneNumber = g.controller.e("phoneNumber").value;
+    let phoneNumber = dom.input.login.phoneNumber.value;
     if (phoneNumber == "") return;
 
     let loadId = load.start();
@@ -16,8 +16,8 @@ function login() {
 
     firebase.auth().signInWithPhoneNumber(phoneNumber, g.login.verifier).then((confirmation) => {
         // Swap the login page state
-        g.controller.e("loginPage").classList.remove("step1");
-        g.controller.e("loginPage").classList.add("step2");
+        dom.page.login.classList.remove("step1");
+        dom.page.login.classList.add("step2");
 
         g.login.confirmation = confirmation;
     }).catch((err) => {
@@ -27,7 +27,7 @@ function login() {
 }
 
 function verifyCode() {
-    let code = g.controller.e("verificationCode").value;
+    let code = dom.input.login.code.value;
 
     if (code == "" || !g.login || !g.login.confirmation) return;
     
@@ -41,8 +41,8 @@ function verifyCode() {
         notification.set("Incorrect verification code");
     }).finally(() => {
         // Swap the login page back
-        g.controller.e("loginPage").classList.remove("step2");
-        g.controller.e("loginPage").classList.add("step1");
+        dom.page.login.classList.remove("step2");
+        dom.page.login.classList.add("step1");
 
         // Destroy the verifier
         g.login.verifier.clear();

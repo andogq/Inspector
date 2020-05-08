@@ -1,16 +1,18 @@
 function locationInput() {
     // Show the fullscreen input
-    let fullScreenEl = g.controller.e("fullScreenInput");
+    let fullScreenEl = dom.fullScreen.el;
     fullScreenEl.classList.remove("hidden");
 
     // Save elements
-    let actualInput = fullScreenEl.children[0].children[1];
+    let actualInput = dom.input.fullScreen;
     
     // Clear any suggestions and focus the input
     actualInput.focus();
 
     // Back button
-    fullScreenEl.children[0].children[0].addEventListener("click", () => fullScreenEl.classList.add("hidden"), {once: true});
+    dom.fullScreen.back.addEventListener("click", () => {
+        fullScreenEl.classList.add("hidden")
+    }, {once: true});
 
     actualInput.addEventListener("keyup", () => {
         searchNearbyStops(actualInput.value).then(addSuggestions);
@@ -21,9 +23,9 @@ function locationInput() {
 }
 
 function addSuggestions(suggestions) {
-    let fullScreenEl = g.controller.e("fullScreenInput");
-    let container = fullScreenEl.children[1];
-    let input = g.controller.e("location");
+    let fullScreenEl = dom.fullScreen.el;
+    let container = dom.fullScreen.suggestions;
+    let input = dom.input.report.location;
     container.innerHTML = "";
 
     if (suggestions.length > 0) suggestions.forEach((suggestion) => {
@@ -84,10 +86,10 @@ function addSuggestions(suggestions) {
 }
 
 function validateInput() {
-    let amount = g.controller.e("amount");
-    let location = g.controller.e("location");
-    let time = g.controller.e("time");
-    let reportButton = g.controller.e("submit");
+    let amount = dom.input.report.amount;
+    let location = dom.input.report.location;
+    let time = dom.input.report.time;
+    let reportButton = dom.button.reportSubmit;
 
     if (amount.value != undefined && location.stopId != undefined && time.value != "") reportButton.disabled = false;
     else reportButton.disabled = true;
@@ -95,9 +97,9 @@ function validateInput() {
 
 function sendReport() {
     firebase.auth().currentUser.getIdToken().then((token) => {
-        let amount = Number(g.controller.e("amount").value.replace("+", ""));
-        let stopId = Number(g.controller.e("location").stopId);
-        let d = g.controller.e("time").value.split(":");
+        let amount = Number(dom.input.report.amount.value.replace("+", ""));
+        let stopId = Number(dom.input.report.location.stopId);
+        let d = dom.input.report.time.value.split(":");
         
         let time = new Date();
 
@@ -116,13 +118,16 @@ function sendReport() {
                 notification.set("There was an error submitting your report");
             }).finally(() => {
                 // Reset the form
-                g.controller.e("amount").value = undefined;
-                g.controller.e("amount").getElementsByClassName("selected")[0].classList.remove("selected");
-                g.controller.e("location").stopId = undefined;
-                g.controller.e("location").value = "";
+                dom.input.report.amount.value = undefined;
+                dom.input.report.amount.getElementsByClassName("selected")[0].classList.remove("selected");
+                dom.input.report.location.stopId = undefined;
+                dom.input.report.location.value = "";
+
                 let d = new Date();
-                g.controller.e("time").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-                g.controller.e("submit").disabled = true;
+                let hours = String(d.getHours()).padStart(2, "0");
+                let minutes = String(d.getMinutes()).padStart(2, "0");
+                dom.input.report.time.value = `${hours}:${minutes}`;
+                dom.button.reportSubmit.disabled = true;
 
                 // Refresh the heatmap
                 updateHeatmap();

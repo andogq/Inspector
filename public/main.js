@@ -27,6 +27,60 @@ const c = {
     }
 }
 
+// DOM elements
+function d(id) {
+    return document.getElementById(id);
+}
+const dom = {
+    button: {
+        report: d("report"),
+        recenter: d("recenter"),
+        account: d("account"),
+        data: d("data"),
+        history: d("history"),
+        help: d("help"),
+        reportSubmit: d("submit"),
+        login: d("login"),
+        verify: d("verify")
+    },
+    pullUp: {
+        menu: d("pullUpMenu"),
+        container: d("pullUpMenuContainer")
+    },
+    page: {
+        report: d("reportPage"),
+        account: d("accountPage"),
+        login: d("loginPage")
+    },
+    input: {
+        report: {
+            amount: d("amount"),
+            location: d("location"),
+            time: d("time")
+        },
+        login: {
+            phoneNumber: d("phoneNumber"),
+            code: d("verificationCode")
+        },
+        fullScreen: d("fullScreenText")
+    },
+    fullScreen: {
+        el: d("fullScreenInput"),
+        back: d("fullScreenBack"),
+        suggestions: d("fullScreenSuggestions")
+    },
+    login: {
+        back: d("loginBack")
+    },
+    notification: {
+        el: d("notification"),
+        icon: d("notificationIcon"),
+        text: d("notificationText")
+    },
+    loader: d("loader"),
+    pointMenu: d("pointMenu")
+}
+
 // Globals
 let g = {};
 
@@ -39,22 +93,31 @@ function init() {
     g.menu = new Menu();
     
     // Add event listeners
-    g.controller.click("recenter", {callback: () => {
+    // Recenter button
+    dom.button.recenter.addEventListener("click", () => {
         centerOnUser();
         updateHeatmap();
-    }, state: "map"});
-    g.controller.click("location", {callback: locationInput});
-    g.controller.listen([...document.getElementsByTagName("input")], "blur", {callback: validateInput});
-    g.controller.click("amount", {callback: validateInput});
-    g.controller.click("submit", {callback: sendReport});
-    g.controller.click("login", {callback: login});
-    g.controller.click("report", {callback: () => {
+        g.controller.state = "map";
+    });
+    // Fullscreen window for location search
+    dom.input.report.location.addEventListener("click", locationInput);
+    // Validation for report inputs
+    dom.input.report.amount.addEventListener("click", validateInput);
+    dom.input.report.location.addEventListener("blur", validateInput);
+    dom.input.report.time.addEventListener("blur", validateInput);
+    // Send report listener
+    dom.button.reportSubmit.addEventListener("click", sendReport);
+    // Report button listener
+    dom.button.report.addEventListener("click", () => {
         if (g.loggedIn) {
             g.controller.state = "reportPage";
             g.menu.moveTo(1);
         } else g.controller.state = "loginPage";
-    }});
-    g.controller.e("verify").addEventListener("click", verifyCode);
+    });
+    // Login listener
+    dom.button.login.addEventListener("click", login);
+    // Verify code listener
+    dom.button.verify.addEventListener("click", verifyCode);
     
     initMap().then(() => load.stop(loadId));
 
@@ -167,7 +230,7 @@ function initController() {
 // Helper functions
 const load = {
     start() {
-        document.getElementById("loader").classList.add("loading");
+        dom.loader.classList.add("loading");
 
         this.lastLoad = Date.now();
         return this.lastLoad;
@@ -175,18 +238,16 @@ const load = {
     stop(loadId = 0) {
         // Ensure only the last caller can stop it loading
         if (loadId == this.lastLoad) {
-            document.getElementById("loader").classList.remove("loading");
+            dom.loader.classList.remove("loading");
         }
     }
 }
 
 const notification = {
     set(text, icon = "error") {
-        let el = document.getElementById("notification");
-
-        el.children[0].innerText = icon;
-        el.children[1].innerText = text;
-        el.classList.remove("hidden");
+        dom.notification.icon.innerText = icon;
+        dom.notification.text.innerText = text;
+        dom.notification.el.classList.remove("hidden");
 
         this.lastNotification = Date.now();
 
@@ -196,7 +257,7 @@ const notification = {
     hide(notificationId = 0) {
         // Only hide the notification if it was the last one called
         if (notificationId == this.lastNotification) {
-            document.getElementById("notification").classList.add("hidden");
+            dom.notification.el.classList.add("hidden");
         }
     }
 }

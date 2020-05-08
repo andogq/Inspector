@@ -74,10 +74,10 @@
 
     <div id="fullScreenInput" class="hidden">
         <div class="topRow">
-            <span class="material-icons">keyboard_arrow_left</span>
-            <input type="text"/>
+            <span class="material-icons" id="fullScreenBack">keyboard_arrow_left</span>
+            <input type="text" id="fullScreenText"/>
         </div>
-        <div class="suggestions">
+        <div class="suggestions" id="fullScreenSuggestions">
         </div>
     </div>
 
@@ -104,8 +104,8 @@
         </div>
     </div>
     <div id="notification" class="hidden">
-        <span class="material-icons"></span>
-        <p></p>
+        <span id="notificationIcon" class="material-icons"></span>
+        <p id="notificationText"></p>
     </div>
     <div id="loader" class="loading"></div>
     

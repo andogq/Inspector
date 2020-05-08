@@ -1,8 +1,8 @@
 class Menu {
     constructor() {
         // Elements used in the menu
-        this.menu = document.getElementById("pullUpMenu");
-        this.container = document.getElementById("pullUpMenuContainer");
+        this.menu = dom.pullUp.menu;
+        this.container = dom.pullUp.container;
         
         // Start touch position of the input
         this.startY = 0;
