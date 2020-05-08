@@ -1,8 +1,8 @@
 class Menu {
     constructor() {
         // Elements used in the menu
-        this.menu = dom.pullUp.menu;
-        this.container = dom.pullUp.container;
+        this.menu = dom.menu.el;
+        this.container = dom.menu.container;
         
         // Start touch position of the input
         this.startY = 0;
@@ -12,7 +12,7 @@ class Menu {
         // Keeps track of if the menu is being dragged, to keep things smooth
         this.moving = false;
 
-        this.tabHeight = Number(window.getComputedStyle(dom.pullUp.tab).height.replace("px", ""));
+        this.tabHeight = Number(window.getComputedStyle(dom.menu.tab).height.replace("px", ""));
 
         // Add event listeners for the different touch events
         this.menu.addEventListener("touchstart", this.touchStart.bind(this));

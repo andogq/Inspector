@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="css/inputs.css"/>
     <link rel="stylesheet" href="css/map.css"/>
     <link rel="stylesheet" href="css/page.css"/>
-    <link rel="stylesheet" href="css/pullUpMenu.css"/>
+    <link rel="stylesheet" href="css/menu.css"/>
     <link rel="stylesheet" href="css/loader.css"/>
-    <link rel="stylesheet" href="css/fullScreenInput.css"/>
+    <link rel="stylesheet" href="css/fullScreen.css"/>
     <link rel="stylesheet" href="css/notification.css"/>
     <link rel="stylesheet" href="css/login.css"/>
     <link rel="stylesheet" href="css/states.css"/>
@@ -32,24 +32,24 @@
     <div id="centerPoint"></div>
     
     <div id="pointMenu">
-        <span class="material-icons" id="report">report</span>
-        <span class="material-icons" id="recenter">gps_fixed</span>
+        <span class="material-icons" id="button_report">report</span>
+        <span class="material-icons" id="button_recenter">gps_fixed</span>
     </div>
 
-    <div id="pullUpMenu">
-        <div id="buttonTab">
-            <span class="material-icons" id="account">person</span>
-            <span class="material-icons" id="data">bar_chart</span>
-            <span class="material-icons" id="history">history</span>
-            <span class="material-icons" id="help">help</span>
+    <div id="menu">
+        <div id="menu_tab">
+            <span class="material-icons" id="button_account">person</span>
+            <span class="material-icons" id="button_data">bar_chart</span>
+            <span class="material-icons" id="button_history">history</span>
+            <span class="material-icons" id="button_help">help</span>
         </div>
         <hr/>
-        <div id="pullUpMenuContainer">
-            <div id="reportPage" class="page">
+        <div id="menu_container">
+            <div id="page_report" class="page">
                 <h1>Report Inspectors</h1>
                 <div class="row">
                     <h2 class="text">Amount:</h2>
-                    <div id="amount" class="selection input">
+                    <div id="input_report_amount" class="selection input">
                         <div>1</div>
                         <div>2</div>
                         <div>3</div>
@@ -58,55 +58,55 @@
                 </div>
                 <div class="row">
                     <h2 class="text">Location:</h2>
-                    <input type="text" id="location" placeholder="Nearby Location"/>
+                    <input type="text" id="input_report_location" placeholder="Nearby Location"/>
                 </div>
                 <div class="row">
                     <h2 class="text">Time:</h2>
-                    <input type="time" id="time"/>
+                    <input type="time" id="input_report_time"/>
                 </div>
-                <input type="button" id="submit" disabled value="Report"/>
+                <input type="button" id="button_submitReport" disabled value="Report"/>
             </div>
-            <div id="accountPage" class="page">
+            <div id="page_account" class="page">
                 <h1>Account</h1>
             </div>
+        </div>
+    </div>
+
+    <div id="page_login" class="step1">
+        <div class="background"></div>
+        <div class="container">
+            <span class="material-icons" id="login_back">keyboard_arrow_left</span>
+            <h1>Login or Signup</h1>
+            <div id="loginStep1">
+                <div id="phoneInput">
+                    <h2>Phone Number</h2>
+                    <input type="tel" id="input_login_phone" placeholder="Phone Number"/>
+                </div>
+                <input type="button" id="button_login" value="Go!"/>
+            </div>
+            <div id="loginStep2">
+                <div id="codeInput">
+                    <h2>Verification Code</h2>
+                    <input type="number" id="input_login_code" placeholder="Verification Code"/>
+                </div>
+                <input type="button" id="button_verify" value="Verify"/>
+            </div>
+            <p>You will recieve a code via SMS for verification. Standard rates apply.</p>
         </div>
     </div>
 
     <div id="fullScreenInput">
         <div class="topRow">
             <span class="material-icons" id="fullScreenBack">keyboard_arrow_left</span>
-            <input type="text" id="fullScreenText"/>
+            <input type="text" id="input_fullScreen"/>
         </div>
         <div class="suggestions" id="fullScreenSuggestions">
         </div>
     </div>
 
-    <div id="loginPage" class="step1">
-        <div class="background"></div>
-        <div class="container">
-            <span class="material-icons" id="loginBack">keyboard_arrow_left</span>
-            <h1>Login or Signup</h1>
-            <div id="loginStep1">
-                <div id="phoneNumberInput">
-                    <h2>Phone Number</h2>
-                    <input type="tel" id="phoneNumber" placeholder="Phone Number"/>
-                </div>
-                <input type="button" id="login" value="Go!"/>
-            </div>
-            <div id="loginStep2">
-                <div id="codeInput">
-                    <h2>Verification Code</h2>
-                    <input type="number" id="verificationCode" placeholder="Verification Code"/>
-                </div>
-                <input type="button" id="verify" value="Verify"/>
-            </div>
-            <p>You will recieve a code via SMS for verification. Standard rates apply.</p>
-        </div>
-    </div>
-
     <div id="notification">
-        <span id="notificationIcon" class="material-icons"></span>
-        <p id="notificationText"></p>
+        <span id="notification_icon" class="material-icons"></span>
+        <p id="notification_text"></p>
     </div>
     
     <div id="loader"></div>

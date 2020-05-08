@@ -89,7 +89,7 @@ function validateInput() {
     let amount = dom.input.report.amount;
     let location = dom.input.report.location;
     let time = dom.input.report.time;
-    let reportButton = dom.button.reportSubmit;
+    let reportButton = dom.button.submitReport;
 
     if (amount.value != undefined && location.stopId != undefined && time.value != "") reportButton.disabled = false;
     else reportButton.disabled = true;
@@ -126,7 +126,7 @@ function sendReport() {
                 let hours = String(d.getHours()).padStart(2, "0");
                 let minutes = String(d.getMinutes()).padStart(2, "0");
                 dom.input.report.time.value = `${hours}:${minutes}`;
-                dom.button.reportSubmit.disabled = true;
+                dom.button.submitReport.disabled = true;
 
                 // Refresh the heatmap
                 updateHeatmap();

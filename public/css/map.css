@@ -42,10 +42,10 @@
     font-size: calc(var(--unit) * 2);
 }
 
-#report {
+#button_report {
     color: var(--accent);
 }
 
-#recenter {
+#button_recenter {
     color: var(--main);
 }

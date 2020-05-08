@@ -1,24 +1,24 @@
-#loginPage {
+#page_login {
     position: fixed;
 }
 
-#loginPage > .background, #loginPage > .container {
+#page_login > .background, #page_login > .container {
     position: absolute;
 }
 
-#loginPage, #loginPage > .background, #loginPage > .container {
+#page_login, #page_login > .background, #page_login > .container {
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 }
 
-#loginPage > .background {
+#page_login > .background {
     background: var(--white);
     opacity: 0.9;
 }
 
-#loginPage > .container {
+#page_login > .container {
     margin: var(--unit);
 
     display: flex;
@@ -26,36 +26,36 @@
     justify-content: center;
 }
 
-#loginPage > .container > * {
+#page_login > .container > * {
     margin: calc(var(--unit) / 2) 0;
 }
 
-#loginPage h2 {
+#page_login h2 {
     color: var(--dark);
     font-size: calc(var(--unit) * 0.75);
     font-weight: normal;
 }
 
-#loginPage h1 {
+#page_login h1 {
     font-size: calc(var(--unit) * 1.75);
     color: var(--accent);
 }
 
-#loginBack {
+#login_back {
     position: fixed;
     top: var(--unit);
     left: var(--unit);
 }
 
-#loginPage.step1 > .container > #loginStep2 {
+#page_login.step1 > .container > #loginStep2 {
     display: none;
 }
 
-#loginPage.step2 > .container > #loginStep1 {
+#page_login.step2 > .container > #loginStep1 {
     display: none;
 }
 
-#loginPage > .container > p {
+#page_login > .container > p {
     font-size: calc(var(--unit) / 1.5);
     text-align: center;
 }

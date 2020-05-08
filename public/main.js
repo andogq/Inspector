@@ -33,37 +33,37 @@ function d(id) {
 }
 const dom = {
     button: {
-        report: d("report"),
-        recenter: d("recenter"),
-        account: d("account"),
-        data: d("data"),
-        history: d("history"),
-        help: d("help"),
-        reportSubmit: d("submit"),
-        login: d("login"),
-        verify: d("verify")
+        report: d("button_report"),
+        recenter: d("button_recenter"),
+        account: d("button_account"),
+        data: d("button_data"),
+        history: d("button_history"),
+        help: d("button_help"),
+        submitReport: d("button_submitReport"),
+        login: d("button_login"),
+        verify: d("button_verify")
     },
-    pullUp: {
-        menu: d("pullUpMenu"),
-        container: d("pullUpMenuContainer"),
-        tab: d("buttonTab")
+    menu: {
+        el: d("menu"),
+        container: d("menu_container"),
+        tab: d("menu_tab")
     },
     page: {
-        report: d("reportPage"),
-        account: d("accountPage"),
-        login: d("loginPage")
+        report: d("page_report"),
+        account: d("page_account"),
+        login: d("page_login")
     },
     input: {
         report: {
-            amount: d("amount"),
-            location: d("location"),
-            time: d("time")
+            amount: d("input_report_amount"),
+            location: d("input_report_location"),
+            time: d("input_report_time")
         },
         login: {
-            phoneNumber: d("phoneNumber"),
-            code: d("verificationCode")
+            phone: d("input_login_phone"),
+            code: d("input_login_code")
         },
-        fullScreen: d("fullScreenText")
+        fullScreen: d("input_fullScreen")
     },
     fullScreen: {
         el: d("fullScreenInput"),
@@ -71,12 +71,12 @@ const dom = {
         suggestions: d("fullScreenSuggestions")
     },
     login: {
-        back: d("loginBack")
+        back: d("login_back")
     },
     notification: {
         el: d("notification"),
-        icon: d("notificationIcon"),
-        text: d("notificationText")
+        icon: d("notification_icon"),
+        text: d("notification_text")
     },
     map: d("map"),
     centerPoint: d("centerPoint"),
@@ -117,7 +117,7 @@ function addListeners() {
         if (g.loggedIn) {
             // User is logged in
             document.body.setAttribute("state", "page");
-            dom.pullUp.container.setAttribute("state", "report");
+            dom.menu.container.setAttribute("state", "report");
         } else document.body.setAttribute("state", "login");
     });
 
@@ -128,7 +128,7 @@ function addListeners() {
         document.body.setAttribute("state", "map");
     });
 
-    dom.button.reportSubmit.addEventListener("click", sendReport);
+    dom.button.submitReport.addEventListener("click", sendReport);
 
     // Button listeners
     dom.button.login.addEventListener("click", login);
@@ -140,6 +140,10 @@ function addListeners() {
     dom.input.report.amount.addEventListener("click", validateInput);
     dom.input.report.location.addEventListener("blur", validateInput);
     dom.input.report.time.addEventListener("blur", validateInput);
+
+    dom.login.back.addEventListener("click", () => {
+        document.body.setAttribute("state", "map");
+    });
 }
 
 function initMap() {

@@ -13,12 +13,12 @@
     align-items: center;
 }
 
-#notification > span {
+#notification_icon {
     justify-self: center;
     color: var(--white);
 }
 
-#notification > p {
+#notification_text {
     color: var(--white);
     font-size: calc(var(--unit) * 0.8);
 }

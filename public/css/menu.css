@@ -1,7 +1,7 @@
 /*
  * Styling for the main div
  */
-#pullUpMenu {
+#menu {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -17,7 +17,7 @@
 /*
  * The bit that peeks out, and is draggable
  */
-#buttonTab {
+#menu_tab {
     height: calc(var(--unit) * 3);
 
     display: flex;
@@ -32,7 +32,7 @@
 /*
  * The container containing everything in the menu
  */
-#pullUpMenuContainer {
+#menu_container {
     height: calc(100% - (var(--unit) * 3));
     overflow-y: hidden;
 
@@ -42,7 +42,7 @@
 /*
  * The line between the buttons and the page
  */
-#pullUpMenu > hr {
+#menu > hr {
     /* width: 90%; */
     margin: 1% 0;
     border: 2px solid var(--accentLight);
