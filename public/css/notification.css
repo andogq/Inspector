@@ -3,12 +3,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(var(--unit) * 2);
+    height: 2rem;
 
     background: var(--accent);
 
     display: grid;
-    grid: 1fr / calc(var(--unit) * 2) 1fr;
+    grid: 1fr / 2rem 1fr;
 
     align-items: center;
 }
@@ -20,5 +20,5 @@
 
 #notification_text {
     color: var(--white);
-    font-size: calc(var(--unit) * 0.8);
+    font-size: 0.8rem;
 }

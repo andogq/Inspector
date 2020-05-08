@@ -17,7 +17,7 @@ body[state="menu"] #menu {
     pointer-events: all;
 }
 body[state="menu"] #menu {
-    height: calc(var(--unit) * 3);
+    height: 3rem;
 }
 
 

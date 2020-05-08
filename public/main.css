@@ -2,7 +2,7 @@
  * Variables
  */
 :root {
-    --unit: 5vmin;
+    font-size: 5vmin;
     --transition: 250ms ease-out;
 
     --main: #4E8098;
@@ -44,7 +44,7 @@ html, body {
  * Slight adjustment for icons
  */
 .material-icons {
-    font-size: calc(var(--unit) * 1.5);
+    font-size: 1.5rem;
 }
 
 body > * {

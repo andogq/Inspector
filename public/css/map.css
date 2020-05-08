@@ -11,13 +11,13 @@
  */
 #centerPoint {
     position: fixed;
-    top: calc(50% - (var(--unit) * 0.75));
-    left: calc(50% - (var(--unit) * 0.75));
-    height: calc(var(--unit) * 1.5);
-    width: calc(var(--unit) * 1.5);
+    top: calc(50% - 0.75rem);
+    left: calc(50% - 0.75rem);
+    height: 1.5rem;
+    width: 1.5rem;
 
     border-radius: 100%;
-    border: calc(var(--unit) / 10) solid var(--white);
+    border: 0.1rem solid var(--white);
 
     background: var(--main);
 }
@@ -27,7 +27,7 @@
  */
 #pointMenu {
     position: fixed;
-    top: calc(50% + var(--unit));
+    top: calc(50% + 1rem);
     left: 50%;
     width: fit-content;
     transform: translate(-50%, 0);
@@ -38,8 +38,8 @@
  * Styling for the actual icons
  */
 #pointMenu > * {
-    margin: calc(var(--unit) / 2);
-    font-size: calc(var(--unit) * 2);
+    margin: 0.5rem;
+    font-size: 2rem;
 }
 
 #button_report {

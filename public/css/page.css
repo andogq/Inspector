@@ -6,7 +6,7 @@
 }
 
 .page > h1 {
-    font-size: calc(var(--unit) * 1.75);
+    font-size: 1.75rem;
     color: var(--accent);
 }
 
@@ -19,6 +19,6 @@
 
 .row > .text {
     color: var(--dark);
-    font-size: calc(var(--unit) * 0.75);
+    font-size: 0.75rem;
     font-weight: normal;
 }

@@ -19,7 +19,7 @@
 }
 
 #page_login > .container {
-    margin: var(--unit);
+    margin: 1rem;
 
     display: flex;
     flex-direction: column;
@@ -27,24 +27,24 @@
 }
 
 #page_login > .container > * {
-    margin: calc(var(--unit) / 2) 0;
+    margin: 0.5rem 0;
 }
 
 #page_login h2 {
     color: var(--dark);
-    font-size: calc(var(--unit) * 0.75);
+    font-size: 0.75rem;
     font-weight: normal;
 }
 
 #page_login h1 {
-    font-size: calc(var(--unit) * 1.75);
+    font-size: 1.75rem;
     color: var(--accent);
 }
 
 #login_back {
     position: fixed;
-    top: var(--unit);
-    left: var(--unit);
+    top: 1rem;
+    left: 1rem;
 }
 
 #page_login.step1 > .container > #loginStep2 {
@@ -56,6 +56,6 @@
 }
 
 #page_login > .container > p {
-    font-size: calc(var(--unit) / 1.5);
+    font-size: 0.75rem;
     text-align: center;
 }

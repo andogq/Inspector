@@ -3,10 +3,10 @@
  */
 input, .input {
     width: 100%;
-    height: calc(var(--unit) * 2.5);
+    height: 2.5rem;
 
     background: var(--white);
-    font-size: calc(var(--unit) * 0.75);
+    font-size: 0.75rem;
     --border: 2px solid var(--darker);
 }
 
@@ -52,7 +52,7 @@ input:disabled {
  */
 input {
     border: var(--border);
-    padding: calc(var(--unit) / 2);
+    padding: 0.5rem;
 }
 input:focus {
     outline: none;
@@ -63,7 +63,7 @@ input:focus {
  * Input button elements
  */
 input[type="button"] {
-    margin-top: var(--unit);
+    margin-top: 1rem;
 }
 input[type="button"]:focus {
     border: var(--border);
