@@ -11,7 +11,6 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css"/>
 
-    <link rel="stylesheet" href="css/classes.css"/>
     <link rel="stylesheet" href="css/inputs.css"/>
     <link rel="stylesheet" href="css/main.css"/>
     <link rel="stylesheet" href="css/map.css"/>
@@ -22,16 +21,18 @@
     <link rel="stylesheet" href="css/notification.css"/>
     <link rel="stylesheet" href="css/login.css"/>
 
+    <link rel="stylesheet" href="css/states.css"/>
+
     <!-- Firebase Scripts -->
     <script src="/__/firebase/7.14.2/firebase-app.js"></script>
     <script src="/__/firebase/7.14.2/firebase-auth.js"></script>
     <script src="/__/firebase/init.js"></script>
 </head>
-<body>
+<body state="map">
     <div id="map"></div>
     <div id="centerPoint"></div>
     
-    <div id="pointMenu" class="hidden">
+    <div id="pointMenu">
         <span class="material-icons" id="report">report</span>
         <span class="material-icons" id="recenter">gps_fixed</span>
     </div>
@@ -72,7 +73,7 @@
         </div>
     </div>
 
-    <div id="fullScreenInput" class="hidden">
+    <div id="fullScreenInput">
         <div class="topRow">
             <span class="material-icons" id="fullScreenBack">keyboard_arrow_left</span>
             <input type="text" id="fullScreenText"/>
@@ -81,7 +82,7 @@
         </div>
     </div>
 
-    <div id="loginPage" class="hidden step1">
+    <div id="loginPage" class="step1">
         <div class="background"></div>
         <div class="container">
             <span class="material-icons" id="loginBack">keyboard_arrow_left</span>
@@ -103,14 +104,13 @@
             <p>You will recieve a code via SMS for verification. Standard rates apply.</p>
         </div>
     </div>
-    <div id="notification" class="hidden">
+    <div id="notification">
         <span id="notificationIcon" class="material-icons"></span>
         <p id="notificationText"></p>
     </div>
-    <div id="loader" class="loading"></div>
+    <div id="loader"></div>
     
     <div id="scripts">
-        <script src="js/controller.js"></script>
         <script src="js/menu.js"></script>
         <script src="js/map.js"></script>
         <script src="js/geo.js"></script>

@@ -34,7 +34,9 @@ function verifyCode() {
     let verifyLoadId = load.start();
 
     g.login.confirmation.confirm(code).then(() => {
-        g.controller.state = "map";
+        // Logged in successfully!
+        notification.set("Logged in successfully!", "check");
+        document.body.setAttribute("state", "map");
         g.loggedIn = true;
     }).catch((err) => {
         console.error(err);

@@ -45,7 +45,8 @@ const dom = {
     },
     pullUp: {
         menu: d("pullUpMenu"),
-        container: d("pullUpMenuContainer")
+        container: d("pullUpMenuContainer"),
+        tab: d("buttonTab")
     },
     page: {
         report: d("reportPage"),
@@ -77,6 +78,8 @@ const dom = {
         icon: d("notificationIcon"),
         text: d("notificationText")
     },
+    map: d("map"),
+    centerPoint: d("centerPoint"),
     loader: d("loader"),
     pointMenu: d("pointMenu")
 }
@@ -87,37 +90,11 @@ let g = {};
 function init() {
     let loadId = load.start();
 
-    // Other init functions
-    initController();
-    initElements();
     g.menu = new Menu();
-    
-    // Add event listeners
-    // Recenter button
-    dom.button.recenter.addEventListener("click", () => {
-        centerOnUser();
-        updateHeatmap();
-        g.controller.state = "map";
-    });
-    // Fullscreen window for location search
-    dom.input.report.location.addEventListener("click", locationInput);
-    // Validation for report inputs
-    dom.input.report.amount.addEventListener("click", validateInput);
-    dom.input.report.location.addEventListener("blur", validateInput);
-    dom.input.report.time.addEventListener("blur", validateInput);
-    // Send report listener
-    dom.button.reportSubmit.addEventListener("click", sendReport);
-    // Report button listener
-    dom.button.report.addEventListener("click", () => {
-        if (g.loggedIn) {
-            g.controller.state = "reportPage";
-            g.menu.moveTo(1);
-        } else g.controller.state = "loginPage";
-    });
-    // Login listener
-    dom.button.login.addEventListener("click", login);
-    // Verify code listener
-    dom.button.verify.addEventListener("click", verifyCode);
+
+    // Other init functions
+    initElements();
+    addListeners();
     
     initMap().then(() => load.stop(loadId));
 
@@ -125,9 +102,44 @@ function init() {
     firebase.auth().settings.appVerificationDisabledForTesting = true;
 
     firebase.auth().onAuthStateChanged((user) => {
-        if (user) g.loggedIn = true;
-        else g.loggedIn = false
+        g.loggedIn = user != undefined;
     });
+}
+
+function addListeners() {
+    dom.map.addEventListener("touchstart", () => {
+        document.body.setAttribute("state", "map");
+    });
+    dom.centerPoint.addEventListener("click", () => {
+        document.body.setAttribute("state", "menu");
+    });
+    dom.button.report.addEventListener("click", () => {
+        if (g.loggedIn) {
+            // User is logged in
+            document.body.setAttribute("state", "page");
+            dom.pullUp.container.setAttribute("state", "report");
+        } else document.body.setAttribute("state", "login");
+    });
+
+    // Recenter button
+    dom.button.recenter.addEventListener("click", () => {
+        centerOnUser();
+        updateHeatmap();
+        document.body.setAttribute("state", "map");
+    });
+
+    dom.button.reportSubmit.addEventListener("click", sendReport);
+
+    // Button listeners
+    dom.button.login.addEventListener("click", login);
+    dom.button.verify.addEventListener("click", verifyCode);
+
+    // Fullscreen window for location search
+    dom.input.report.location.addEventListener("click", locationInput);
+    // Validation for report inputs
+    dom.input.report.amount.addEventListener("click", validateInput);
+    dom.input.report.location.addEventListener("blur", validateInput);
+    dom.input.report.time.addEventListener("blur", validateInput);
 }
 
 function initMap() {
@@ -154,83 +166,10 @@ function initMap() {
     });
 }
 
-function initController() {
-    // Initialise controller
-    g.controller = new Controller();
-    // Map state, for when the user is only on the map
-    g.controller.addState("map", [
-        {
-            target: "pointMenu",
-            add: "hidden"
-        },
-        {
-            target: "map",
-            remove: "faded"
-        }
-    ], {
-        trigger: {
-            touchstart: "map",
-            click: ["recenter", "loginBack"]
-        },
-        callback: function() {
-            g.menu.hide();
-        }
-    });
-    // Menu state, when the menu is peeking and the point menu is showing
-    g.controller.addState("menu", [
-        {
-            target: "pointMenu",
-            remove: "hidden"
-        },
-        {
-            target: "map",
-            add: "faded"
-        }
-    ], {
-        trigger: {click: "centerPoint"},
-        callback: function() {
-            g.menu.show();
-        }
-    });
-
-    // States for the pages
-    g.controller.addState("reportPage", ["menu",
-        {
-            target: "reportPage",
-            add: "show"
-        }
-    ], {
-        callback: function() {
-            g.menu.moveTo(1);
-        }
-    });
-    g.controller.addState("accountPage", ["menu",
-        {
-            target: "accountPage",
-            add: "show"
-        }
-    ], {
-        trigger: {click: "account"},
-        callback: function() {
-            g.menu.moveTo(1);
-        }
-    });
-    g.controller.addState("loginPage", ["map", 
-        {
-            target: "loginPage",
-            remove: "hidden"
-        }
-    ], {
-        callback: function() {
-            g.menu.hide();
-        }
-    });
-}
-
 // Helper functions
 const load = {
     start() {
-        dom.loader.classList.add("loading");
+        dom.loader.setAttribute("state", "show");
 
         this.lastLoad = Date.now();
         return this.lastLoad;
@@ -238,7 +177,7 @@ const load = {
     stop(loadId = 0) {
         // Ensure only the last caller can stop it loading
         if (loadId == this.lastLoad) {
-            dom.loader.classList.remove("loading");
+            dom.loader.removeAttribute("state");
         }
     }
 }
@@ -247,7 +186,7 @@ const notification = {
     set(text, icon = "error") {
         dom.notification.icon.innerText = icon;
         dom.notification.text.innerText = text;
-        dom.notification.el.classList.remove("hidden");
+        dom.notification.el.setAttribute("state", "show");
 
         this.lastNotification = Date.now();
 
@@ -257,7 +196,7 @@ const notification = {
     hide(notificationId = 0) {
         // Only hide the notification if it was the last one called
         if (notificationId == this.lastNotification) {
-            dom.notification.el.classList.add("hidden");
+            dom.notification.el.removeAttribute("state");
         }
     }
 }

@@ -46,3 +46,8 @@ html, body {
 .material-icons {
     font-size: calc(var(--unit) * 1.5);
 }
+
+body > * {
+    opacity: 0;
+    pointer-events: none;
+}

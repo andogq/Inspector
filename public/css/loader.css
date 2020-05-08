@@ -1,4 +1,4 @@
-#loader.loading {
+#loader {
     position: fixed;
     top: var(--unit);
     right: var(--unit);

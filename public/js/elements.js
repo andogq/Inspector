@@ -24,7 +24,9 @@ function initElements() {
     [...document.getElementsByTagName("input")].forEach((el) => {
         if (el.type == "time") {
             let d = new Date();
-            el.value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`
+            let hours = String(d.getHours()).padStart(2, "0");
+            let minutes = String(d.getMinutes()).padStart(2, "0")
+            el.value = `${hours}:${minutes}`
         }
     });
 }

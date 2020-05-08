@@ -1,7 +1,7 @@
 function locationInput() {
     // Show the fullscreen input
     let fullScreenEl = dom.fullScreen.el;
-    fullScreenEl.classList.remove("hidden");
+    fullScreenEl.setAttribute("state", "show");
 
     // Save elements
     let actualInput = dom.input.fullScreen;
@@ -11,7 +11,7 @@ function locationInput() {
 
     // Back button
     dom.fullScreen.back.addEventListener("click", () => {
-        fullScreenEl.classList.add("hidden")
+        fullScreenEl.removeAttribute("state");
     }, {once: true});
 
     actualInput.addEventListener("keyup", () => {
@@ -46,7 +46,7 @@ function addSuggestions(suggestions) {
             input.stopId = data.id;
             
             // Hide the element
-            fullScreenEl.classList.add("hidden");
+            fullScreenEl.removeAttribute("state");
 
             validateInput();
         });
@@ -109,8 +109,7 @@ function sendReport() {
 
         if (amount != undefined && stopId != undefined && time != "") {
             // Hide the report page
-            g.controller.state = "map";
-            g.menu.hide();
+            document.body.setAttribute("state", "map");
 
             request({method: "POST", url: "/report", data: {amount, stopId, time, token}}).then(() => {
                 notification.set("Report submitted!", "done");

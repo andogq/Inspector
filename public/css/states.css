@@ -1,0 +1,71 @@
+/* Map state */
+body[state="map"] #map,
+body[state="map"] #centerPoint {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Menu state */
+body[state="menu"] #map {
+    opacity: 0.2;
+    pointer-events: all;
+}
+body[state="menu"] #centerPoint,
+body[state="menu"] #pointMenu,
+body[state="menu"] #pullUpMenu {
+    opacity: 1;
+    pointer-events: all;
+}
+body[state="menu"] #pullUpMenu {
+    height: calc(var(--unit) * 3);
+}
+
+
+/* Page state */
+body[state="page"] #centerPoint,
+body[state="page"] #pointMenu,
+body[state="page"] #pullUpMenu {
+    opacity: 1;
+    pointer-events: all;
+}
+body[state="page"] #map {
+    opacity: 0.2;
+    pointer-events: all;
+}
+body[state="page"] #pullUpMenu {
+    height: 70%;
+}
+
+/* Menu dragging and extended */
+body[state="page"] #pullUpMenu[state="dragging"] {
+    transition: none;
+}
+body[state="page"] #pullUpMenu[state="extended"] {
+    height: 100%;
+    border-radius: 0;
+}
+
+/* Report and report page */
+#pullUpMenuContainer[state="report"] > #reportPage,
+#pullUpMenuContainer[state="account"] > #accountPage {
+    display: inline;
+}
+
+/* Login state */
+body[state="login"] #loginPage,
+body[state="login"] #map {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Notification and loader */
+#notification[state="show"],
+#loader[state="show"] {
+    opacity: 1;
+}
+
+/* Full screen input */
+#fullScreenInput[state="show"] {
+    opacity: 1;
+    pointer-events: all;
+}
