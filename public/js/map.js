@@ -19,38 +19,54 @@ function centerOnUser() {
     });
 }
 
-// Loads the stops from the server
-function loadStops() {
-    return new Promise((resolve) => {
-        let colors = c.colors;
+// Loads the sources from the server
+function loadSources() {
+    let colors = c.colors;
+    let paint = {
+        "circle-radius": 5,
+        "circle-color": [
+            "match", ["get", "type"],
+            "bus_metro", colors["bus_metro"],
+            "bus_night", colors["bus_night"],
+            "bus_regional", colors["bus_regional"],
+            "bus_sky", colors["bus_sky"],
+            "bus_tele", colors["bus_tele"],
+            "coach_regional", colors["coach_regional"],
+            "interstate", colors["interstate"],
+            "train_metro", colors["train_metro"],
+            "train_regional", colors["train_regional"],
+            "tram_metro", colors["tram_metro"],
+            "white"
+        ]
+    }
 
-        g.map.addSource("stops", {type: "geojson", data: "/data/stops.geojson"});
-        g.map.addLayer({
-            id: "stops",
-            type: "circle",
-            source: "stops",
-            paint: {
-                "circle-radius": 5,
-                "circle-color": [
-                    "match", ["get", "type"],
-                    "bus_metro", colors["bus_metro"],
-                    "bus_night", colors["bus_night"],
-                    "bus_regional", colors["bus_regional"],
-                    "bus_sky", colors["bus_sky"],
-                    "bus_tele", colors["bus_tele"],
-                    "coach_regional", colors["coach_regional"],
-                    "interstate", colors["interstate"],
-                    "train_metro", colors["train_metro"],
-                    "train_regional", colors["train_regional"],
-                    "tram_metro", colors["tram_metro"],
-                    "white"
-                ]
-            }
+    g.sources = [];
+
+    return Promise.all(c.map.sources.map((sourceUrl) => {
+        return new Promise((resolve) => {
+            let sourceName = sourceUrl.replace(/^.+\/(.+)\.geojson$/, "$1");
+
+            g.map.addSource(sourceName, {
+                type: "geojson",
+                data: sourceUrl
+            });
+            g.map.addLayer({
+                id: sourceName,
+                type: "circle",
+                source: sourceName,
+                paint: {
+                    "circle-radius": 5,
+                    "circle-color": c.colors[sourceName]
+                }
+            });
+
+            g.sources.push(sourceName);
+
+            g.map.on("sourcedata", () => {
+                if (g.map.getSource(sourceName) && g.map.isSourceLoaded(sourceName)) resolve();
+            });
         });
-        g.map.on("sourcedata", () => {
-            if (g.map.getSource("stops") && g.map.isSourceLoaded("stops")) resolve();
-        });
-    });
+    }));
 }
 
 function searchNearbyStops(query="") {
@@ -60,7 +76,7 @@ function searchNearbyStops(query="") {
 
         let filter = query == "" ? undefined : ["in", query, ["get", "name"]];
 
-        let stops = g.map.queryRenderedFeatures([point1, point2], {layers: ["stops"], filter});
+        let stops = g.map.queryRenderedFeatures([point1, point2], {layers: g.sources, filter});
 
         return stops.sort((a, b) => {
             let dA = Math.hypot((pos.lon - a.geometry.coordinates[0]), (pos.lat - a.geometry.coordinates[1]));

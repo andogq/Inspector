@@ -8,14 +8,20 @@ const c = {
         token: "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ",
         nearbyRadius: 0.0015,
         updateInterval: 5,
-        animationDuration: 1000
+        animationDuration: 1000,
+        sources: [
+            "/data/bus_metro.geojson",
+            "/data/bus_regional.geojson",
+            "/data/coach_regional.geojson",
+            "/data/interstate.geojson",
+            "/data/train_metro.geojson",
+            "/data/train_regional.geojson",
+            "/data/tram_metro.geojson"
+        ]
     },
     colors: {
         bus_metro: "#d66540",
-        bus_night: "#d66540",
         bus_regional: "#d66540",
-        bus_sky: "#e74c3c",
-        bus_tele: "#d66540",
         coach_regional: "#8e44ad",
         interstate: "#8e44ad",
         train_metro: "#2980b9",
@@ -167,7 +173,7 @@ function initMap() {
             let promises = [];
 
             promises.push(loadHeatmap());
-            promises.push(loadStops());
+            promises.push(loadSources()); 
             promises.push(centerOnUser());
 
             Promise.all(promises).then(resolve);

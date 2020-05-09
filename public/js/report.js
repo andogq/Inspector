@@ -20,7 +20,7 @@ function locationSearch(query) {
             let els = [];
     
             if (results.length > 0) results.forEach((result) => {
-                let row = makeRow(c.colors[result.properties.type], result.properties.name);
+                let row = makeRow(result.layer.paint["circle-color"], result.properties.name);
                 
                 row.stopData = JSON.stringify({id: result.properties.id, name: result.properties.name});
         
