@@ -64,8 +64,8 @@ body[state="login"] #map {
     opacity: 1;
 }
 
-/* Full screen input */
-#fullScreenInput[state="show"] {
+/* Search box */
+#search_container[state="show"] {
     opacity: 1;
     pointer-events: all;
 }

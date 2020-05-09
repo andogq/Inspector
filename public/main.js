@@ -63,12 +63,12 @@ const dom = {
             phone: d("input_login_phone"),
             code: d("input_login_code")
         },
-        fullScreen: d("input_fullScreen")
+        search: d("input_search")
     },
-    fullScreen: {
-        el: d("fullScreenInput"),
-        back: d("fullScreenBack"),
-        suggestions: d("fullScreenSuggestions")
+    search: {
+        container: d("search_container"),
+        back: d("search_back"),
+        suggestions: d("search_suggestions")
     },
     login: {
         back: d("login_back")
@@ -134,8 +134,8 @@ function addListeners() {
     dom.button.login.addEventListener("click", login);
     dom.button.verify.addEventListener("click", verifyCode);
 
-    // Fullscreen window for location search
-    dom.input.report.location.addEventListener("click", locationInput);
+    // Fullscreen window for search
+    dom.input.report.location.addEventListener("click", () => search.show(locationSearch));
     // Validation for report inputs
     dom.input.report.amount.addEventListener("click", validateInput);
     dom.input.report.location.addEventListener("blur", validateInput);
@@ -144,6 +144,11 @@ function addListeners() {
     dom.login.back.addEventListener("click", () => {
         document.body.setAttribute("state", "map");
     });
+    dom.search.back.addEventListener("click", () => {
+        dom.search.container.remove("state");
+    });
+
+    dom.input.search.addEventListener("keyup", () => search.update());
 }
 
 function initMap() {

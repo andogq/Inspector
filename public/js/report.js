@@ -1,88 +1,58 @@
-function locationInput() {
-    // Show the fullscreen input
-    let fullScreenEl = dom.fullScreen.el;
-    fullScreenEl.setAttribute("state", "show");
-
-    // Save elements
-    let actualInput = dom.input.fullScreen;
+function locationSearch(query) {
+    return new Promise((resolve) => {
+        searchNearbyStops(query).then((results) => {
+            function makeRow(color, text) {
+                let row = document.createElement("div");
+                row.classList.add("row");
+                
+                let dot = document.createElement("div");
+                dot.classList.add("dot");
+                dot.style.background = color;
+                row.appendChild(dot);
     
-    // Clear any suggestions and focus the input
-    actualInput.focus();
-
-    // Back button
-    dom.fullScreen.back.addEventListener("click", () => {
-        fullScreenEl.removeAttribute("state");
-    }, {once: true});
-
-    actualInput.addEventListener("keyup", () => {
-        searchNearbyStops(actualInput.value).then(addSuggestions);
-    });
-
-    // Load the suggestions
-    searchNearbyStops(actualInput.value).then(addSuggestions);
-}
-
-function addSuggestions(suggestions) {
-    let fullScreenEl = dom.fullScreen.el;
-    let container = dom.fullScreen.suggestions;
-    let input = dom.input.report.location;
-    container.innerHTML = "";
-
-    if (suggestions.length > 0) suggestions.forEach((suggestion) => {
-        // Create the row and save the data for it
-        let row = document.createElement("div");
-        row.classList.add("row");
-        row.stopData = JSON.stringify({id: suggestion.properties.id, name: suggestion.properties.name});
-
-        // Add the event listener for when it's clicked
-        row.addEventListener("click", (e) => {
-            let target = e.target;
-            // Get to the row element
-            while (!target.classList.contains("row")) target = target.parentElement;
-
-            // Load the data into the location input
-            let data = JSON.parse(target.stopData);
-            input.value = data.name;
-            input.stopId = data.id;
-            
-            // Hide the element
-            fullScreenEl.removeAttribute("state");
-
-            validateInput();
+                let p = document.createElement("p");
+                p.innerText = text;
+                row.appendChild(p);
+    
+                return row;
+            }
+    
+            let els = [];
+    
+            if (results.length > 0) results.forEach((result) => {
+                let row = makeRow(c.colors[result.properties.type], result.properties.name);
+                
+                row.stopData = JSON.stringify({id: result.properties.id, name: result.properties.name});
+        
+                // Add the event listener for when it's clicked
+                row.addEventListener("click", (e) => {
+                    let target = e.target;
+                    // Get to the row element
+                    while (!target.classList.contains("row")) target = target.parentElement;
+        
+                    // Load the data into the location input
+                    let data = JSON.parse(target.stopData);
+                    dom.input.report.location.value = data.name;
+                    dom.input.report.location.stopId = data.id;
+                    
+                    // Hide the element
+                    dom.search.container.removeAttribute("state");
+        
+                    validateInput();
+                });
+        
+                els.push(row);
+            });
+            else {
+                let row = makeRow("red", "No nearby places found...");
+        
+                // Add the row to the container
+                els.push(row);
+            }
+    
+            resolve(els);
         });
-        
-        // Create and color the dot
-        let dot = document.createElement("div");
-        dot.classList.add("dot");
-        dot.style.background = c.colors[suggestion.properties.type];
-        row.appendChild(dot);
-
-        // Create and add the name of the stop
-        let name = document.createElement("p");
-        name.innerText = suggestion.properties.name;
-        row.appendChild(name);
-
-        // Add the row to the container
-        container.appendChild(row);
     });
-    else {
-        let row = document.createElement("div");
-        row.classList.add("row");
-        
-        // Create and color the dot
-        let dot = document.createElement("div");
-        dot.classList.add("dot");
-        dot.style.background = "red";
-        row.appendChild(dot);
-
-        // Create and add the name of the stop
-        let name = document.createElement("p");
-        name.innerText = "No nearby places found...";
-        row.appendChild(name);
-
-        // Add the row to the container
-        container.appendChild(row);
-    }
 }
 
 function validateInput() {
