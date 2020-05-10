@@ -1,0 +1,41 @@
+{
+    "name": "Inspector - Ticket Inspector Tracker",
+    "short_name": "Inspector",
+    "description": "An app tracking ticket inspectors, nicely displayed onto a heatmap",
+    "icons": [
+        {
+            "src": "icons/48x48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#D66540",
+    "background_color": "#D66540"
+}
