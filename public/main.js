@@ -271,32 +271,4 @@ const state = {
     }
 }
 
-function request({method = "GET", url, data}) {
-    let loadId = load.start();
-    return new Promise((resolve, reject) => {
-        if (!url) reject();
-        else {
-
-            let xhr = new XMLHttpRequest();
-
-            xhr.onload = () => {
-                if (xhr.status == 200) {
-                    let response = xhr.responseText;
-
-                    try {
-                        response = JSON.parse(response);
-                    } finally {
-                        resolve (response);
-                    }
-                } else reject();
-            }
-            xhr.onerror = reject;
-
-            xhr.open(method, url);
-            if (typeof(data) == "object") data = JSON.stringify(data);
-            xhr.send(data); 
-        }
-    }).finally(() => load.stop(loadId));
-}
-
 init();

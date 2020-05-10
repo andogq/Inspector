@@ -82,9 +82,16 @@ function sendReport() {
             // Hide the report page
             state.set("map");
 
-            request({method: "POST", url: "/api/submit_report", data: {amount, stopId, time, token}}).then(() => {
-                notification.set("Report submitted!", "done");
-            }).catch(() => {
+            fetch("/api/submit_report", {method: "POST", body: JSON.stringify({amount, stopId, time, token})}).then((response) => {
+                if (response.ok) {
+                    // It all went well
+                    notification.set("Report submitted!", "done");
+                } else {
+                    // Something went wrong
+                    throw new Error(`Error with request: ${response.status}`);
+                }
+            }).catch((e) => {
+                console.error(e);
                 notification.set("There was an error submitting your report");
             }).finally(() => {
                 // Reset the form

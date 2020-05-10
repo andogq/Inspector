@@ -3,6 +3,7 @@ const exclude = [
     "/sw.js",
     "/app.webmanifest"
 ]
+const api = /^\/api\/.+$/;
 const files = [
     "/",
     "/css/inputs.css",
@@ -60,7 +61,9 @@ this.addEventListener("fetch", (e) => {
     e.respondWith(caches.match(e.request).then((res) => {
         if (res) return res;
         else return fetch(e.request).then((res) => {
-            if (!res || res.status != 200 || res.type != "basic" || exclude.indexOf(e.request.url) != -1) return res;
+            let path = new URL(e.request.url).pathname;
+            if (!res || res.status != 200 || res.type != "basic" || e.request.method != "GET"
+                || exclude.indexOf(path) != -1 || api.test(path)) return res;
             else {
                 let clone = res.clone();
 
