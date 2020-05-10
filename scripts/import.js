@@ -220,12 +220,14 @@ function init() {
                 name: line[1]
             }
 
-            if (unique(line, type)) {
-                promises.push(saveLine(line, type));
-                g[type].count.written++;
-            } else {
-                // console.log(`Duplicate found: ${JSON.stringify(line)}`);
-                g[type].count.duplicate++;
+            if (line.lat && line.lon && line.id && line.name) {
+                if (unique(line, type)) {
+                    promises.push(saveLine(line, type));
+                    g[type].count.written++;
+                } else {
+                    // console.log(`Duplicate found: ${JSON.stringify(line)}`);
+                    g[type].count.duplicate++;
+                }
             }
         }).finally(() => {
             Promise.all(promises).then(() => {
