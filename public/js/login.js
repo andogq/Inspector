@@ -1,20 +1,20 @@
 function login() {
-    let phoneNumber = dom.input.login.phoneNumber.value;
-    if (phoneNumber == "") return;
+    let phone = dom.input.login.phone.value;
+    if (phone == "") return;
 
     let loadId = load.start();
     
     // Format the phone number correctly
-    phoneNumber = phoneNumber.replace(/[^\d(?:+61)]/g, "");
-    phoneNumber = phoneNumber.replace(/^0/, "");
-    if (!/^\+61/.test(phoneNumber)) phoneNumber = "+61" + phoneNumber;
+    phone = phone.replace(/[^\d(?:+61)]/g, "");
+    phone = phone.replace(/^0/, "");
+    if (!/^\+61/.test(phone)) phone = "+61" + phone;
 
 
     // Setup the recaptcha
     g.login = {};
-    g.login.verifier = new firebase.auth.RecaptchaVerifier("login", {style: "invisible"});
+    g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {style: "invisible"});
 
-    firebase.auth().signInWithPhoneNumber(phoneNumber, g.login.verifier).then((confirmation) => {
+    firebase.auth().signInWithPhoneNumber(phone, g.login.verifier).then((confirmation) => {
         // Swap the login page state
         dom.page.login.classList.remove("step1");
         dom.page.login.classList.add("step2");
