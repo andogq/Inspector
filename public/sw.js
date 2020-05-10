@@ -1,6 +1,7 @@
 const version = "v0.3.4";
 const exclude = [
-    "/sw.js"
+    "/sw.js",
+    "/app.webmanifest"
 ]
 const files = [
     "/",
