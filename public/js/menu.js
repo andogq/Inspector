@@ -35,7 +35,7 @@ class Menu {
         if (this.moving) {
             let newHeight;
 
-            this.menu.setAttribute("state", "dragging");
+            state.el(this.menu, "dragging")
             newHeight = this.startHeight + dy;
 
             if (newHeight < this.tabHeight) newHeight = this.tabHeight;
@@ -48,13 +48,13 @@ class Menu {
 
     touchEnd() {
         this.moving = false;
-        this.menu.removeAttribute("state");
+        state.reset(this.menu, "state");
 
         let height = this.currentHeight;
         this.menu.style.height = "";
 
-        if (height > document.body.clientHeight * 0.9) this.menu.setAttribute("state", "extended");
-        else if (height < document.body.clientHeight * 0.4) document.body.setAttribute("state", "menu");
+        if (height > document.body.clientHeight * 0.9) state.el(this.menu, "extended");
+        else if (height < document.body.clientHeight * 0.4) state.set("menu");
     }
 
     get currentHeight() {

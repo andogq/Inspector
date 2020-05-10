@@ -3,13 +3,13 @@ const search = {
         // The function to run with a query to supply elements to add
         this.run = run;
 
-        dom.search.container.setAttribute("state", "show");
+        state.el(dom.search.container, "show");
         dom.input.search.focus();
 
         this.update();
     },
     hide() {
-        dom.search.container.removeAttribute("state");
+        state.reset(dom.search.container);
     },
 
     update() {

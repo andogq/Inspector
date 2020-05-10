@@ -36,7 +36,7 @@ function locationSearch(query) {
                     dom.input.report.location.stopId = data.id;
                     
                     // Hide the element
-                    dom.search.container.removeAttribute("state");
+                    search.hide();
         
                     validateInput();
                 });
@@ -66,7 +66,8 @@ function validateInput() {
 }
 
 function sendReport() {
-    firebase.auth().currentUser.getIdToken().then((token) => {
+    if (!g.loggedIn) state.set("login");
+    else firebase.auth().currentUser.getIdToken().then((token) => {
         let amount = Number(dom.input.report.amount.value.replace("+", ""));
         let stopId = Number(dom.input.report.location.stopId);
         let d = dom.input.report.time.value.split(":");
@@ -79,7 +80,7 @@ function sendReport() {
 
         if (amount != undefined && stopId != undefined && time != "") {
             // Hide the report page
-            document.body.setAttribute("state", "map");
+            state.set("map");
 
             request({method: "POST", url: "/api/submit_report", data: {amount, stopId, time, token}}).then(() => {
                 notification.set("Report submitted!", "done");

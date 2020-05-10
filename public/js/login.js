@@ -36,7 +36,7 @@ function verifyCode() {
     g.login.confirmation.confirm(code).then(() => {
         // Logged in successfully!
         notification.set("Logged in successfully!", "check");
-        document.body.setAttribute("state", "map");
+        state.set("map");
         g.loggedIn = true;
     }).catch((err) => {
         console.error(err);
