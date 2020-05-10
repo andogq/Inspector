@@ -119,6 +119,7 @@ function init() {
     g.menu = new Menu();
 
     // Other init functions
+    initServiceWorker();
     initElements();
     addListeners();
     
@@ -194,6 +195,16 @@ function initMap() {
             Promise.all(promises).then(resolve);
         });
     });
+}
+
+function initServiceWorker() {
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.register("/sw.js").then(() => {
+            console.log("Service worker installed");
+        }).catch((err) => {
+            console.error("Problem installing service worker", err);
+        });
+    }
 }
 
 // Helper functions
