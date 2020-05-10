@@ -89,7 +89,7 @@ function searchNearbyStops(query="") {
 function loadHeatmap() {
     g.map.addSource("reports", {
         type: "geojson",
-        data: "/reports"
+        data: "/api/reports"
     });
     g.map.addLayer({
         id: "reports",

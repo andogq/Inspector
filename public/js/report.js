@@ -81,7 +81,7 @@ function sendReport() {
             // Hide the report page
             document.body.setAttribute("state", "map");
 
-            request({method: "POST", url: "/report", data: {amount, stopId, time, token}}).then(() => {
+            request({method: "POST", url: "/api/submit_report", data: {amount, stopId, time, token}}).then(() => {
                 notification.set("Report submitted!", "done");
             }).catch(() => {
                 notification.set("There was an error submitting your report");

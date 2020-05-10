@@ -8,16 +8,16 @@
         ],
         "rewrites": [
             {
-                "source": "/report",
-                "function": "report"
+                "source": "/api/submit_report",
+                "function": "submit_report"
             },
             {
-                "source": "/reports",
+                "source": "/api/reports",
                 "function": "reports"
             },
             {
-                "source": "/login",
-                "function": "login"
+                "source": "**",
+                "destination": "/index.html"
             }
         ]
     }
