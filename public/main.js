@@ -139,9 +139,7 @@ function init() {
             initServiceWorker();
             initElements();
             addListeners();
-            
-            initMap().then(() => load.stop(loadId));
-        
+                    
             // ! REMOVE, ONLY FOR TESTING
             firebase.auth().settings.appVerificationDisabledForTesting = true;
         
@@ -150,6 +148,8 @@ function init() {
             });
         
             state.check();
+
+            initMap().then(() => load.stop(loadId));
         });
     }).catch((e) => {
         console.error(e);
@@ -172,7 +172,7 @@ function loadScript(src) {
 function addListeners() {
     window.addEventListener("popstate", state.check.bind(state));
 
-    dom.map.addEventListener("touchstart", () => state.set("map"));
+    dom.map.addEventListener("touchstart", () => state.set("map"), {passive: true});
     dom.centerPoint.addEventListener("click", () => state.set("menu"));
     dom.button.report.addEventListener("click", () => {
         if (g.loggedIn) {
@@ -213,18 +213,22 @@ function initMap() {
         mapboxgl.accessToken = c.map.token;
         g.map = new mapboxgl.Map({
             container: "map",
-            style: "mapbox://styles/mapbox/light-v10",
+            style: "mapbox://styles/mapbox/light-v10?optimize=true",
             center: c.coords.melbource,
-            zoom: 10,
+            zoom: 12,
             maxBounds: c.coords.victoria
         });
 
         g.map.on("load", () => {
+            getCurrentPosition().then(({lat, lon}) => {
+                g.map.setZoom(15);
+                g.map.setCenter([lon, lat])
+            });
+
             let promises = [];
 
             promises.push(loadHeatmap());
             promises.push(loadSources()); 
-            promises.push(centerOnUser());
 
             Promise.all(promises).then(resolve);
         });
@@ -305,4 +309,4 @@ const state = {
     }
 }
 
-init();
+window.addEventListener("load", init);

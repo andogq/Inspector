@@ -2,11 +2,11 @@
  * Imports
  */
 /* Mapbox */
-@import url("https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css");
 /* Google fonts */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons&display=swap");
 /* Application */
+@import "/css/mapbox-gl.css";
 @import "/css/inputs.css";
 @import "/css/map.css";
 @import "/css/page.css";

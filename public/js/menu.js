@@ -15,10 +15,10 @@ class Menu {
         this.tabHeight = Number(window.getComputedStyle(dom.menu.tab).height.replace("px", ""));
 
         // Add event listeners for the different touch events
-        this.menu.addEventListener("touchstart", this.touchStart.bind(this));
-        this.menu.addEventListener("touchmove", this.touchMove.bind(this));
-        this.menu.addEventListener("touchend", this.touchEnd.bind(this));
-        this.menu.addEventListener("touchcancel", this.touchEnd.bind(this));
+        this.menu.addEventListener("touchstart", this.touchStart.bind(this), {passive: true});
+        this.menu.addEventListener("touchmove", this.touchMove.bind(this), {passive: true});
+        this.menu.addEventListener("touchend", this.touchEnd.bind(this), {passive: true});
+        this.menu.addEventListener("touchcancel", this.touchEnd.bind(this), {passive: true});
     }
 
     touchStart(e) {
