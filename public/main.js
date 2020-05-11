@@ -50,7 +50,20 @@ const c = {
             "body": "page",
             "#menu_container": "about"
         }
-    }
+    },
+    scripts: [
+        "/__/firebase/7.14.2/firebase-app.js",
+        "/__/firebase/7.14.2/firebase-auth.js",
+        "/js/elements.js",
+        "/js/geo.js",
+        "/js/login.js",
+        "/js/map.js",
+        "/js/mapbox-gl.js",
+        "/js/menu.js",
+        "/js/report.js",
+        "/js/search.js"
+    ],
+    firebaseScript: "/__/firebase/init.js"
 }
 
 // DOM elements
@@ -116,23 +129,44 @@ let g = {};
 function init() {
     let loadId = load.start();
 
-    g.menu = new Menu();
-
-    // Other init functions
-    initServiceWorker();
-    initElements();
-    addListeners();
-    
-    initMap().then(() => load.stop(loadId));
-
-    // ! REMOVE, ONLY FOR TESTING
-    firebase.auth().settings.appVerificationDisabledForTesting = true;
-
-    firebase.auth().onAuthStateChanged((user) => {
-        g.loggedIn = user != undefined;
+    // Load all the scripts
+    Promise.all(c.scripts.map(loadScript)).then(() => {
+        // Finally load the firebase script before continuing the init
+        loadScript(c.firebaseScript).then(() => {
+            g.menu = new Menu();
+        
+            // Other init functions
+            initServiceWorker();
+            initElements();
+            addListeners();
+            
+            initMap().then(() => load.stop(loadId));
+        
+            // ! REMOVE, ONLY FOR TESTING
+            firebase.auth().settings.appVerificationDisabledForTesting = true;
+        
+            firebase.auth().onAuthStateChanged((user) => {
+                g.loggedIn = user != undefined;
+            });
+        
+            state.check();
+        });
+    }).catch((e) => {
+        console.error(e);
+        notification.set("There was an error loading, try clearing the cache");
+        load.stop(loadId);
     });
+}
 
-    state.check();
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        let el = document.createElement("script");
+        el.onload = resolve;
+        el.onerror = reject;
+        el.async = true;
+        el.src = src;
+        document.body.appendChild(el);
+    });
 }
 
 function addListeners() {

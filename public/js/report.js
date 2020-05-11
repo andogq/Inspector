@@ -68,6 +68,8 @@ function validateInput() {
 function sendReport() {
     if (!g.loggedIn) state.set("login");
     else firebase.auth().currentUser.getIdToken().then((token) => {
+        let loadId = load.start();
+
         let amount = Number(dom.input.report.amount.value.replace("+", ""));
         let stopId = Number(dom.input.report.location.stopId);
         let d = dom.input.report.time.value.split(":");
@@ -105,6 +107,8 @@ function sendReport() {
                 let minutes = String(d.getMinutes()).padStart(2, "0");
                 dom.input.report.time.value = `${hours}:${minutes}`;
                 dom.button.submitReport.disabled = true;
+
+                load.stop(loadId);
 
                 // Refresh the heatmap
                 updateHeatmap();
