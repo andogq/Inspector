@@ -8,6 +8,9 @@ input, .input {
     background: var(--white);
     font-size: 0.75rem;
     --border: 2px solid var(--darker);
+
+    border-radius: 0;
+    -webkit-appearance: none;
 }
 
 input:disabled {
