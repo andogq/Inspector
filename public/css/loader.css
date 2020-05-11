@@ -12,6 +12,8 @@
     border-right: 2px solid rgba(0, 0, 0, 0);
 
     animation: loading 1s infinite;
+
+    transition: opacity 0.25s;
 }
 
 @keyframes loading {

@@ -10,9 +10,50 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/16x16.png">
 
-    <link rel="stylesheet" href="main.css"/>
+    <link rel="preconnect" href="https://api.mapbox.com"/>
+
+    <style type="text/css">
+        /* Style until the page loads */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            background: #D66540;
+            z-index: 100;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #loadingScreen > div {
+            border-radius: 100%;
+            height: 10vmin;
+            width: 10vmin;
+            margin: 1vmin;
+            border: 2px solid white;
+            border-right: 2px solid rgba(0, 0, 0, 0);
+            animation: loading 1s infinite;
+        }
+
+        @keyframes loading {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <link rel="preload" as="style" onload="this.onload=undefined;this.rel=`stylesheet`" href="main.css"/>
 </head>
 <body state="map">
+    <div id="loadingScreen">
+        <div></div>
+    </div>
+    
     <div id="map"></div>
     <div id="centerPoint"></div>
     
