@@ -11,3 +11,11 @@ function clearCache() {
         notification.set("Cache cleared", "done");
     });
 }
+
+function forceUpdate() {
+    return navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => registration.unregister());
+    }).finally(() => {
+        location.pathname = "/";
+    });
+}

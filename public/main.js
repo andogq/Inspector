@@ -86,7 +86,8 @@ const dom = {
         submitReport: d("button_submitReport"),
         login: d("button_login"),
         verify: d("button_verify"),
-        clearCache: d("button_clearCache")
+        clearCache: d("button_clearCache"),
+        forceUpdate: d("button_forceUpdate")
     },
     menu: {
         el: d("menu"),
@@ -225,6 +226,7 @@ function addListeners() {
     dom.button.settings.addEventListener("click", () => state.set("settings"));
 
     dom.button.clearCache.addEventListener("click", clearCache);
+    dom.button.forceUpdate.addEventListener("click", forceUpdate);
 }
 
 function initMap() {
@@ -257,8 +259,9 @@ function initMap() {
 
 function initServiceWorker() {
     if (navigator.serviceWorker) {
-        navigator.serviceWorker.register("/sw.js").then(() => {
+        navigator.serviceWorker.register("/sw.js").then((registration) => {
             g.channel = new BroadcastChannel("inspector");
+            g.worker = registration.active;
             console.log("Service worker installed");
         }).catch((err) => {
             console.error("Problem installing service worker", err);
