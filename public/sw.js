@@ -42,7 +42,38 @@ const files = [
     "/main.css",
     "/main.js"
 ]
+const channel = new BroadcastChannel("inspector");
 
+function sendMessage(data) {
+    channel.postMessage(data);
+}
+
+function clearCache() {
+    return caches.keys().then((names) => {
+        return Promise.all(names.map(name =>  caches.delete(name)));
+    });
+}
+
+channel.addEventListener("message", (e) => {
+    if (e.data.get) {
+        switch (e.data.get) {
+            case "version":
+                sendMessage({
+                    version
+                });
+            break;
+        }
+    }
+    if (e.data.do) {
+        switch (e.data.do) {
+            case "clearCache":
+                clearCache().then(() => {
+                    sendMessage({success: true});
+                });
+            break;
+        }
+    }
+});
 this.addEventListener("install", (e) => {
     e.waitUntil(caches.open(version).then((cache) => {
         return cache.addAll(files);
@@ -50,11 +81,7 @@ this.addEventListener("install", (e) => {
 });
 
 this.addEventListener("activate", (e) => {
-    e.waitUntil(caches.keys().then((names) => {
-        return Promise.all(names.map((name) => {
-            if (name != version) return caches.delete(name);
-        }));
-    }));
+    e.waitUntil(clearCache());
 });
 
 this.addEventListener("fetch", (e) => {

@@ -49,6 +49,10 @@ const c = {
         about: {
             "body": "page",
             "#menu_container": "about"
+        },
+        settings: {
+            "body": "page",
+            "#menu_container": "settings"
         }
     },
     scripts: [
@@ -61,7 +65,8 @@ const c = {
         "/js/mapbox-gl.js",
         "/js/menu.js",
         "/js/report.js",
-        "/js/search.js"
+        "/js/search.js",
+        "/js/settings.js"
     ],
     firebaseScript: "/__/firebase/init.js"
 }
@@ -77,10 +82,11 @@ const dom = {
         account: d("button_account"),
         data: d("button_data"),
         history: d("button_history"),
-        help: d("button_help"),
+        settings: d("button_settings"),
         submitReport: d("button_submitReport"),
         login: d("button_login"),
-        verify: d("button_verify")
+        verify: d("button_verify"),
+        clearCache: d("button_clearCache")
     },
     menu: {
         el: d("menu"),
@@ -109,6 +115,9 @@ const dom = {
         back: d("search_back"),
         suggestions: d("search_suggestions")
     },
+    settings: {
+        version: d("settings_version")
+    },
     login: {
         back: d("login_back")
     },
@@ -135,8 +144,15 @@ function init() {
         loadScript(c.firebaseScript).then(() => {
             g.menu = new Menu();
         
+            Promise.all([
+                initServiceWorker(),
+                initMap()
+            ]).then(() => {
+                setVersion();
+                load.stop(loadId);
+            });
+
             // Other init functions
-            initServiceWorker();
             initElements();
             addListeners();
                     
@@ -148,8 +164,6 @@ function init() {
             });
         
             state.check();
-
-            initMap().then(() => load.stop(loadId));
         });
     }).catch((e) => {
         console.error(e);
@@ -205,6 +219,12 @@ function addListeners() {
     dom.search.back.addEventListener("click", () => state.reset(dom.search.container));
 
     dom.input.search.addEventListener("keyup", () => search.update());
+
+    // Tab button listeners
+    dom.button.account.addEventListener("click", () => state.set("account"));
+    dom.button.settings.addEventListener("click", () => state.set("settings"));
+
+    dom.button.clearCache.addEventListener("click", clearCache);
 }
 
 function initMap() {
@@ -238,6 +258,7 @@ function initMap() {
 function initServiceWorker() {
     if (navigator.serviceWorker) {
         navigator.serviceWorker.register("/sw.js").then(() => {
+            g.channel = new BroadcastChannel("inspector");
             console.log("Service worker installed");
         }).catch((err) => {
             console.error("Problem installing service worker", err);
@@ -307,6 +328,18 @@ const state = {
         if (c.states[s]) this.set(s, false);
         else if (s == "") this.set("map")
     }
+}
+
+function sendMessage(data) {
+    return new Promise((resolve) => {
+        // Set up the event listener
+        g.channel.addEventListener("message", (e) => {
+            resolve(e.data);
+        }, {once: true});
+
+        // Send the message
+        g.channel.postMessage(data);
+    });
 }
 
 window.addEventListener("load", init);

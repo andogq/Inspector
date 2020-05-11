@@ -47,7 +47,8 @@ body[state="page"] #menu[state="extended"] {
 
 /* Report and report page */
 #menu_container[state="report"] > #page_report,
-#menu_container[state="account"] > #page_account {
+#menu_container[state="account"] > #page_account,
+#menu_container[state="settings"] > #page_settings {
     display: inline;
 }
 
