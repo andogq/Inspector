@@ -2,7 +2,13 @@ function login() {
     let phone = dom.input.login.phone.value;
     if (phone == "") return;
 
+    // Start loading and disable the login button
     let loadId = load.start();
+    dom.button.login.disabled = true;
+
+    // Setup the recaptcha
+    g.login = {};
+    g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {size: "invisible"});
     
     // Format the phone number correctly
     phone = phone.replace(/[^\d(?:+61)]/g, "");
@@ -18,7 +24,11 @@ function login() {
     }).catch((err) => {
         console.error(err);
         notification.set("Invalid phone number");
-    }).finally(() => load.stop(loadId));
+    }).finally(() => {
+        // Re-enable the button and stop loading
+        load.stop(loadId);
+        dom.button.login.disabled = false;
+    });
 }
 
 function verifyCode() {
@@ -27,6 +37,7 @@ function verifyCode() {
     if (code == "" || !g.login || !g.login.confirmation) return;
     
     let verifyLoadId = load.start();
+    dom.button.verify.disabled = true;
 
     g.login.confirmation.confirm(code).then(() => {
         // Logged in successfully!
@@ -47,5 +58,6 @@ function verifyCode() {
         g.login = {};
 
         load.stop(verifyLoadId);
+        dom.button.verify.disabled = false;
     });
 }

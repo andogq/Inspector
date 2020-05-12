@@ -198,10 +198,6 @@ function init() {
 
         g.online = navigator.onLine;
 
-        // Setup the recaptcha
-        g.login = {};
-        g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {size: "invisible"});
-
         firebase.auth().onAuthStateChanged((user) => {
             g.loggedIn = user != undefined;
         });
