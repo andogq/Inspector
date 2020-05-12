@@ -59,7 +59,6 @@ const c = {
         }
     },
     scripts: [
-        "/__/firebase/7.14.2/firebase-app.js",
         "/__/firebase/7.14.2/firebase-auth.js",
         "/__/firebase/7.14.2/firebase-analytics.js",
         "/js/elements.js",
@@ -72,15 +71,18 @@ const c = {
         "/js/search.js",
         "/js/settings.js"
     ],
-    firebaseConfig: {
-        apiKey: "AIzaSyBNjCHxAouwFF5LRtxJEGzS3C0H7BUsVhY",
-        authDomain: "inspector-d21b9.firebaseapp.com",
-        databaseURL: "https://inspector-d21b9.firebaseio.com",
-        projectId: "inspector-d21b9",
-        storageBucket: "inspector-d21b9.appspot.com",
-        messagingSenderId: "48317127651",
-        appId: "1:48317127651:web:cc16a707f7abdcf5239ed6",
-        measurementId: "G-WQBXSF7YXJ"
+    firebase: {
+        config: {
+            apiKey: "AIzaSyBNjCHxAouwFF5LRtxJEGzS3C0H7BUsVhY",
+            authDomain: "inspector-d21b9.firebaseapp.com",
+            databaseURL: "https://inspector-d21b9.firebaseio.com",
+            projectId: "inspector-d21b9",
+            storageBucket: "inspector-d21b9.appspot.com",
+            messagingSenderId: "48317127651",
+            appId: "1:48317127651:web:cc16a707f7abdcf5239ed6",
+            measurementId: "G-WQBXSF7YXJ"
+        },
+        script: "/__/firebase/7.14.2/firebase-app.js"
     }
 }
 
@@ -174,37 +176,39 @@ function init() {
     }
 
     // Load all the scripts
-    Promise.all(c.scripts.map(loadScript)).then(() => {
-        // Finally load the firebase script before continuing the init
-        firebase.initializeApp(c.firebaseConfig);
-        firebase.analytics();
+    loadScript(c.firebase.script).then(() => {
+        Promise.all(c.scripts.map(loadScript)).then(() => {
+            // Finally load the firebase script before continuing the init
+            firebase.initializeApp(c.firebase.config);
+            firebase.analytics();
+            
+            g.menu = new Menu();
         
-        g.menu = new Menu();
-    
-        Promise.all([
-            initServiceWorker(),
-            initMap()
-        ]).then(() => {
-            setVersion().then(() => {
-                firebase.analytics().setUserProperties({
-                    version: g.version
+            Promise.all([
+                initServiceWorker(),
+                initMap()
+            ]).then(() => {
+                setVersion().then(() => {
+                    firebase.analytics().setUserProperties({
+                        version: g.version
+                    });
+                    load.stop(loadId);
                 });
-                load.stop(loadId);
             });
+
+            // Other init functions
+            initElements();
+            addListeners();
+
+            g.online = navigator.onLine;
+
+            firebase.auth().onAuthStateChanged((user) => {
+                g.loggedIn = user != undefined;
+                dom.button.signOut.disabled = !g.loggedIn;
+            });
+        
+            if (!g.firstTime) state.check();
         });
-
-        // Other init functions
-        initElements();
-        addListeners();
-
-        g.online = navigator.onLine;
-
-        firebase.auth().onAuthStateChanged((user) => {
-            g.loggedIn = user != undefined;
-            dom.button.signOut.disabled = !g.loggedIn;
-        });
-    
-        if (!g.firstTime) state.check();
     }).catch((e) => {
         console.error(e);
         notification.set("There was an error loading, try clearing the cache");
@@ -286,10 +290,10 @@ function addListeners() {
     // Welcome page event listeners
     dom.button.acceptTerms.addEventListener("click", () => {
         if (!g.termsAccepted) {
-            if (g.termsAccepted && g.geolocation) dom.button.continue.disabled = false;
-            dom.button.acceptTerms.classList.add("active");
-
             g.termsAccepted = true;
+            dom.button.acceptTerms.classList.add("active");
+            
+            if (g.termsAccepted && g.geolocation) dom.button.continue.disabled = false;
         }
     });
 
