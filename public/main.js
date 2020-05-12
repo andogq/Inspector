@@ -227,6 +227,14 @@ function addListeners() {
 
     dom.button.clearCache.addEventListener("click", clearCache);
     dom.button.forceUpdate.addEventListener("click", forceUpdate);
+
+    window.addEventListener("offline", () => {
+        g.online = false;
+        notification.set("You are offline, some features mightn't work");
+    });
+    window.addEventListener("online", () => {
+        g.online = true;
+    });
 }
 
 function initMap() {

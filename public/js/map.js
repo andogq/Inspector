@@ -123,5 +123,5 @@ function loadHeatmap() {
 }
 
 function updateHeatmap() {
-    g.map.getSource("reports").setData("/api/reports");
+    if (g.online) g.map.getSource("reports").setData("/api/reports");
 }

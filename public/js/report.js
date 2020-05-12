@@ -67,7 +67,7 @@ function validateInput() {
 
 function sendReport() {
     if (!g.loggedIn) state.set("login");
-    else firebase.auth().currentUser.getIdToken().then((token) => {
+    else if (g.online) firebase.auth().currentUser.getIdToken().then((token) => {
         let loadId = load.start();
 
         let amount = Number(dom.input.report.amount.value.replace("+", ""));
@@ -115,4 +115,5 @@ function sendReport() {
             });
         }
     });
+    else notification.set("You are offline, please try again later");
 }
