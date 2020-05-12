@@ -49,9 +49,26 @@
     </style>
     <link rel="preload" as="style" onload="this.onload=undefined;this.rel=`stylesheet`" href="main.css"/>
 </head>
-<body state="map">
+<body>
     <div id="loadingScreen">
         <div></div>
+    </div>
+
+    <div id="welcome">
+        <h1>Inspector</h1>
+        <p>Thanks for visiting! There's just a few things you should know before we continue:</p>
+        <ol>
+            <li>Fare evading is a crime, and the creator of this app does not condone nor accept any responsibility for any actions or consequences that come about as a result of actions taken by users of this app. By using this app, you agree to this statement. <b>In other words, this app is purely for informative reasons so don't do anything stupid!</b></li>
+            <li>Your location will be needed to locate you on the map and so we can show you stations and reports nearby. <b>Your location will never leave the device.</b></li>
+            <li>This website can be installed as an app! Just click the button below, it'll only take a second!</li>
+        </ol>
+        <input type="button" id="button_acceptTerms" value="I agree to the statement above"/>
+        <input type="button" id="button_requestGeolocation" value="Request location permission"/>
+        <input type="button" id="button_install" value="Install as an app"/>
+        <input type="button" id="button_continue" disabled value="Continue"/>
+        <div id="appleNotification">
+            <p>To install as an app on an Apple Device, press the share button (at the bottom of the window), then scroll to and select 'Add to Home Screen'.</p>
+        </div>
     </div>
     
     <div id="map"></div>

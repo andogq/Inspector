@@ -1,0 +1,65 @@
+#welcome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    overflow-y: scroll;
+
+    background: var(--white);
+
+    padding: 2rem;
+}
+
+#welcome > * {
+    margin: 1rem 0;
+}
+
+#welcome > h1 {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+#welcome p, #welcome li {
+    font-size: 0.75rem;
+}
+
+#welcome > input.active {
+    background: var(--accent);
+    color: white;
+}
+
+/* Hide the install button if it is already in an app */
+@media all and (display-mode: standalone) {
+    #button_install {
+        display: none;
+    }
+}
+
+#appleNotification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    margin: 0;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    opacity: 0;
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#appleNotification > p {
+    width: 80%;
+    height: fit-content;
+    background: white;
+    border-radius: 1rem;
+    padding: 1rem;
+}

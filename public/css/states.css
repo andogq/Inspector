@@ -70,3 +70,9 @@ body[state="login"] #map {
     opacity: 1;
     pointer-events: all;
 }
+
+/* Welcome page */
+body[state="welcome"] #welcome, #welcome[state="apple"] #appleNotification {
+    opacity: 1;
+    pointer-events: all;
+}

@@ -6,6 +6,7 @@ function setVersion() {
 
 function clearCache() {
     let loadId = load.start();
+    localStorage.clear();
     return sendMessage({do: "clearCache"}).then(() => {
         load.stop(loadId);
         notification.set("Cache cleared", "done");

@@ -53,6 +53,9 @@ const c = {
         settings: {
             "body": "page",
             "#menu_container": "settings"
+        },
+        welcome: {
+            "body": "welcome"
         }
     },
     scripts: [
@@ -87,7 +90,11 @@ const dom = {
         login: d("button_login"),
         verify: d("button_verify"),
         clearCache: d("button_clearCache"),
-        forceUpdate: d("button_forceUpdate")
+        forceUpdate: d("button_forceUpdate"),
+        acceptTerms: d("button_acceptTerms"),
+        requestGeolocation: d("button_requestGeolocation"),
+        install: d("button_install"),
+        continue: d("button_continue")
     },
     menu: {
         el: d("menu"),
@@ -127,6 +134,10 @@ const dom = {
         icon: d("notification_icon"),
         text: d("notification_text")
     },
+    welcome: {
+        el: d("welcome"),
+        appleNotification: d("appleNotification")
+    },
     map: d("map"),
     centerPoint: d("centerPoint"),
     loader: d("loader"),
@@ -138,6 +149,10 @@ let g = {};
 
 function init() {
     let loadId = load.start();
+
+    // Check if the user is visiting for the first time whilst everything loads
+    g.firstTime = localStorage.getItem("firstTime") == undefined;
+    if (g.firstTime) state.set("welcome");
 
     // Load all the scripts
     Promise.all(c.scripts.map(loadScript)).then(() => {
@@ -164,7 +179,7 @@ function init() {
                 g.loggedIn = user != undefined;
             });
         
-            state.check();
+            if (!g.firstTime) state.check();
         });
     }).catch((e) => {
         console.error(e);
@@ -185,6 +200,13 @@ function loadScript(src) {
 }
 
 function addListeners() {
+    // Event listeners to enable installation
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        g.installPrompt = e;
+        console.log("Install ready");
+    });
+
     window.addEventListener("popstate", state.check.bind(state));
 
     dom.map.addEventListener("touchstart", () => state.set("map"), {passive: true});
@@ -235,6 +257,59 @@ function addListeners() {
     window.addEventListener("online", () => {
         g.online = true;
     });
+
+    // Welcome page event listeners
+    dom.button.acceptTerms.addEventListener("click", () => {
+        if (!g.termsAccepted) {
+            if (g.termsAccepted && g.geolocation) dom.button.continue.disabled = false;
+            dom.button.acceptTerms.classList.add("active");
+
+            g.termsAccepted = true;
+        }
+    });
+
+    dom.button.requestGeolocation.addEventListener("click", () => {
+        if (!g.geolocation) {
+            let loadId = load.start();
+            getCurrentPosition().then(() => {
+                dom.button.requestGeolocation.classList.add("active");
+                dom.button.requestGeolocation.value = "Permission granted!";
+                g.geolocation = true;
+
+                if (g.termsAccepted && g.geolocation) dom.button.continue.disabled = false;
+            }).catch(() => notification.set("Something went wrong, try again")).finally(() => load.stop(loadId));
+        }
+    });
+
+    dom.button.install.addEventListener("click", () => {
+        if (g.installPrompt) {
+            // For chrome
+            let loadId = load.start();
+            g.installPrompt.prompt().then((choice) => {
+                if (choice.outcome == "accepted") {
+                    dom.button.install.classList.add("active");
+                    window.addEventListener("appinstalled", () => {
+                        notification.set("Install successfull! Check your home screen!", "done");
+                        dom.button.install.classList.remove("active");
+                        dom.button.install.disabled = true;
+                    }, {once: true});
+                } else {
+                    notification.set("Something went wrong. Please try again");
+                }
+                load.stop(loadId);
+            })
+        } else if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
+            // Apple device
+            state.el(dom.welcome.el, "apple");
+            dom.welcome.appleNotification.addEventListener("click", () => state.reset(dom.welcome.el), {once: true});
+        } else notification.set("Something went wrong. Please try again");
+    });
+
+    dom.button.continue.addEventListener("click", () => {
+        state.set("map");
+        g.firstTime = false;
+        localStorage.setItem("firstTime", g.firstTime);
+    });
 }
 
 function initMap() {
@@ -250,10 +325,12 @@ function initMap() {
         });
 
         g.map.on("load", () => {
-            getCurrentPosition().then(({lat, lon}) => {
-                g.map.setZoom(15);
-                g.map.setCenter([lon, lat])
-            });
+            if (!g.firstTime) {
+                getCurrentPosition().then(({lat, lon}) => {
+                    g.map.setZoom(15);
+                    g.map.setCenter([lon, lat])
+                });
+            }
 
             let promises = [];
 
@@ -335,7 +412,7 @@ const state = {
     },
     check() {
         // Check if the user was previously in a state
-        let s = location.pathname.replace(/^\/(.+)$/, "$1");
+        let s = location.pathname.replace(/^\/(.*)$/, "$1");
         if (c.states[s]) this.set(s, false);
         else if (s == "") this.set("map")
     }
