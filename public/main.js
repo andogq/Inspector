@@ -154,6 +154,14 @@ function init() {
     g.firstTime = localStorage.getItem("firstTime") == undefined;
     if (g.firstTime) state.set("welcome");
 
+    // Add CSS file
+    { 
+        let el = document.createElement("link");
+        el.rel = "stylesheet";
+        el.href = "/main.css";
+        document.head.appendChild(el);
+    }
+
     // Load all the scripts
     Promise.all(c.scripts.map(loadScript)).then(() => {
         // Finally load the firebase script before continuing the init
@@ -172,9 +180,6 @@ function init() {
             initElements();
             addListeners();
                     
-            // ! REMOVE, ONLY FOR TESTING
-            firebase.auth().settings.appVerificationDisabledForTesting = true;
-        
             firebase.auth().onAuthStateChanged((user) => {
                 g.loggedIn = user != undefined;
             });
