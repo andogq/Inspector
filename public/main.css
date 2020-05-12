@@ -69,7 +69,7 @@ html, body {
     font-size: 1.5rem;
 }
 
-body > * {
+body > .child {
     opacity: 0;
     pointer-events: none;
 }

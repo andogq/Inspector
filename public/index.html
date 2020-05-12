@@ -49,11 +49,11 @@
     </style>
 </head>
 <body>
-    <div id="loadingScreen">
+    <div class="child" id="loadingScreen">
         <div></div>
     </div>
 
-    <div id="welcome">
+    <div class="child" id="welcome">
         <h1>Inspector</h1>
         <p>Thanks for visiting! There's just a few things you should know before we continue:</p>
         <ol>
@@ -70,15 +70,15 @@
         </div>
     </div>
     
-    <div id="map"></div>
-    <div id="centerPoint"></div>
+    <div class="child" id="map"></div>
+    <div class="child" id="centerPoint"></div>
     
-    <div id="pointMenu">
+    <div class="child" id="pointMenu">
         <span class="material-icons" id="button_report">report</span>
         <span class="material-icons" id="button_recenter">gps_fixed</span>
     </div>
 
-    <div id="menu">
+    <div class="child" id="menu">
         <div id="menu_tab">
             <span class="material-icons" id="button_account">person</span>
             <span class="material-icons" id="button_data">bar_chart</span>
@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    <div id="page_login" class="step1">
+    <div id="page_login" class="step1 child">
         <div class="background"></div>
         <div class="container">
             <span class="material-icons" id="login_back">keyboard_arrow_left</span>
@@ -146,7 +146,7 @@
         </div>
     </div>
 
-    <div id="search_container">
+    <div class="child" id="search_container">
         <div class="search_top">
             <span class="material-icons" id="search_back">keyboard_arrow_left</span>
             <input type="text" id="input_search"/>
@@ -155,12 +155,12 @@
         </div>
     </div>
 
-    <div id="notification">
+    <div class="child" id="notification">
         <span id="notification_icon" class="material-icons"></span>
         <p id="notification_text"></p>
     </div>
     
-    <div id="loader"></div>
+    <div class="child" id="loader"></div>
     
     <script src="main.js"></script>
 </body>

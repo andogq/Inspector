@@ -9,11 +9,6 @@ function login() {
     phone = phone.replace(/^0/, "");
     if (!/^\+61/.test(phone)) phone = "+61" + phone;
 
-
-    // Setup the recaptcha
-    g.login = {};
-    g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {style: "invisible"});
-
     firebase.auth().signInWithPhoneNumber(phone, g.login.verifier).then((confirmation) => {
         // Swap the login page state
         dom.page.login.classList.remove("step1");
@@ -38,6 +33,7 @@ function verifyCode() {
         notification.set("Logged in successfully!", "check");
         state.set("map");
         g.loggedIn = true;
+        firebase.analytics().logEvent("login", {method: "phone"});
     }).catch((err) => {
         console.error(err);
         notification.set("Incorrect verification code");

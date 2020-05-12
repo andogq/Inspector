@@ -88,6 +88,7 @@ function sendReport() {
                 if (response.ok) {
                     // It all went well
                     notification.set("Report submitted!", "done");
+                    firebase.analytics().logEvent("report");
                 } else {
                     // Something went wrong
                     throw new Error(`Error with request: ${response.status}`);

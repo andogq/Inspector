@@ -61,6 +61,7 @@ const c = {
     scripts: [
         "/__/firebase/7.14.2/firebase-app.js",
         "/__/firebase/7.14.2/firebase-auth.js",
+        "/__/firebase/7.14.2/firebase-analytics.js",
         "/js/elements.js",
         "/js/geo.js",
         "/js/login.js",
@@ -71,7 +72,16 @@ const c = {
         "/js/search.js",
         "/js/settings.js"
     ],
-    firebaseScript: "/__/firebase/init.js"
+    firebaseConfig: {
+        apiKey: "AIzaSyBNjCHxAouwFF5LRtxJEGzS3C0H7BUsVhY",
+        authDomain: "inspector-d21b9.firebaseapp.com",
+        databaseURL: "https://inspector-d21b9.firebaseio.com",
+        projectId: "inspector-d21b9",
+        storageBucket: "inspector-d21b9.appspot.com",
+        messagingSenderId: "48317127651",
+        appId: "1:48317127651:web:cc16a707f7abdcf5239ed6",
+        measurementId: "G-WQBXSF7YXJ"
+    }
 }
 
 // DOM elements
@@ -165,27 +175,38 @@ function init() {
     // Load all the scripts
     Promise.all(c.scripts.map(loadScript)).then(() => {
         // Finally load the firebase script before continuing the init
-        loadScript(c.firebaseScript).then(() => {
-            g.menu = new Menu();
+        firebase.initializeApp(c.firebaseConfig);
+        firebase.analytics();
         
-            Promise.all([
-                initServiceWorker(),
-                initMap()
-            ]).then(() => {
-                setVersion();
+        g.menu = new Menu();
+    
+        Promise.all([
+            initServiceWorker(),
+            initMap()
+        ]).then(() => {
+            setVersion().then(() => {
+                firebase.analytics().setUserProperties({
+                    version: g.version
+                });
                 load.stop(loadId);
             });
-
-            // Other init functions
-            initElements();
-            addListeners();
-                    
-            firebase.auth().onAuthStateChanged((user) => {
-                g.loggedIn = user != undefined;
-            });
-        
-            if (!g.firstTime) state.check();
         });
+
+        // Other init functions
+        initElements();
+        addListeners();
+
+        g.online = navigator.onLine;
+
+        // Setup the recaptcha
+        g.login = {};
+        g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {size: "invisible"});
+
+        firebase.auth().onAuthStateChanged((user) => {
+            g.loggedIn = user != undefined;
+        });
+    
+        if (!g.firstTime) state.check();
     }).catch((e) => {
         console.error(e);
         notification.set("There was an error loading, try clearing the cache");
@@ -315,6 +336,8 @@ function addListeners() {
         g.firstTime = false;
         localStorage.setItem("firstTime", g.firstTime);
         jumpToUser();
+
+        firebase.analytics().logEvent("newUser");
     });
 
     [dom.button.report, dom.button.recenter, dom.centerPoint].forEach((button) => {
