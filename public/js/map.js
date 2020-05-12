@@ -19,6 +19,14 @@ function centerOnUser() {
     });
 }
 
+// Jumps to the user
+function jumpToUser() {
+    getCurrentPosition().then(({lat, lon}) => {
+        g.map.setZoom(15);
+        g.map.setCenter([lon, lat])
+    });
+}
+
 // Loads the sources from the server
 function loadSources() {
     let colors = c.colors;

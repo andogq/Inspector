@@ -309,6 +309,11 @@ function addListeners() {
         state.set("map");
         g.firstTime = false;
         localStorage.setItem("firstTime", g.firstTime);
+        jumpToUser();
+    });
+
+    [dom.button.report, dom.button.recenter, dom.centerPoint].forEach((button) => {
+        button.addEventListener("click", buzz);
     });
 }
 
@@ -325,12 +330,7 @@ function initMap() {
         });
 
         g.map.on("load", () => {
-            if (!g.firstTime) {
-                getCurrentPosition().then(({lat, lon}) => {
-                    g.map.setZoom(15);
-                    g.map.setCenter([lon, lat])
-                });
-            }
+            if (!g.firstTime) jumpToUser();
 
             let promises = [];
 
@@ -352,6 +352,10 @@ function initServiceWorker() {
             console.error("Problem installing service worker", err);
         });
     }
+}
+
+function buzz() {
+    if (navigator.vibrate) navigator.vibrate(50);
 }
 
 // Helper functions
