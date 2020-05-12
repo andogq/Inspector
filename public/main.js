@@ -104,7 +104,8 @@ const dom = {
         acceptTerms: d("button_acceptTerms"),
         requestGeolocation: d("button_requestGeolocation"),
         install: d("button_install"),
-        continue: d("button_continue")
+        continue: d("button_continue"),
+        signOut: d("button_signOut")
     },
     menu: {
         el: d("menu"),
@@ -200,6 +201,7 @@ function init() {
 
         firebase.auth().onAuthStateChanged((user) => {
             g.loggedIn = user != undefined;
+            dom.button.signOut.disabled = !g.loggedIn;
         });
     
         if (!g.firstTime) state.check();
@@ -271,6 +273,7 @@ function addListeners() {
 
     dom.button.clearCache.addEventListener("click", clearCache);
     dom.button.forceUpdate.addEventListener("click", forceUpdate);
+    dom.button.signOut.addEventListener("click", signOut);
 
     window.addEventListener("offline", () => {
         g.online = false;

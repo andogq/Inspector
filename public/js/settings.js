@@ -24,3 +24,9 @@ function forceUpdate() {
         location.pathname = "/";
     });
 }
+
+function signOut() {
+    firebase.analytics().logEvent("signOut");
+
+    if (g.loggedIn) firebase.auth().signOut();
+}
