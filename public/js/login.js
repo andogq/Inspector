@@ -8,7 +8,7 @@ function login() {
 
     // Setup the recaptcha
     g.login = {};
-    g.login.verifier = new firebase.auth.RecaptchaVerifier("button_login", {size: "invisible"});
+    g.login.verifier = new firebase.auth.RecaptchaVerifier("recaptchaContainer", {size: "invisible"});
     
     // Format the phone number correctly
     phone = phone.replace(/[^\d(?:+61)]/g, "");
@@ -23,7 +23,7 @@ function login() {
         g.login.confirmation = confirmation;
     }).catch((err) => {
         console.error(err);
-        notification.set("Invalid phone number");
+        notification.set(err.message);
     }).finally(() => {
         // Re-enable the button and stop loading
         load.stop(loadId);
