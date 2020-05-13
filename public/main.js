@@ -193,7 +193,7 @@ function init() {
                 initServiceWorker(),
                 initMap()
             ]).then(() => {
-                setVersion().then(() => {
+                setVersion().finally(() => {
                     firebase.analytics().setUserProperties({
                         version: g.version
                     });
@@ -390,12 +390,15 @@ function initMap() {
 
 function initServiceWorker() {
     if (navigator.serviceWorker) {
-        navigator.serviceWorker.register("/sw.js").then((registration) => {
+        return navigator.serviceWorker.register("/sw.js").then((registration) => {
             g.worker = registration.active;
             console.log("Service worker installed");
         }).catch((err) => {
             console.error("Problem installing service worker", err);
         });
+    } else {
+        notification.set("Your device limits the functionality of this app");
+        return Promise.resolve();
     }
 }
 
@@ -468,13 +471,14 @@ const state = {
 }
 
 function sendMessage(data) {
-    return new Promise((resolve) => {
+    if (g.worker) return new Promise((resolve) => {
         navigator.serviceWorker.addEventListener("message", (e) => {
             resolve(e.data);
         }, {once: true});
 
         g.worker.postMessage(data); 
     });
+    else return Promise.reject("No service worker");
 }
 
 window.addEventListener("load", init);

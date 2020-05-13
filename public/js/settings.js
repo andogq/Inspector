@@ -1,8 +1,11 @@
 function setVersion() {
-    return sendMessage({get: "version"}).then(({version}) => {
+    return sendMessage({get: "version"}).then((res) => {
+        let version;
+        if (res) version = res.version;
+
         g.version = version;
         dom.settings.version.innerText = version;
-    });
+    }).catch(console.error);
 }
 
 function clearCache() {
