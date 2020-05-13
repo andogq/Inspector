@@ -350,6 +350,10 @@ function addListeners() {
 
 function initMap() {
     return new Promise((resolve) => {
+        // Ensure the container is 100% of the height and width
+        dom.map.style.height = "100%";
+        dom.map.style.width = "100%";
+        
         // Initialise Mapbox
         mapboxgl.accessToken = c.map.token;
         g.map = new mapboxgl.Map({
