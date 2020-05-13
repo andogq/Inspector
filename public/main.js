@@ -351,6 +351,11 @@ function addListeners() {
     [dom.button.report, dom.button.recenter, dom.centerPoint].forEach((button) => {
         button.addEventListener("click", buzz);
     });
+
+    // Prevent zooming
+    document.addEventListener("gesturestart", (e) => {
+        e.preventDefault();
+    });
 }
 
 function initMap() {
