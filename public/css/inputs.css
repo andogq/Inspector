@@ -11,6 +11,8 @@ input, .input {
 
     border-radius: 0;
     -webkit-appearance: none;
+
+    transition: var(--transition);
 }
 
 input:disabled {
@@ -43,6 +45,8 @@ input:disabled {
 
     border-top: var(--border);
     border-right: var(--border);
+    
+    transition: var(--transition);
 }
 
 .selection > .selected {

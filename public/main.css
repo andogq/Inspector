@@ -47,8 +47,6 @@
 
     font-family: "Open Sans";
 
-    transition: var(--transition);
-
     overscroll-behavior: none;
 }
 
@@ -69,11 +67,6 @@ html, body {
 }
 
 body > .child {
-    opacity: 0;
-    pointer-events: none;
-}
-
-#loadingScreen {
     opacity: 0;
     pointer-events: none;
 }

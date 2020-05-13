@@ -1,5 +1,7 @@
 #page_login {
     position: fixed;
+    
+    transition: opacity var(--transition);
 }
 
 #page_login > .background, #page_login > .container {

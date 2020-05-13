@@ -4,6 +4,8 @@
 #map {
     height: 100%;
     width: 100%;
+
+    transition: opacity var(--transition);
 }
 
 /*
@@ -32,6 +34,8 @@
     width: fit-content;
     transform: translate(-50%, 0);
     text-align: center;
+
+    transition: var(--transition);
 }
 
 /*

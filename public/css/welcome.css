@@ -10,6 +10,8 @@
     background: var(--white);
 
     padding: 2rem;
+
+    transition: opacity var(--transition);
 }
 
 #welcome > * {

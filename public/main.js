@@ -154,7 +154,8 @@ const dom = {
     map: d("map"),
     centerPoint: d("centerPoint"),
     loader: d("loader"),
-    pointMenu: d("pointMenu")
+    pointMenu: d("pointMenu"),
+    loadingScreen: d("loadingScreen")
 }
 
 // Globals
@@ -178,6 +179,10 @@ function init() {
     // Load all the scripts
     loadScript(c.firebase.script).then(() => {
         Promise.all(c.scripts.map(loadScript)).then(() => {
+            // Hide the loading screen
+            dom.loadingScreen.style.opacity = 0;
+            dom.loadingScreen.style.pointerEvents = "none";
+
             // Finally load the firebase script before continuing the init
             firebase.initializeApp(c.firebase.config);
             firebase.analytics();
@@ -353,7 +358,7 @@ function initMap() {
         // Ensure the container is 100% of the height and width
         dom.map.style.height = "100%";
         dom.map.style.width = "100%";
-        
+
         // Initialise Mapbox
         mapboxgl.accessToken = c.map.token;
         g.map = new mapboxgl.Map({
@@ -365,6 +370,7 @@ function initMap() {
         });
 
         g.map.on("load", () => {
+            g.map.resize();
             if (!g.firstTime) jumpToUser();
 
             let promises = [];

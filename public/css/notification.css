@@ -11,6 +11,8 @@
     grid: 1fr / 2rem 1fr;
 
     align-items: center;
+
+    transition: opacity var(--transition);
 }
 
 #notification_icon {

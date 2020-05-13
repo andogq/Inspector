@@ -9,6 +9,8 @@
     padding: 1rem;
 
     background-color: var(--white);
+
+    transition: opacity var(--transition);
 }
 
 #search_container > .search_top {
