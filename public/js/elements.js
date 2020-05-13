@@ -5,7 +5,7 @@ function initElements() {
         [...el.children].forEach((child) => {
             child.addEventListener("click", (e) => {
                 // Find the parent element
-                let parent = e.path[0];
+                let parent = e.target;
                 while (parent != el) parent = parent.parentElement;
 
                 // Set the value of the parent to the contents of the child

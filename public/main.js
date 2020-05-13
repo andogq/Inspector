@@ -386,7 +386,6 @@ function initMap() {
 function initServiceWorker() {
     if (navigator.serviceWorker) {
         navigator.serviceWorker.register("/sw.js").then((registration) => {
-            g.channel = new BroadcastChannel("inspector");
             g.worker = registration.active;
             console.log("Service worker installed");
         }).catch((err) => {
@@ -465,13 +464,11 @@ const state = {
 
 function sendMessage(data) {
     return new Promise((resolve) => {
-        // Set up the event listener
-        g.channel.addEventListener("message", (e) => {
+        navigator.serviceWorker.addEventListener("message", (e) => {
             resolve(e.data);
         }, {once: true});
 
-        // Send the message
-        g.channel.postMessage(data);
+        g.worker.postMessage(data); 
     });
 }
 

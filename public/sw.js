@@ -1,4 +1,4 @@
-const version = "v0.3.6";
+const version = "v0.3.7";
 const exclude = [
     "/sw.js",
     "/app.webmanifest"
@@ -42,11 +42,6 @@ const files = [
     "/main.css",
     "/main.js"
 ]
-const channel = new BroadcastChannel("inspector");
-
-function sendMessage(data) {
-    channel.postMessage(data);
-}
 
 function clearCache() {
     return caches.keys().then((names) => {
@@ -54,26 +49,6 @@ function clearCache() {
     });
 }
 
-channel.addEventListener("message", (e) => {
-    if (e.data.get) {
-        switch (e.data.get) {
-            case "version":
-                sendMessage({
-                    version
-                });
-            break;
-        }
-    }
-    if (e.data.do) {
-        switch (e.data.do) {
-            case "clearCache":
-                clearCache().then(() => {
-                    sendMessage({success: true});
-                });
-            break;
-        }
-    }
-});
 this.addEventListener("install", (e) => {
     e.waitUntil(caches.open(version).then((cache) => {
         return cache.addAll(files);
@@ -103,3 +78,28 @@ this.addEventListener("fetch", (e) => {
         });
     }));
 });
+
+this.addEventListener("message", (e) => {
+    function sendMessage(data) {
+        this.clients.matchAll({type: "window"}).then(clients => clients.forEach(c => c.postMessage(data)));
+    }
+
+    if (e.data.get) {
+        switch (e.data.get) {
+            case "version":
+                sendMessage({
+                    version
+                });
+            break;
+        }
+    }
+    if (e.data.do) {
+        switch (e.data.do) {
+            case "clearCache":
+                clearCache().then(() => {
+                    sendMessage({success: true});
+                });
+            break;
+        }
+    }
+})
