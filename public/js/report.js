@@ -59,10 +59,27 @@ function validateInput() {
     let amount = dom.input.report.amount;
     let location = dom.input.report.location;
     let dress = dom.input.report.dress;
-    let time = dom.input.report.time;
     let reportButton = dom.button.submitReport;
+    
+    let d = dom.input.report.time.value;
+    let timeValid = false;
+    if (d != "") {
+        d = d.split(":");
+        
+        let time = new Date();
 
-    if (amount.value && location.stopId && dress.value && time.value != "") reportButton.disabled = false;
+        time.setHours(d[0]);
+        time.setMinutes(d[1]);
+
+        // Only accept dates for previous hour and next 5 minutes
+        let min = new Date(Date.now() - (1000 * 60 * 60)); // 1 hour in the past
+        let max = new Date(Date.now() + (1000 * 60 * 5)); // 5 minutes in the future
+        timeValid = time > min && time < max;
+    }
+
+    if (!timeValid && d != "") notification.set("Reports can only be made for the last hour");
+
+    if (amount.value && location.stopId && dress.value && timeValid) reportButton.disabled = false;
     else reportButton.disabled = true;
 }
 
