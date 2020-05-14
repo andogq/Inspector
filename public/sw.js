@@ -1,4 +1,4 @@
-const version = "v0.3.7";
+const version = "v0.3.8";
 const exclude = [
     "/sw.js",
     "/app.webmanifest"

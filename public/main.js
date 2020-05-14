@@ -101,6 +101,7 @@ const dom = {
         submitReport: d("button_submitReport"),
         login: d("button_login"),
         verify: d("button_verify"),
+        installSettings: d("button_installSettings"),
         clearCache: d("button_clearCache"),
         forceUpdate: d("button_forceUpdate"),
         acceptTerms: d("button_acceptTerms"),
@@ -283,6 +284,7 @@ function addListeners() {
     dom.button.account.addEventListener("click", () => state.set("account"));
     dom.button.settings.addEventListener("click", () => state.set("settings"));
 
+    dom.button.installSettings.addEventListener("click", install);
     dom.button.clearCache.addEventListener("click", clearCache);
     dom.button.forceUpdate.addEventListener("click", forceUpdate);
     dom.button.signOut.addEventListener("click", signOut);
@@ -318,29 +320,7 @@ function addListeners() {
         }
     });
 
-    dom.button.install.addEventListener("click", () => {
-        if (g.installPrompt) {
-            // For chrome
-            let loadId = load.start();
-            g.installPrompt.prompt().then((choice) => {
-                if (choice.outcome == "accepted") {
-                    dom.button.install.classList.add("active");
-                    window.addEventListener("appinstalled", () => {
-                        notification.set("Install successfull! Check your home screen!", "done");
-                        dom.button.install.classList.remove("active");
-                        dom.button.install.disabled = true;
-                    }, {once: true});
-                } else {
-                    notification.set("Something went wrong. Please try again");
-                }
-                load.stop(loadId);
-            })
-        } else if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
-            // Apple device
-            state.el(dom.welcome.el, "apple");
-            dom.welcome.appleNotification.addEventListener("click", () => state.reset(dom.welcome.el), {once: true});
-        } else notification.set("Something went wrong. Please try again");
-    });
+    dom.button.install.addEventListener("click", install);
 
     dom.button.continue.addEventListener("click", () => {
         state.set("map");
@@ -410,6 +390,30 @@ function initServiceWorker() {
         notification.set("Your device limits the functionality of this app");
         return Promise.resolve();
     }
+}
+
+function install() {
+    if (g.installPrompt) {
+        // For chrome
+        let loadId = load.start();
+        g.installPrompt.prompt().then((choice) => {
+            if (choice.outcome == "accepted") {
+                dom.button.install.classList.add("active");
+                window.addEventListener("appinstalled", () => {
+                    notification.set("Install successfull! Check your home screen!", "done");
+                    dom.button.install.classList.remove("active");
+                    dom.button.install.disabled = true;
+                }, {once: true});
+            } else {
+                notification.set("Something went wrong. Please try again");
+            }
+            load.stop(loadId);
+        })
+    } else if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
+        // Apple device
+        state.el(dom.welcome.el, "apple");
+        dom.welcome.appleNotification.addEventListener("click", () => state.reset(dom.welcome.el), {once: true});
+    } else notification.set("Something went wrong. Please try again");
 }
 
 function buzz() {

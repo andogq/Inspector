@@ -8,13 +8,14 @@
 /* Application */
 @import "/css/mapbox-gl.css";
 @import "/css/inputs.css";
-@import "/css/map.css";
-@import "/css/page.css";
-@import "/css/menu.css";
 @import "/css/loader.css";
-@import "/css/search.css";
-@import "/css/notification.css";
 @import "/css/login.css";
+@import "/css/map.css";
+@import "/css/menu.css";
+@import "/css/notification.css";
+@import "/css/page.css";
+@import "/css/search.css";
+@import "/css/settings.css";
 @import "/css/states.css";
 @import "/css/welcome.css";
 
