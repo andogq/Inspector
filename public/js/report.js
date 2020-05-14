@@ -58,63 +58,71 @@ function locationSearch(query) {
 function validateInput() {
     let amount = dom.input.report.amount;
     let location = dom.input.report.location;
+    let dress = dom.input.report.dress;
     let time = dom.input.report.time;
     let reportButton = dom.button.submitReport;
 
-    if (amount.value != undefined && location.stopId != undefined && time.value != "") reportButton.disabled = false;
+    if (amount.value && location.stopId && dress.value && time.value != "") reportButton.disabled = false;
     else reportButton.disabled = true;
 }
 
 function sendReport() {
     if (!g.loggedIn) state.set("login");
-    else if (g.online) firebase.auth().currentUser.getIdToken().then((token) => {
-        let loadId = load.start();
+    else if (g.online) {
+        firebase.auth().currentUser.getIdToken().then((token) => {
+            let loadId = load.start();
+            dom.button.submitReport.disabled = true;
 
-        let amount = Number(dom.input.report.amount.value.replace("+", ""));
-        let stopId = Number(dom.input.report.location.stopId);
-        let d = dom.input.report.time.value.split(":");
-        
-        let time = new Date();
+            let amount = Number(dom.input.report.amount.value.replace("+", ""));
+            let stopId = Number(dom.input.report.location.stopId);
+            let dress = ["Uniformed", "Plain Clothes"].indexOf(dom.input.report.dress.value);
+            let d = dom.input.report.time.value.split(":");
+            
+            let time = new Date();
 
-        time.setHours(d[0]);
-        time.setMinutes(d[1]);
-        time = time.toISOString();
+            time.setHours(d[0]);
+            time.setMinutes(d[1]);
+            time = time.toISOString();
 
-        if (amount != undefined && stopId != undefined && time != "") {
-            // Hide the report page
-            state.set("map");
+            if (amount && stopId && dress != undefined && time != "") {
+                // Hide the report page
+                state.set("map");
 
-            fetch("/api/submit_report", {method: "POST", body: JSON.stringify({amount, stopId, time, token})}).then((response) => {
-                if (response.ok) {
-                    // It all went well
-                    notification.set("Report submitted!", "done");
-                    firebase.analytics().logEvent("report");
-                } else {
-                    // Something went wrong
-                    throw new Error(`Error with request: ${response.status}`);
-                }
-            }).catch((e) => {
-                console.error(e);
-                notification.set("There was an error submitting your report");
-            }).finally(() => {
-                // Reset the form
-                dom.input.report.amount.value = undefined;
-                dom.input.report.amount.getElementsByClassName("selected")[0].classList.remove("selected");
-                dom.input.report.location.stopId = undefined;
-                dom.input.report.location.value = "";
+                fetch("/api/submit_report", {method: "POST", body: JSON.stringify({amount, stopId, dress, time, token})}).then((response) => {
+                    if (response.ok) {
+                        // It all went well
+                        notification.set("Report submitted!", "done");
+                        firebase.analytics().logEvent("report");
+                    } else {
+                        // Something went wrong
+                        throw new Error(`Error with request: ${response.status}`);
+                    }
+                }).catch((e) => {
+                    console.error(e);
+                    notification.set("There was an error submitting your report");
+                }).finally(() => {
+                    // Reset the form
+                    dom.input.report.amount.value = undefined;
+                    dom.input.report.amount.getElementsByClassName("selected")[0].classList.remove("selected");
+                    dom.input.report.dress.value = undefined;
+                    dom.input.report.dress.getElementsByClassName("selected")[0].classList.remove("selected");
+                    dom.input.report.location.stopId = undefined;
+                    dom.input.report.location.value = "";
 
-                let d = new Date();
-                let hours = String(d.getHours()).padStart(2, "0");
-                let minutes = String(d.getMinutes()).padStart(2, "0");
-                dom.input.report.time.value = `${hours}:${minutes}`;
-                dom.button.submitReport.disabled = true;
+                    let d = new Date();
+                    let hours = String(d.getHours()).padStart(2, "0");
+                    let minutes = String(d.getMinutes()).padStart(2, "0");
+                    dom.input.report.time.value = `${hours}:${minutes}`;
+                    dom.button.submitReport.disabled = true;
 
-                load.stop(loadId);
+                    load.stop(loadId);
+                    dom.button.submitReport.disabled = true;
 
-                // Refresh the heatmap
-                updateHeatmap();
-            });
-        }
-    });
+                    // Refresh the heatmap
+                    updateHeatmap();
+                });
+            }
+        });
+    }
     else notification.set("You are offline, please try again later");
 }

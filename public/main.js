@@ -123,6 +123,7 @@ const dom = {
         report: {
             amount: d("input_report_amount"),
             location: d("input_report_location"),
+            dress: d("input_report_dress"),
             time: d("input_report_time")
         },
         login: {
@@ -269,6 +270,7 @@ function addListeners() {
     // Validation for report inputs
     dom.input.report.amount.addEventListener("click", validateInput);
     dom.input.report.location.addEventListener("blur", validateInput);
+    dom.input.report.dress.addEventListener("click", validateInput);
     dom.input.report.time.addEventListener("blur", validateInput);
 
     dom.login.back.addEventListener("click", () => state.set("map"));
