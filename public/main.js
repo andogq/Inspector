@@ -29,7 +29,7 @@ const c = {
         tram_metro: "#27ae60"
     },
     notification: {
-        timeout: 5000
+        timeout: 10000
     },
     states: {
         map: {
@@ -150,8 +150,7 @@ const dom = {
         text: d("notification_text")
     },
     welcome: {
-        el: d("welcome"),
-        appleNotification: d("appleNotification")
+        el: d("welcome")
     },
     map: d("map"),
     centerPoint: d("centerPoint"),
@@ -219,7 +218,7 @@ function init() {
         });
     }).catch((e) => {
         console.error(e);
-        notification.set("There was an error loading, try clearing the cache");
+        notification.set("There was an error loading the app. Try clearing your cache and check your internet connection.");
         load.stop(loadId);
     });
 }
@@ -291,7 +290,7 @@ function addListeners() {
 
     window.addEventListener("offline", () => {
         g.online = false;
-        notification.set("You are offline, some features mightn't work");
+        notification.set("You are offline, so some features won't work correctly.");
     });
     window.addEventListener("online", () => {
         g.online = true;
@@ -316,7 +315,7 @@ function addListeners() {
                 g.geolocation = true;
 
                 if (g.termsAccepted && g.geolocation) dom.button.continue.disabled = false;
-            }).catch(() => notification.set("Something went wrong, try again")).finally(() => load.stop(loadId));
+            }).catch(() => notification.set("There was an error getting your location. Make sure that location services are enabled.")).finally(() => load.stop(loadId));
         }
     });
 
@@ -387,33 +386,32 @@ function initServiceWorker() {
             console.error("Problem installing service worker", err);
         });
     } else {
-        notification.set("Your device limits the functionality of this app");
+        notification.set("Some features may not work correctly due to limitations imposed by your device. Try refreshing the page, or trying a new browser.");
         return Promise.resolve();
     }
 }
 
 function install() {
     if (g.installPrompt) {
-        // For chrome
+        // For Chrome and other modern browsers that support it
         let loadId = load.start();
         g.installPrompt.prompt().then((choice) => {
             if (choice.outcome == "accepted") {
                 dom.button.install.classList.add("active");
                 window.addEventListener("appinstalled", () => {
-                    notification.set("Install successfull! Check your home screen!", "done");
+                    notification.set("Install successfull! It will appear on your home screen shortly.", "done");
                     dom.button.install.classList.remove("active");
                     dom.button.install.disabled = true;
                 }, {once: true});
             } else {
-                notification.set("Something went wrong. Please try again");
+                notification.set("The app couldn't be installed automatically. Try going to your browser's share menu and select 'Add to Home Screen'.");
             }
             load.stop(loadId);
         })
     } else if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
         // Apple device
-        state.el(dom.welcome.el, "apple");
-        dom.welcome.appleNotification.addEventListener("click", () => state.reset(dom.welcome.el), {once: true});
-    } else notification.set("Something went wrong. Please try again");
+        notification.set("To install as an app on an Apple Device, press the share button (at the bottom of the window), then scroll to and select 'Add to Home Screen'.");
+    } else notification.set("The app couldn't be installed automatically. Try going to your browser's share menu and select 'Add to Home Screen'.");
 }
 
 function buzz() {

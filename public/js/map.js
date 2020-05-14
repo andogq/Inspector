@@ -14,7 +14,7 @@ function centerOnUser() {
                 resolve();
             }, c.map.animationDuration);
         }).catch(() => {
-            notification.set("Geolocation not available", "gps_off");
+            notification.set("Geolocation not available. Check your device's permission settings.", "gps_off");
         });
     });
 }

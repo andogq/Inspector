@@ -38,30 +38,3 @@
         display: none;
     }
 }
-
-#appleNotification {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    margin: 0;
-
-    background: rgba(0, 0, 0, 0.5);
-
-    opacity: 0;
-    pointer-events: none;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#appleNotification > p {
-    width: 80%;
-    height: fit-content;
-    background: white;
-    border-radius: 1rem;
-    padding: 1rem;
-}
