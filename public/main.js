@@ -366,6 +366,7 @@ function initMap() {
 
         // Initialise Mapbox
         mapboxgl.accessToken = c.map.token;
+        mapboxgl.prewarm();
         g.map = new mapboxgl.Map({
             container: "map",
             style: "mapbox://styles/mapbox/light-v10?optimize=true",
