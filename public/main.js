@@ -154,6 +154,7 @@ const dom = {
     },
     map: d("map"),
     centerPoint: d("centerPoint"),
+    centerPointOverlay: d("centerPointOverlay"),
     loader: d("loader"),
     pointMenu: d("pointMenu"),
     loadingScreen: d("loadingScreen")
@@ -346,6 +347,12 @@ function addListeners() {
         g.firstTime = false;
         localStorage.setItem("firstTime", g.firstTime);
         jumpToUser();
+
+        // Show the overlay and remove it once the user touches the screen
+        dom.centerPointOverlay.setAttribute("state", "show");
+        document.body.addEventListener("touchstart", () => {
+            dom.centerPointOverlay.removeAttribute("state"), {once: true}
+        });
 
         firebase.analytics().logEvent("newUser");
     });
