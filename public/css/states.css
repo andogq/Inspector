@@ -19,6 +19,9 @@ body[state="menu"] #menu {
 body[state="menu"] #menu {
     height: 3rem;
 }
+body[state="menu"] #key {
+    opacity: 1;
+}
 
 
 /* Page state */
@@ -34,6 +37,9 @@ body[state="page"] #map {
 }
 body[state="page"] #menu {
     height: 70%;
+}
+body[state="menu"] #key {
+    opacity: 1;
 }
 
 /* Menu dragging and extended */

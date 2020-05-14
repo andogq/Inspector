@@ -83,3 +83,40 @@
 #button_recenter {
     color: var(--main);
 }
+
+/*
+ * Styling for the map key
+ */
+#key {
+    position: fixed;
+    top: 3rem;
+    right: 1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: opacity var(--transition);
+}
+
+#key > * {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#key > h5 {
+    font-size: 0.65rem;
+}
+
+#key > * > div {
+    height: 0.3rem;
+    width: 0.3rem;
+    border-radius: 50%;
+
+    margin: 0.3rem;
+}
+
+#key > * > p {
+    font-size: 0.5rem;
+    flex-grow: 1;
+}

@@ -152,6 +152,12 @@ const dom = {
     welcome: {
         el: d("welcome")
     },
+    key: {
+        metro: d("key_metro"),
+        vline: d("key_vline"),
+        tram: d("key_tram"),
+        bus: d("key_bus")
+    },
     map: d("map"),
     centerPoint: d("centerPoint"),
     centerPointOverlay: d("centerPointOverlay"),
@@ -213,6 +219,12 @@ function init() {
                 g.loggedIn = user != undefined;
                 dom.button.signOut.disabled = !g.loggedIn;
             });
+
+            // Initialise the colors in the key
+            dom.key.metro.children[0].style.background = c.colors.train_metro;
+            dom.key.vline.children[0].style.background = c.colors.train_regional;
+            dom.key.tram.children[0].style.background = c.colors.tram_metro;
+            dom.key.bus.children[0].style.background = c.colors.bus_regional;
         
             if (!g.firstTime) state.check();
         });
