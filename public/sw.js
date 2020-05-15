@@ -56,7 +56,10 @@ this.addEventListener("install", (e) => {
 });
 
 this.addEventListener("activate", (e) => {
-    e.waitUntil(clearCache());
+    e.waitUntil(Promise.all([
+        clearCache(),
+        clients.claim()
+    ]));
 });
 
 this.addEventListener("fetch", (e) => {

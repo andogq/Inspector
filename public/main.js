@@ -356,6 +356,8 @@ function addListeners() {
     document.addEventListener("gesturestart", (e) => {
         e.preventDefault();
     });
+
+    if (navigator.serviceWorker) navigator.serviceWorker.addEventListener("controllerchange", () => notification.set("Update successfull!", "done"));
 }
 
 function initMap() {
@@ -391,8 +393,7 @@ function initMap() {
 
 function initServiceWorker() {
     if (navigator.serviceWorker) {
-        return navigator.serviceWorker.register("/sw.js").then((registration) => {
-            g.worker = registration.active;
+        return navigator.serviceWorker.register("/sw.js").then(() => {
             console.log("Service worker installed");
         }).catch((err) => {
             console.error("Problem installing service worker", err);
@@ -495,14 +496,16 @@ const state = {
 }
 
 function sendMessage(data) {
-    if (g.worker) return new Promise((resolve) => {
-        navigator.serviceWorker.addEventListener("message", (e) => {
-            resolve(e.data);
-        }, {once: true});
+    return navigator.serviceWorker.ready.then(() => {
+        return new Promise((resolve) => {
+            navigator.serviceWorker.addEventListener("message", (e) => {
+                resolve(e.data);
+            }, {once: true});
 
-        g.worker.postMessage(data); 
+            if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage(data); 
+            else notification.set("There was a problem loading the app. Make sure there's only one instance running (close other tabs with it open).");
+        });
     });
-    else return Promise.reject("No service worker");
 }
 
 window.addEventListener("load", init);
