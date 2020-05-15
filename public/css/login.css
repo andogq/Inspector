@@ -32,14 +32,12 @@
     margin: 0.5rem 0;
 }
 
-#page_login h2 {
+#page_login h5 {
     color: var(--dark);
-    font-size: 0.75rem;
     font-weight: normal;
 }
 
-#page_login h1 {
-    font-size: 1.75rem;
+#page_login h2 {
     color: var(--accent);
 }
 
@@ -58,6 +56,5 @@
 }
 
 #page_login > .container > p {
-    font-size: 0.75rem;
     text-align: center;
 }

@@ -48,8 +48,7 @@
 #centerPointOverlay[state="show"] {
     opacity: 1;
 }
-#centerPointOverlay > p {
-    font-size: 1rem;
+#centerPointOverlay > h4 {
     color: var(--white);
     margin-top: 5rem;
 }
@@ -71,7 +70,7 @@
 /*
  * Styling for the actual icons
  */
-#pointMenu > * {
+#pointMenu > h1 {
     margin: 0.5rem;
     font-size: 2rem;
 }
@@ -104,10 +103,6 @@
     align-items: center;
 }
 
-#key > h5 {
-    font-size: 0.65rem;
-}
-
 #key > * > div {
     height: 0.3rem;
     width: 0.3rem;
@@ -117,6 +112,5 @@
 }
 
 #key > * > p {
-    font-size: 0.5rem;
     flex-grow: 1;
 }

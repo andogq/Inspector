@@ -19,12 +19,7 @@
 }
 
 #welcome > h1 {
-    font-size: 2rem;
     color: var(--accent);
-}
-
-#welcome p, #welcome li {
-    font-size: 0.75rem;
 }
 
 #welcome > input.active {

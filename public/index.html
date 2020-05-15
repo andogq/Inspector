@@ -69,13 +69,13 @@
     
     <div class="child" id="map"></div>
     <div id="centerPointOverlay">
-        <p>Press the blue dot to active the menu</p>
+        <h4>Press the blue dot to active the menu</h4>
     </div>
     <div class="child" id="centerPoint"></div>
     
     <div class="child" id="pointMenu">
-        <span class="material-icons" id="button_report">report</span>
-        <span class="material-icons" id="button_recenter">gps_fixed</span>
+        <h1 class="material-icons" id="button_report">report</h1>
+        <h1 class="material-icons" id="button_recenter">gps_fixed</h1>
     </div>
 
     <div class="child" id="key">
@@ -108,9 +108,9 @@
         <hr/>
         <div id="menu_container">
             <div id="page_report" class="page">
-                <h1>Report Inspectors</h1>
+                <h2>Report Inspectors</h2>
                 <div class="row">
-                    <h2 class="text">Amount:</h2>
+                    <p class="text">Amount:</p>
                     <div id="input_report_amount" class="selection input">
                         <div>1</div>
                         <div>2</div>
@@ -119,29 +119,29 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h2 class="text">Location:</h2>
+                    <p class="text">Location:</p>
                     <input type="text" id="input_report_location" placeholder="Nearby Location"/>
                 </div>
                 <div class="row">
-                    <h2 class="text">Dress:</h2>
+                    <p class="text">Dress:</p>
                     <div id="input_report_dress" class="selection input">
                         <div>Uniformed</div>
                         <div>Plain Clothes</div>
                     </div>
                 </div>
                 <div class="row">
-                    <h2 class="text">Time:</h2>
+                    <p class="text">Time:</p>
                     <input type="time" id="input_report_time"/>
                 </div>
                 <input type="button" id="button_submitReport" disabled value="Report"/>
             </div>
             <div id="page_account" class="page">
-                <h1>Account</h1>
+                <h2>Account</h2>
             </div>
             <div id="page_settings" class="page">
-                <h1>Settings</h1>
+                <h2>Settings</h2>
                 <div class="row">
-                    <h2 class="text">Current Version:</h2>
+                    <p class="text">Current Version:</p>
                     <h3 id="settings_version"></h3>
                 </div>
                 <input type="button" id="button_installSettings" value="Install"/>
@@ -156,10 +156,10 @@
         <div class="background"></div>
         <div class="container">
             <span class="material-icons" id="login_back">keyboard_arrow_left</span>
-            <h1>Login or Signup</h1>
+            <h2>Login or Signup</h2>
             <div id="loginStep1">
                 <div id="phoneInput">
-                    <h2>Phone Number</h2>
+                    <h5>Phone Number</h5>
                     <input type="tel" id="input_login_phone" placeholder="Phone Number"/>
                 </div>
                 <div id="recaptchaContainer"></div>
@@ -167,7 +167,7 @@
             </div>
             <div id="loginStep2">
                 <div id="codeInput">
-                    <h2>Verification Code</h2>
+                    <h5>Verification Code</h5>
                     <input type="number" id="input_login_code" placeholder="Verification Code"/>
                 </div>
                 <input type="button" id="button_verify" value="Verify"/>
