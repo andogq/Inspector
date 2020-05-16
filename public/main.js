@@ -205,6 +205,20 @@ function init() {
                     firebase.analytics().setUserProperties({
                         version: g.version
                     });
+                    
+                    // Check for an update
+                    fetch("/latest.txt").then((res) => {
+                        if (res.ok) {
+                            res.text().then((latest) => {
+                                console.log(latest);
+                                if (latest != g.version) notification.set("An update is available! Go to settings and press 'Force Update' to install it!");
+                            });
+                        } else throw new Error(res.status);
+                    }).catch((err) => {
+                        notification.set("There was a problem checking for a new version. Try clear the cache.");
+                        console.error(err);
+                    });
+
                     load.stop(loadId);
                 });
             });

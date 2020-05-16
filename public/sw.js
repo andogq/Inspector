@@ -1,7 +1,8 @@
-const version = "v0.3.9";
+const version = "v0.3.10";
 const exclude = [
     "/sw.js",
-    "/app.webmanifest"
+    "/app.webmanifest",
+    "/latest.txt"
 ]
 const api = /^\/api\/.+$/;
 const files = [
