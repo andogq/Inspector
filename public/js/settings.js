@@ -13,8 +13,8 @@ function clearCache() {
     localStorage.clear();
     return sendMessage({do: "clearCache"}).then(() => {
         load.stop(loadId);
-        notification.set("Cache cleared", "done");
         firebase.analytics().logEvent("clearCache");
+        location.pathname = "/";
     });
 }
 
