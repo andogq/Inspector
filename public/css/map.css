@@ -114,3 +114,34 @@
 #key > * > p {
     flex-grow: 1;
 }
+
+#reportDetails {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5rem;
+    padding: 0.5rem;
+
+    box-shadow: 0 0 1rem black;
+
+    background: var(--white);
+
+    display: grid;
+    grid: auto 1fr 1fr / 1fr 1fr;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+}
+
+#reportDetails > p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#reportDetails > h4 {
+    grid-area: 1 / 1 / 2 / 3;
+    color: var(--accent);
+}

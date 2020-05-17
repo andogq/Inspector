@@ -7,6 +7,7 @@ const c = {
     map: {
         token: "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ",
         nearbyRadius: 0.0015,
+        touchRadius: 50,
         updateInterval: 5,
         animationDuration: 1000,
         sources: [
@@ -158,6 +159,13 @@ const dom = {
         tram: d("key_tram"),
         bus: d("key_bus")
     },
+    reportDetails: {
+        container: d("reportDetails"),
+        amount: d("reportDetails_amount"),
+        lastReport: d("reportDetails_lastReport"),
+        dress: d("reportDetails_dress"),
+        reports: d("reportDetails_reports")
+    },
     map: d("map"),
     centerPoint: d("centerPoint"),
     centerPointOverlay: d("centerPointOverlay"),
@@ -270,7 +278,10 @@ function addListeners() {
 
     window.addEventListener("popstate", state.check.bind(state));
 
-    dom.map.addEventListener("touchstart", () => state.set("map"), {passive: true});
+    dom.map.addEventListener("touchstart", (e) => {
+        reportDetail(e);
+        state.set("map");
+    }, {passive: true});
     dom.centerPoint.addEventListener("click", () => state.set("menu"));
     dom.button.report.addEventListener("click", () => {
         if (g.loggedIn) {
@@ -397,8 +408,8 @@ function initMap() {
 
             let promises = [];
 
-            promises.push(loadHeatmap());
             promises.push(loadSources()); 
+            promises.push(initHeatmap());
 
             Promise.all(promises).then(resolve);
         });

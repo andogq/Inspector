@@ -13,8 +13,8 @@ module.exports = functions.https.onRequest((req, res) => {
 
             // Do the query
             db.collection("reports").where("time", ">=", minTime).get().then((r) => {
-                let stopIds = [];
-                let reports = [];
+                let reports = {};
+                let stopPromises = [];
 
                 // Pull all the reports and save the stop ids
                 r.forEach((report) => {
@@ -23,44 +23,47 @@ module.exports = functions.https.onRequest((req, res) => {
                     r.time = r.time.toDate();
 
                     let id = String(r.stopId);  
-                    if (stopIds.indexOf(id) == -1) stopIds.push(id);
-                    reports.push(r);
+                    if (!reports[id]) {
+                        reports[id] = [];
+                        stopPromises.push(db.collection("stops").doc(id).get());
+                    }
+                    reports[id].push(r);
                 });
+                
+                let response = {};
+                
+                Promise.all(stopPromises).then(stopRefs => stopRefs.forEach((ref) => {
+                    let stopData = ref.data();
+                    let id = stopData.id;
+                    let stopReports = reports[id];
+                    
+                    let {lastReport, amount, dress} = stopReports.reduce(({lastReport, amount, dress}, report) => {
+                        if (report.time > lastReport) lastReport = report.time;
+                        amount += report.amount;
+                        dress[report.dress]++;
+                        return {lastReport, amount, dress};
+                    }, {lastReport: 0, amount: 0, dress: [0, 0]});
 
-                let stopPromises = [];
-                let stops = [];
-                stopIds.forEach((id) => {
-                    stopPromises.push(db.collection("stops").doc(id).get().then((stop) => {
-                        stops[id] = stop.data();
-                    }));
-                });
+                    // Average the amount
+                    amount /= stopReports.length;
 
-                let geojson = {
-                    type: "FeatureCollection",
-                    features: []
-                }
+                    // Calculate the intensity of the report
+                    let timePassed = 1 - ((Date.now() - lastReport) / (1000 * 60 * 60));
+                    let intensity = amount / 4 * timePassed;
 
-                Promise.all(stopPromises).then(() => {                    
-                    reports.forEach((report) => {
-                        let timePassed = 1 - ((Date.now() - report.time) / (1000 * 60 * 60));
-                        let intensity = (report.amount / 4) * timePassed;
-
-                        geojson.features.push({
-                            type: "Feature",
-                            geometry: {
-                                type: "Point",
-                                coordinates: [
-                                    stops[report.stopId].lon,
-                                    stops[report.stopId].lat
-                                ]
-                            },
-                            properties: {
-                                intensity
-                            }
-                        });
-                    });
-                    resolve(geojson);
-                });
+                    response[id] = {
+                        id,
+                        coordinates: {
+                            lat: stopData.lat,
+                            lon: stopData.lon
+                        },
+                        reports: stopReports.length,
+                        lastReport,
+                        amount,
+                        dress,
+                        intensity
+                    };
+                })).then(() => resolve(response));
             });
         }
     }).then((body = "") => {

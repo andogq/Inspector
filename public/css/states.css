@@ -82,3 +82,9 @@ body[state="welcome"] #welcome, #welcome[state="apple"] #appleNotification {
     opacity: 1;
     pointer-events: all;
 }
+
+
+#reportDetails[state="show"] {
+    opacity: 1;
+    pointer-events: all;
+}
