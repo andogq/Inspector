@@ -31,6 +31,11 @@
     color: var(--darker);
 }
 
+/* Grey out unused buttons */
+#button_account, #button_data, #button_history {
+    color: grey;
+}
+
 /*
  * The container containing everything in the menu
  */
