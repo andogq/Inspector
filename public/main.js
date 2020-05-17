@@ -7,7 +7,7 @@ const c = {
     map: {
         token: "pk.eyJ1IjoiYW5kb2dxIiwiYSI6ImNrOTBvemU3ZDA0NHIzZnJpdHZ6c21ubWgifQ.bnBBzM9gS46EbEyK1GdoxQ",
         nearbyRadius: 0.0015,
-        touchRadius: 50,
+        touchRadius: 10,
         updateInterval: 5,
         animationDuration: 1000,
         sources: [
@@ -282,7 +282,10 @@ function addListeners() {
         reportDetail(e);
         state.set("map");
     }, {passive: true});
-    dom.centerPoint.addEventListener("click", () => state.set("menu"));
+    dom.centerPoint.addEventListener("click", () => {
+        state.reset(dom.reportDetails.container);
+        state.set("menu");
+    });
     dom.button.report.addEventListener("click", () => {
         if (g.loggedIn) {
             // User is logged in
